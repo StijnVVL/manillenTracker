@@ -1,0 +1,24 @@
+import type { Team, TournamentState } from '../types';
+
+export function getTeamMap(teams: Team[]): Map<string, Team> {
+  return new Map(teams.map((team) => [team.id, team]));
+}
+
+export function getTeamName(teamMap: Map<string, Team>, teamId: string): string {
+  return teamMap.get(teamId)?.name ?? 'Unknown team';
+}
+
+export function getCurrentRound(state: TournamentState) {
+  if (state.currentRoundIndex < 0) return null;
+  return state.rounds[state.currentRoundIndex] ?? null;
+}
+
+export function getLatestRoundDiffs(state: TournamentState): Map<string, number> {
+  const current = getCurrentRound(state);
+  if (!current || current.results.length === 0) {
+    const previous = state.rounds[state.currentRoundIndex - 1];
+    if (!previous) return new Map();
+    return new Map(previous.results.map((r) => [r.teamId, r.matchDiff]));
+  }
+  return new Map(current.results.map((r) => [r.teamId, r.matchDiff]));
+}
