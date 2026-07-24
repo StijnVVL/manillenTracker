@@ -1,0 +1,35 @@
+<div class="matchup-display-shell">
+  <header class="matchup-display-header">
+    <h1 class="matchup-display-title">Round {{ currentRound?.number }} Matchups</h1>
+    <p class="matchup-display-subtitle">Please move to your assigned tables</p>
+  </header>
+
+  @if (currentRound) {
+    <div class="matchup-display-grid">
+      @for (matchup of currentRound.matchups; track matchup.teamAId + matchup.teamBId; let index = $index) {
+        <div class="matchup-display-card">
+          <div class="matchup-display-table">Table {{ index + 1 }}</div>
+          <div class="matchup-display-vs">VS</div>
+          <div class="matchup-display-team">{{ getTeamName(matchup.teamAId) }}</div>
+          <div class="matchup-display-team">{{ getTeamName(matchup.teamBId) }}</div>
+        </div>
+      }
+      @if (currentRound.byeTeamId) {
+        <div class="matchup-display-card bye-card">
+          <div class="matchup-display-table">Bye</div>
+          <div class="matchup-display-team">{{ getTeamName(currentRound.byeTeamId) }}</div>
+        </div>
+      }
+    </div>
+
+    <div class="matchup-display-start">
+      <button
+        type="button"
+        class="btn btn-primary btn-large"
+        (click)="startRound()"
+      >
+        Start Timer
+      </button>
+    </div>
+  }
+</div>

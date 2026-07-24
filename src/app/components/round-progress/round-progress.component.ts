@@ -6,11 +6,7 @@ import { TOTAL_ROUNDS } from '../../models/tournament.model';
   selector: 'app-round-progress',
   standalone: true,
   imports: [CommonModule],
-  template: `
-    <div class="round-progress">
-      Round {{ roundNumber }} of {{ TOTAL_ROUNDS }}
-    </div>
-  `,
+  templateUrl: './round-progress.component.html',
   styles: [],
 })
 export class RoundProgressComponent {

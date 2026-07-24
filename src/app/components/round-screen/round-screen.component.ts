@@ -21,57 +21,7 @@ import { TournamentState, Round } from '../../models/tournament.model';
     RoundHistoryComponent,
     TeamStandingsComponent,
   ],
-  template: `
-    @if (currentRound) {
-      <app-countdown-timer
-        [remainingMs]="state.remainingMs"
-        [roundNumber]="currentRound.number"
-        [isWarning]="isWarning"
-      />
-
-      <div class="timer-controls">
-        @if (isIdle || isPaused) {
-          <button type="button" class="btn btn-primary" (click)="startTimer()">
-            {{ isPaused ? 'Resume' : 'Start Round' }}
-          </button>
-        }
-        @if (isRunning) {
-          <button type="button" class="btn btn-secondary" (click)="pauseTimer()">
-            Pause
-          </button>
-        }
-        <button
-          type="button"
-          class="btn btn-danger"
-          (click)="endRound()"
-          [disabled]="state.timerStatus === 'ended'"
-        >
-          End Round
-        </button>
-      </div>
-
-      <div class="grid-2" style="margin-top: 1.5rem">
-        <app-ladder-board
-          [teams]="state.teams"
-          [ladder]="state.ladder"
-          [roundDiffs]="roundDiffs"
-        />
-        <app-matchup-list [round]="currentRound" [teams]="state.teams" />
-      </div>
-
-      <div style="margin-top: 1rem">
-        <app-team-standings [state]="state" />
-      </div>
-
-      <div style="margin-top: 1rem">
-        <app-round-history
-          [rounds]="state.rounds"
-          [teams]="state.teams"
-          [currentRoundIndex]="state.currentRoundIndex"
-        />
-      </div>
-    }
-  `,
+  templateUrl: './round-screen.component.html',
   styles: [],
 })
 export class RoundScreenComponent implements OnInit, OnDestroy {

@@ -7,14 +7,7 @@ import { RoundProgressComponent } from '../round-progress/round-progress.compone
   selector: 'app-countdown-timer',
   standalone: true,
   imports: [CommonModule, RoundProgressComponent],
-  template: `
-    <section class="timer-section">
-      <app-round-progress [roundNumber]="roundNumber" />
-      <div [class]="'countdown ' + (isWarning ? 'countdown-warning' : '')">
-        {{ formattedTime }}
-      </div>
-    </section>
-  `,
+  templateUrl: './countdown-timer.component.html',
   styles: [],
 })
 export class CountdownTimerComponent {

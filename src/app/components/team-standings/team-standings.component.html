@@ -1,0 +1,29 @@
+<div class="card">
+  <h2 class="card-title">{{ title }}</h2>
+  <div class="standings-table-wrap">
+    <table class="standings-table">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Team</th>
+          <th>W</th>
+          <th>L</th>
+          <th>T</th>
+          <th>Margin</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (standing of standings; track standing.teamId) {
+          <tr>
+            <td>{{ standing.currentRank }}</td>
+            <td>{{ getTeamName(standing.teamId) }}</td>
+            <td>{{ standing.wins }}</td>
+            <td>{{ standing.losses }}</td>
+            <td>{{ standing.ties }}</td>
+            <td>{{ standing.totalMarginWon }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,72 @@
+.matchup-display-shell {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.matchup-display-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+.matchup-display-title {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  margin: 0;
+  color: var(--primary-dark);
+}
+.matchup-display-subtitle {
+  font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+  margin: 0.5rem 0 0;
+  color: var(--muted);
+}
+.matchup-display-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  flex: 1;
+}
+.matchup-display-card {
+  background: var(--bg-card);
+  border: 2px solid var(--primary);
+  border-radius: 20px;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+.matchup-display-card.bye-card {
+  border-color: var(--muted);
+}
+.matchup-display-table {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.matchup-display-vs {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--primary);
+  margin: 1rem 0;
+  letter-spacing: 0.1em;
+}
+.matchup-display-team {
+  font-size: 1.4rem;
+  font-weight: 600;
+  padding: 0.75rem;
+  margin: 0.5rem 0;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 10px;
+  color: var(--primary-dark);
+}
+.matchup-display-start {
+  text-align: center;
+  margin-top: 2rem;
+}
+.btn-large {
+  padding: 1rem 2.5rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+}

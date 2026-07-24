@@ -8,78 +8,7 @@ import { TournamentState } from '../../models/tournament.model';
   selector: 'app-setup-screen',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  template: `
-    <div class="card">
-      <h2 class="card-title">Tournament Setup</h2>
-      <p style="color: var(--muted); margin-top: 0">
-        Add fixed teams, set the round duration, then start the match. The tournament
-        runs for 5 rounds. Round 1 pairings are randomized.
-      </p>
-
-      <label class="field-label" for="round-duration">
-        Round duration (minutes)
-      </label>
-      <input
-        id="round-duration"
-        class="input-number"
-        type="number"
-        min="1"
-        max="240"
-        [ngModel]="state.roundDurationMinutes"
-        (ngModelChange)="onDurationChange($event)"
-      />
-
-      <div style="margin-top: 1.5rem">
-        <label class="field-label" for="team-name">
-          Team name
-        </label>
-        <div class="setup-team-row">
-          <input
-            id="team-name"
-            class="input"
-            [(ngModel)]="newTeamName"
-            placeholder="e.g. Team Alpha"
-            (keydown.enter)="addTeam()"
-          />
-          <button type="button" class="btn btn-secondary" (click)="addTeam()">
-            Add
-          </button>
-        </div>
-      </div>
-
-      @if (state.teams.length > 0) {
-        <ul class="ladder-list" style="margin-top: 1rem">
-          @for (team of state.teams; track team.id) {
-            <li class="ladder-item">
-              <input
-                class="input"
-                [ngModel]="editableNames[team.id]"
-                (ngModelChange)="updateTeamName(team.id, $event)"
-              />
-              <button
-                type="button"
-                class="btn btn-danger"
-                (click)="removeTeam(team.id)"
-              >
-                Remove
-              </button>
-            </li>
-          }
-        </ul>
-      }
-
-      <div class="setup-actions">
-        <button
-          type="button"
-          class="btn btn-primary"
-          [disabled]="state.teams.length < 2"
-          (click)="startTournament()"
-        >
-          Start Tournament
-        </button>
-      </div>
-    </div>
-  `,
+  templateUrl: './setup-screen.component.html',
   styles: [],
 })
 export class SetupScreenComponent implements OnInit {

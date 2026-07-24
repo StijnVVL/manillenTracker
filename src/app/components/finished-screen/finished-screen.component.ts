@@ -17,46 +17,7 @@ import { TournamentState, Team } from '../../models/tournament.model';
     RoundHistoryComponent,
     TeamStandingsComponent,
   ],
-  template: `
-    <div class="card champion-card">
-      @if (championId) {
-        <div class="champion-label">Champion</div>
-        <div class="champion-name">{{ getTeamName(championId) }}</div>
-        <p class="champion-note">
-          Winner of Table 1 in the final round
-        </p>
-      } @else {
-        <div class="champion-label">Tournament Complete</div>
-        <div class="champion-name">No champion</div>
-        <p class="champion-note">
-          Table 1 in the final round ended in a tie
-        </p>
-      }
-    </div>
-
-    <div class="grid-2" style="margin-top: 1rem">
-      <app-ladder-board [teams]="state.teams" [ladder]="state.ladder" title="Final Ladder" />
-      <app-team-standings [state]="state" title="Final Standings" />
-    </div>
-
-    <div style="margin-top: 1rem">
-      <app-round-history
-        [rounds]="state.rounds"
-        [teams]="state.teams"
-        [currentRoundIndex]="state.currentRoundIndex"
-      />
-    </div>
-
-    <div class="setup-actions" style="margin-top: 1rem">
-      <button
-        type="button"
-        class="btn btn-primary"
-        (click)="startNewTournament()"
-      >
-        Start New Tournament
-      </button>
-    </div>
-  `,
+  templateUrl: './finished-screen.component.html',
   styles: [],
 })
 export class FinishedScreenComponent implements OnInit {
