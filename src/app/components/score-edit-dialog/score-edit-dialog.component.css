@@ -1,0 +1,79 @@
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.dialog-box {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 1.5rem;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.dialog-title {
+  margin: 0 0 1rem 0;
+  font-size: 1.25rem;
+  color: var(--primary-dark);
+}
+
+.dialog-content {
+  margin-bottom: 1.5rem;
+}
+
+.score-input-group {
+  margin-bottom: 1rem;
+}
+
+.score-input-group:last-of-type {
+  margin-bottom: 0;
+}
+
+.score-input-group .field-label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.score-input-group .input {
+  width: 100%;
+}
+
+.dialog-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+.dialog-actions .btn {
+  border: 2px solid;
+  font-weight: 600;
+}
+
+.dialog-actions .btn-secondary {
+  border-color: var(--border);
+  background: transparent;
+  color: var(--primary-dark);
+}
+
+.dialog-actions .btn-secondary:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.dialog-actions .btn-primary {
+  border-color: var(--primary);
+}
+
+.dialog-actions .btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

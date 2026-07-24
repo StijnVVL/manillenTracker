@@ -1,0 +1,76 @@
+.matchups-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+@media (max-width: 768px) {
+  .matchups-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+.matchup-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.matchup-info {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.matchup-table-number {
+  font-weight: 600;
+  color: var(--primary-dark);
+  min-width: 3.5rem;
+}
+
+.matchup-teams {
+  color: var(--text-primary);
+}
+
+.matchup-score {
+  font-weight: 600;
+  color: var(--primary-dark);
+  min-width: 4rem;
+  text-align: right;
+}
+
+.btn-icon {
+  background: transparent;
+  border: none;
+  color: var(--primary);
+  cursor: pointer;
+  padding: 0.375rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.btn-icon:hover {
+  background: rgba(46, 125, 50, 0.1);
+}
+
+.btn-icon:active {
+  background: rgba(46, 125, 50, 0.2);
+}
+
+.bye-note {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background: #f5f5f5;
+  border-radius: 8px;
+  color: var(--muted);
+  font-style: italic;
+}
+
+.setup-actions {
+  margin-top: 1.5rem;
+}

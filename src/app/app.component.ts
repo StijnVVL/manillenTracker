@@ -7,6 +7,7 @@ import { ConfirmDialogService } from './services/confirm-dialog.service';
 import { L10nService } from './services/l10n.service';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 import { AddTeamDialogComponent } from './components/add-team-dialog/add-team-dialog.component';
+import { ScoreEditDialogComponent } from './components/score-edit-dialog/score-edit-dialog.component';
 import { L10nPipe } from './pipes/l10n.pipe';
 import { TournamentState } from './models/tournament.model';
 
@@ -18,6 +19,7 @@ import { TournamentState } from './models/tournament.model';
     RouterLink,
     ConfirmDialogComponent,
     AddTeamDialogComponent,
+    ScoreEditDialogComponent,
     L10nPipe
 ],
   templateUrl: './app.component.html',

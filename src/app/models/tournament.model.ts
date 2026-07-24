@@ -41,7 +41,7 @@ export interface TournamentState {
 }
 
 export const DEFAULT_ROUND_DURATION_MINUTES = 25;
-export const TOTAL_ROUNDS = 5;
+export const TOTAL_ROUNDS = 1;
 export const STORAGE_KEY = 'manillen-tournament';
 
 export type TournamentAction =

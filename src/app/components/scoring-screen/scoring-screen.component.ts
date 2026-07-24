@@ -8,25 +8,25 @@ import { getMatchupDiffs, getWinnerId, scoreWarning } from '../../logic/scoring'
 import { TOTAL_ROUNDS } from '../../models/tournament.model';
 import { getCurrentRound, getTeamMap } from '../../utils/teams';
 import { LadderBoardComponent } from '../ladder-board/ladder-board.component';
-import { RoundHistoryComponent } from '../round-history/round-history.component';
 import { RoundProgressComponent } from '../round-progress/round-progress.component';
-import { TeamStandingsComponent } from '../team-standings/team-standings.component';
 import { TournamentState, Round, Matchup, Team } from '../../models/tournament.model';
+import { ScoreEditDialogService } from '../../services/score-edit-dialog.service';
+import { ConfirmDialogService } from '../../services/confirm-dialog.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-scoring-screen',
   standalone: true,
   imports: [
     FormsModule,
+    CommonModule,
     LadderBoardComponent,
-    RoundHistoryComponent,
     RoundProgressComponent,
-    TeamStandingsComponent,
     L10nPipe
 ],
   templateUrl: './scoring-screen.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
-  styles: [],
+  styleUrl: './scoring-screen.component.css',
 })
 export class ScoringScreenComponent implements OnInit {
   state: TournamentState;
@@ -38,7 +38,9 @@ export class ScoringScreenComponent implements OnInit {
 
   constructor(
     private tournamentService: TournamentService,
-    public l10n: L10nService
+    public l10n: L10nService,
+    private scoreEditDialogService: ScoreEditDialogService,
+    private confirmDialogService: ConfirmDialogService
   ) {
     this.state = tournamentService.state;
   }
@@ -126,8 +128,62 @@ export class ScoringScreenComponent implements OnInit {
   }
 
   nextRound(): void {
-    this.tournamentService.dispatch({ type: 'NEXT_ROUND' });
-    this.scores = {};
-    this.confirmed = false;
+    this.confirmDialogService.confirm({
+      title: this.l10n.get('dialog.nextRound.title'),
+      message: this.l10n.get('dialog.nextRound.message'),
+      confirmText: this.l10n.get('dialog.nextRound.confirm')
+    }).then((confirmed) => {
+      if (confirmed) {
+        this.tournamentService.dispatch({ type: 'NEXT_ROUND' });
+        this.scores = {};
+        this.confirmed = false;
+      }
+    });
+  }
+
+  async editMatchScore(matchup: Matchup): Promise<void> {
+    const scoreA = this.numericScores[matchup.teamAId];
+    const scoreB = this.numericScores[matchup.teamBId];
+
+    const result = await this.scoreEditDialogService.open({
+      teamAId: matchup.teamAId,
+      teamBId: matchup.teamBId,
+      teamAName: this.getTeamName(matchup.teamAId),
+      teamBName: this.getTeamName(matchup.teamBId),
+      scoreA,
+      scoreB
+    });
+
+    if (result) {
+      this.scores[matchup.teamAId] = String(result.scoreA);
+      this.scores[matchup.teamBId] = String(result.scoreB);
+      this.confirmed = false;
+    }
+  }
+
+  hasScores(matchup: Matchup): boolean {
+    return this.numericScores[matchup.teamAId] !== undefined &&
+           this.numericScores[matchup.teamBId] !== undefined;
+  }
+
+  getMatchupScoreDisplay(matchup: Matchup): string {
+    const scoreA = this.numericScores[matchup.teamAId];
+    const scoreB = this.numericScores[matchup.teamBId];
+    if (scoreA !== undefined && scoreB !== undefined) {
+      return `${scoreA} - ${scoreB}`;
+    }
+    return '—';
+  }
+
+  get leftColumnMatchups(): Matchup[] {
+    if (!this.currentRound) return [];
+    const mid = Math.ceil(this.currentRound.matchups.length / 2);
+    return this.currentRound.matchups.slice(0, mid);
+  }
+
+  get rightColumnMatchups(): Matchup[] {
+    if (!this.currentRound) return [];
+    const mid = Math.ceil(this.currentRound.matchups.length / 2);
+    return this.currentRound.matchups.slice(mid);
   }
 }

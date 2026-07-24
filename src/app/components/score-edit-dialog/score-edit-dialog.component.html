@@ -1,0 +1,37 @@
+@if (isOpen) {
+  <div class="dialog-overlay" (click)="onOverlayClick($event)">
+    <div class="dialog-box">
+      <h2 class="dialog-title">{{ 'dialog.editScore.title' | l10n }}</h2>
+      <div class="dialog-content">
+        <div class="score-input-group">
+          <label class="field-label" for="score-team-a">{{ teamAName }}</label>
+          <input
+            id="score-team-a"
+            class="input input-number"
+            type="number"
+            min="0"
+            max="61"
+            [(ngModel)]="scoreA"
+            (keydown)="onKeydown($event)"
+          />
+        </div>
+        <div class="score-input-group">
+          <label class="field-label" for="score-team-b">{{ teamBName }}</label>
+          <input
+            id="score-team-b"
+            class="input input-number"
+            type="number"
+            min="0"
+            max="61"
+            [(ngModel)]="scoreB"
+            (keydown)="onKeydown($event)"
+          />
+        </div>
+      </div>
+      <div class="dialog-actions">
+        <button class="btn btn-secondary" (click)="onCancel()">{{ 'common.cancel' | l10n }}</button>
+        <button class="btn btn-primary" (click)="onSave()" [disabled]="!canSave">{{ 'dialog.editScore.save' | l10n }}</button>
+      </div>
+    </div>
+  </div>
+}

@@ -30,6 +30,13 @@
   "dialog.endRound.message": "Are you sure you want to end the round early?",
   "dialog.endRound.confirm": "End Round",
 
+  "dialog.editScore.title": "Edit Match Score",
+  "dialog.editScore.save": "Save",
+
+  "dialog.nextRound.title": "Next Round",
+  "dialog.nextRound.message": "Are you sure you want to proceed to the next round? Scores will be finalized.",
+  "dialog.nextRound.confirm": "Next Round",
+
   "pageTitle.tournamentSetup": "Tournament Setup",
   "pageTitle.credits": "Credits",
   "pageTitle.settings": "Settings",
@@ -84,13 +91,10 @@
   "scoring.title": "Enter Scores — Round {roundNumber}",
   "scoring.instructions": "Enter raw card points per team. Table movement is based on the score difference between the winning and losing team.",
   "scoring.finalRoundNote": "This is the final round — the Table 1 winner becomes champion.",
-  "scoring.winnerPoints": "Winner: +{margin}",
-  "scoring.loserPoints": "Loser: -{margin}",
-  "scoring.scoreDifference": "Score difference: {margin} — Winner: {teamName}",
-  "scoring.tieNoMovement": "Tie — no table movement",
   "scoring.byeNoScore": "Bye: {teamName} (no score entry needed)",
   "scoring.confirmScores": "Confirm Scores",
   "scoring.nextRound": "Next Round",
+  "scoring.editScore": "Edit score",
   "scoring.ladderBefore": "Ladder Before",
   "scoring.ladderAfter": "Ladder After",
 

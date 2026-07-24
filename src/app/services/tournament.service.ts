@@ -242,10 +242,6 @@ function tournamentReducer(
     }
 
     case 'INIT_ROUND': {
-      if (state.rounds.length >= TOTAL_ROUNDS){
-        return state;
-      }
-
       return {
         ...state,
         status: 'round',

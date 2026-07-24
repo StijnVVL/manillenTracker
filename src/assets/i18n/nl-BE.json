@@ -1,3 +1,8 @@
 {
-  "een-NL-key": "een-NL-value"
+  "dialog.editScore.title": "Wedstrijdscore bewerken",
+  "dialog.editScore.save": "Opslaan",
+  "dialog.nextRound.title": "Volgende ronde",
+  "dialog.nextRound.message": "Weet je zeker dat je naar de volgende ronde wilt gaan? De scores worden definitief.",
+  "dialog.nextRound.confirm": "Volgende ronde",
+  "scoring.editScore": "Score bewerken"
 }

@@ -16,7 +16,6 @@ import { getTeamMap } from '../../utils/teams';
 export class RoundHistoryComponent implements OnChanges {
   @Input() rounds: Round[] = [];
   @Input() teams: Team[] = [];
-  @Input() currentRoundIndex: number = -1;
 
   teamMap: Map<string, Team> = new Map();
   completedRounds: Round[] = [];
@@ -27,7 +26,7 @@ export class RoundHistoryComponent implements OnChanges {
       this.teamMap = getTeamMap(this.teams);
     }
     this.completedRounds = this.rounds.filter(
-      (round, index) => index < this.currentRoundIndex || round.results.length > 0,
+      (round, index) => index < this.rounds.length - 1 || round.results.length > 0,
     );
   }
 
