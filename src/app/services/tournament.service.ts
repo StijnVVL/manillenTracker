@@ -37,16 +37,16 @@ function createRound(number: number, teamIds: string[], useRandom: boolean): Rou
 }
 
 function getCurrentRound(state: TournamentState): Round | null {
-  if (state.currentRoundIndex < 0){
+  if (state.rounds == null){
     return null;
   } 
 
-  return state.rounds[state.currentRoundIndex] ?? null;
+  return state.rounds[state.rounds.length - 1];
 }
 
 function updateCurrentRound(state: TournamentState, round: Round): TournamentState {
   const rounds = [...state.rounds];
-  rounds[state.currentRoundIndex] = round;
+  rounds[rounds.length - 1] = round;
   return { ...state, rounds };
 }
 
@@ -55,7 +55,6 @@ function createInitialState(): TournamentState {
     teams: USE_DUMMY_DATA ? [...DUMMY_TEAMS] : [],
     ladder: [],
     rounds: [],
-    currentRoundIndex: -1,
     roundDurationMinutes: DEFAULT_ROUND_DURATION_MINUTES,
     status: 'setup',
     timerStatus: 'idle',
@@ -83,6 +82,10 @@ function tournamentReducer(
   state: TournamentState,
   action: TournamentAction,
 ): TournamentState {
+  if (action.type != 'TICK_TIMER'){
+    console.log("Action!", action.type);
+  }
+
   switch (action.type) {
     case 'ADD_TEAM': {
       const name = action.name.trim();
@@ -115,15 +118,16 @@ function tournamentReducer(
     }
 
     case 'START_TOURNAMENT': {
-      if (state.teams.length < 2) return state;
+      if (state.teams.length < 2){
+        return state;
+      } 
+
       const ladder = state.teams.map((t) => t.id);
       const round = createRound(1, ladder, true);
-      const remainingMs = state.roundDurationMinutes * 60 * 1000;
       return {
         ...state,
         ladder,
         rounds: [round],
-        currentRoundIndex: 0,
         status: 'matchup_display',
         timerStatus: 'idle',
         lastLadderSnapshot: null,
@@ -213,7 +217,9 @@ function tournamentReducer(
 
     case 'SUBMIT_SCORES': {
       const round = getCurrentRound(state);
-      if (!round) return state;
+      if (!round){ 
+        return state;
+      }
 
       const results = buildRoundResults(round.matchups, action.scores);
       const snapshot = [...state.ladder];
@@ -225,15 +231,13 @@ function tournamentReducer(
         ladderSnapshot: ladder,
       };
       const rounds = [...state.rounds];
-      rounds[state.currentRoundIndex] = updatedRound;
-      const isFinalRound = round.number === TOTAL_ROUNDS;
+      rounds[state.rounds.length - 1] = updatedRound;
 
       return {
         ...state,
         rounds,
         ladder,
-        lastLadderSnapshot: snapshot,
-        status: isFinalRound ? 'finished' : 'matchup_display',
+        lastLadderSnapshot: snapshot
       };
     }
 
@@ -242,12 +246,8 @@ function tournamentReducer(
         return state;
       }
 
-      const nextNumber = state.rounds.length + 1;
-      const round = createRound(nextNumber, state.ladder, false);
       return {
         ...state,
-        rounds: [...state.rounds, round],
-        currentRoundIndex: state.rounds.length,
         status: 'round',
         timerStatus: 'idle',
         lastLadderSnapshot: null,
@@ -255,17 +255,16 @@ function tournamentReducer(
     }
 
     case 'NEXT_ROUND': {
+      const currentRound = getCurrentRound(state)!;
+      const isFinalRound = currentRound.number === TOTAL_ROUNDS;
       if (state.rounds.length >= TOTAL_ROUNDS){
         return state;
       }
 
-      const nextNumber = state.rounds.length + 1;
-      const round = createRound(nextNumber, state.ladder, false);
       return {
         ...state,
-        rounds: [...state.rounds, round],
-        currentRoundIndex: state.rounds.length,
-        status: 'matchup_display',
+        rounds: isFinalRound ? state.rounds : [...state.rounds, createRound(currentRound.number + 1, state.ladder, false)],
+        status: isFinalRound ? 'finished' : 'matchup_display',
         timerStatus: 'idle',
         lastLadderSnapshot: null,
       };

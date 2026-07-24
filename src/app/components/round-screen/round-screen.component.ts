@@ -89,7 +89,6 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
   }
 
   onTick(timeCurrent: number): void {
-    console.log(timeCurrent);
     this.remainingSeconds = (this.currentRound?.dueAt! - timeCurrent) / 1000;
     this.tournamentService.dispatch({
       type: 'TICK_TIMER',

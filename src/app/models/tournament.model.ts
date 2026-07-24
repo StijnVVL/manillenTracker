@@ -34,7 +34,6 @@ export interface TournamentState {
   teams: Team[];
   ladder: string[];
   rounds: Round[];
-  currentRoundIndex: number;
   roundDurationMinutes: number;
   status: TournamentStatus;
   timerStatus: TimerStatus;
