@@ -31,7 +31,8 @@ function createRound(number: number, teamIds: string[], useRandom: boolean): Rou
     startedAt: null,
     endedAt: null,
     dueAt: null,
-    currentAt: null
+    currentAt: null,
+    pausedAt: null
   };
 }
 
@@ -143,15 +144,43 @@ function tournamentReducer(
       return {
         ...updateCurrentRound(state, updatedRound),
         status: 'round',
-        timerStatus: 'idle',
+        timerStatus: 'running',
       };
     }
 
-    case 'PAUSE_ROUND':
-      return { ...state, timerStatus: 'paused' };
+    case 'PAUSE_ROUND': {
+      const round = getCurrentRound(state);
+      if (!round){
+        return state;
+      } 
+      const now = Date.now();
+      const updatedRound: Round = {
+        ...round,
+        pausedAt: now
+      };
+      return {
+        ...updateCurrentRound(state, updatedRound),
+        timerStatus: 'paused',
+      };
+    }
 
-    case 'RESUME_ROUND':
-      return { ...state, timerStatus: 'running' };
+    case 'RESUME_ROUND': {
+      const round = getCurrentRound(state);
+      if (!round){
+        return state;
+      } 
+      const now = Date.now();
+      const dueAt = round.dueAt! + (now - round.pausedAt!);
+      const updatedRound: Round = {
+        ...round,
+        pausedAt: null,
+        dueAt: dueAt
+      };
+      return {
+        ...updateCurrentRound(state, updatedRound),
+        timerStatus: 'running',
+      };
+    }
 
     case 'TICK_TIMER': {
       const round = getCurrentRound(state);

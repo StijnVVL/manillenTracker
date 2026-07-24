@@ -24,6 +24,7 @@ export interface Round {
   endedAt: number | null;
   dueAt: number | null;
   currentAt: number | null;
+  pausedAt: number | null;
 }
 
 export type TournamentStatus = 'setup' | 'matchup_display' | 'round' | 'scoring' | 'finished';
@@ -52,8 +53,8 @@ export type TournamentAction =
   | { type: 'START_TOURNAMENT' }
   | { type: 'INIT_ROUND' }
   | { type: 'START_ROUND', dueTime: number }
-  | { type: 'PAUSE_ROUND' }
-  | { type: 'RESUME_ROUND' }
+  | { type: 'PAUSE_ROUND', pauseTime: number }
+  | { type: 'RESUME_ROUND', resumeTime: number }
   | { type: 'TICK_TIMER', currentTime: number }
   | { type: 'END_ROUND', endTime: number }
   | { type: 'SUBMIT_SCORES'; scores: Record<string, number> }

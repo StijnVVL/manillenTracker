@@ -7,7 +7,7 @@
   >
     @for (lang of languages; track lang.code) {
       <option [value]="lang.code">
-        {{ lang.flag }} {{ lang.nameKey | l10n }}
+        {{ lang.nameKey | l10n }}
       </option>
     }
   </select>
