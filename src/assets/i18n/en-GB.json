@@ -26,6 +26,9 @@
   "dialog.addTeam.teamNameLabel": "Team name",
   "dialog.addTeam.placeholder": "e.g. Team Alpha",
 
+  "dialog.endRound.title": "End Round",
+  "dialog.endRound.message": "Are you sure you want to end the round early?",
+
   "pageTitle.tournamentSetup": "Tournament Setup",
   "pageTitle.credits": "Credits",
   "pageTitle.settings": "Settings",

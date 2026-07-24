@@ -10,6 +10,8 @@ import { MatchupListComponent } from '../matchup-list/matchup-list.component';
 import { RoundHistoryComponent } from '../round-history/round-history.component';
 import { TeamStandingsComponent } from '../team-standings/team-standings.component';
 import { TournamentState, Round, TournamentAction } from '../../models/tournament.model';
+import { ConfirmDialogService } from '../../services/confirm-dialog.service';
+import { L10nService } from '../../services/l10n.service';
 
 @Component({
   selector: 'app-round-screen',
@@ -34,7 +36,9 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
 
   constructor(
     private tournamentService: TournamentService,
+    private confirmDialogService: ConfirmDialogService,
     private timerService: TimerService,
+    private l10n: L10nService
   ) {
     this.state = tournamentService.state;
   }
@@ -111,10 +115,23 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
     this.tournamentService.dispatch({ type: 'PAUSE_ROUND' } as TournamentAction);
   }
 
-  endRound(): void {
+  #endRound(): void {
     var nowDate = new Date();
     var nowTime = nowDate.getTime()
     this.timerService.reset();
     this.tournamentService.dispatch({ type: 'END_ROUND', endTime: nowTime } as TournamentAction);
+  }
+
+  async endRound(): Promise<void> {
+    const confirmed = await this.confirmDialogService.confirm({
+      title: this.l10n.get('dialog.endRound.title'),
+      message: this.l10n.get('dialog.endRound.message'),
+      confirmText: this.l10n.get('common.reset'),
+      cancelText: this.l10n.get('common.cancel')
+    });
+
+    if (confirmed) {
+      this.#endRound();
+    }
   }
 }
