@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TournamentService } from '../../services/tournament.service';
+import { PageTitleService } from '../../services/page-title.service';
+import { AddTeamDialogService } from '../../services/add-team-dialog.service';
 import { TournamentState } from '../../models/tournament.model';
 
 @Component({
@@ -9,23 +11,31 @@ import { TournamentState } from '../../models/tournament.model';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './setup-screen.component.html',
-  styles: [],
+  styleUrl: './setup-screen.component.css',
 })
-export class SetupScreenComponent implements OnInit {
+export class SetupScreenComponent implements OnInit, OnDestroy {
   state: TournamentState;
-  newTeamName: string = '';
   editableNames: Record<string, string> = {};
 
-  constructor(private tournamentService: TournamentService) {
+  constructor(
+    private tournamentService: TournamentService,
+    private pageTitleService: PageTitleService,
+    private addTeamDialogService: AddTeamDialogService
+  ) {
     this.state = tournamentService.state;
   }
 
   ngOnInit(): void {
+    this.pageTitleService.setTitle('Tournament Setup');
     this.tournamentService.state$.subscribe((state) => {
       this.state = state;
       this.updateEditableNames();
     });
     this.updateEditableNames();
+  }
+
+  ngOnDestroy(): void {
+    this.pageTitleService.clearTitle();
   }
 
   private updateEditableNames(): void {
@@ -35,10 +45,11 @@ export class SetupScreenComponent implements OnInit {
     }
   }
 
-  addTeam(): void {
-    if (!this.newTeamName.trim()) return;
-    this.tournamentService.dispatch({ type: 'ADD_TEAM', name: this.newTeamName });
-    this.newTeamName = '';
+  async openAddTeamDialog(): Promise<void> {
+    const teamName = await this.addTeamDialogService.open();
+    if (teamName) {
+      this.tournamentService.dispatch({ type: 'ADD_TEAM', name: teamName });
+    }
   }
 
   removeTeam(teamId: string): void {
@@ -48,10 +59,6 @@ export class SetupScreenComponent implements OnInit {
   updateTeamName(teamId: string, name: string): void {
     this.editableNames[teamId] = name;
     this.tournamentService.dispatch({ type: 'UPDATE_TEAM', teamId, name });
-  }
-
-  onDurationChange(minutes: number): void {
-    this.tournamentService.dispatch({ type: 'SET_ROUND_DURATION', minutes });
   }
 
   startTournament(): void {

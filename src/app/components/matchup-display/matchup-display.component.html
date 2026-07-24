@@ -1,23 +1,28 @@
 <div class="matchup-display-shell">
-  <header class="matchup-display-header">
-    <h1 class="matchup-display-title">Round {{ currentRound?.number }} Matchups</h1>
-    <p class="matchup-display-subtitle">Please move to your assigned tables</p>
-  </header>
+  <p class="matchup-display-subtitle">Please move to your assigned tables</p>
 
   @if (currentRound) {
-    <div class="matchup-display-grid">
+    <div class="matchup-table">
+      <div class="matchup-table-header">
+        <span class="col-table">Table</span>
+        <span class="col-team">Team</span>
+        <span class="col-vs"></span>
+        <span class="col-team">Team</span>
+      </div>
       @for (matchup of currentRound.matchups; track matchup.teamAId + matchup.teamBId; let index = $index) {
-        <div class="matchup-display-card">
-          <div class="matchup-display-table">Table {{ index + 1 }}</div>
-          <div class="matchup-display-vs">VS</div>
-          <div class="matchup-display-team">{{ getTeamName(matchup.teamAId) }}</div>
-          <div class="matchup-display-team">{{ getTeamName(matchup.teamBId) }}</div>
+        <div class="matchup-row">
+          <span class="col-table">{{ index + 1 }}</span>
+          <span class="col-team team-name">{{ getTeamName(matchup.teamAId) }}</span>
+          <span class="col-vs">VS</span>
+          <span class="col-team team-name">{{ getTeamName(matchup.teamBId) }}</span>
         </div>
       }
       @if (currentRound.byeTeamId) {
-        <div class="matchup-display-card bye-card">
-          <div class="matchup-display-table">Bye</div>
-          <div class="matchup-display-team">{{ getTeamName(currentRound.byeTeamId) }}</div>
+        <div class="matchup-row bye-row">
+          <span class="col-table">Bye</span>
+          <span class="col-team team-name">{{ getTeamName(currentRound.byeTeamId) }}</span>
+          <span class="col-vs"></span>
+          <span class="col-team"></span>
         </div>
       }
     </div>
@@ -28,7 +33,7 @@
         class="btn btn-primary btn-large"
         (click)="startRound()"
       >
-        Start New Round
+        Start Timer
       </button>
     </div>
   }

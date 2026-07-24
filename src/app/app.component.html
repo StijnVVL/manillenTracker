@@ -1,33 +1,34 @@
 <div class="app-shell">
   <header class="app-header">
-    <div>
-      <h1 class="app-title">Manillen Match Tracker</h1>
-      <p class="app-subtitle">Track scores, ladder positions, and round timers</p>
-    </div>
-    @if (state.status !== 'setup' && state.status !== 'matchup_display') {
-      <button
-        type="button"
-        class="btn btn-ghost"
-        (click)="resetTournament()"
-      >
-        Reset Tournament
-      </button>
+    <button class="hamburger-btn" (click)="toggleMenu()" [class.active]="menuOpen">
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+    </button>
+
+    @if (pageTitle) {
+      <h1 class="header-title">{{ pageTitle }}</h1>
     }
   </header>
 
-  @if (state.status === 'setup') {
-    <app-setup-screen />
+  @if (menuOpen) {
+    <div class="menu-overlay" (click)="closeMenu()"></div>
+    <nav class="slide-menu">
+      <div class="menu-top">
+        <a routerLink="/" class="menu-item" (click)="closeMenu()">Home</a>
+        <a routerLink="/credits" class="menu-item" (click)="closeMenu()">Credits</a>
+      </div>
+      <div class="menu-bottom">
+        <a routerLink="/settings" class="menu-item" (click)="closeMenu()">Settings</a>
+        <button class="menu-item menu-item-danger" (click)="resetTournament()">Reset Tournament</button>
+      </div>
+    </nav>
   }
-  @if (state.status === 'matchup_display') {
-    <app-matchup-display />
-  }
-  @if (state.status === 'round') {
-    <app-round-screen />
-  }
-  @if (state.status === 'scoring') {
-    <app-scoring-screen />
-  }
-  @if (state.status === 'finished') {
-    <app-finished-screen />
-  }
+
+  <main class="app-content">
+    <router-outlet />
+  </main>
 </div>
+
+<app-confirm-dialog />
+<app-add-team-dialog />

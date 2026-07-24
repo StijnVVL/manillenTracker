@@ -1,70 +1,99 @@
 .matchup-display-shell {
-  max-width: 1200px;
+  max-width: 800px;
   margin: 0 auto;
-  padding: 2rem;
-  min-height: 100vh;
+  padding: 1rem 1.5rem;
   display: flex;
   flex-direction: column;
 }
-.matchup-display-header {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-.matchup-display-title {
-  font-size: clamp(2rem, 5vw, 3.5rem);
-  margin: 0;
-  color: var(--primary-dark);
-}
+
 .matchup-display-subtitle {
-  font-size: clamp(1.2rem, 2.5vw, 1.8rem);
-  margin: 0.5rem 0 0;
+  font-size: 1rem;
+  margin: 0 0 1rem 0;
   color: var(--muted);
-}
-.matchup-display-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.5rem;
-  flex: 1;
-}
-.matchup-display-card {
-  background: var(--bg-card);
-  border: 2px solid var(--primary);
-  border-radius: 20px;
-  padding: 2rem;
   text-align: center;
+}
+
+.matchup-table {
+  background: var(--bg-card);
+  border-radius: 12px;
   box-shadow: var(--shadow);
+  overflow: hidden;
 }
-.matchup-display-card.bye-card {
-  border-color: var(--muted);
+
+.matchup-table-header,
+.matchup-row {
+  display: grid;
+  grid-template-columns: 60px 1fr 50px 1fr;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  gap: 0.5rem;
 }
-.matchup-display-table {
-  font-size: 1.1rem;
+
+.matchup-table-header {
+  background: var(--primary);
+  color: white;
   font-weight: 700;
-  color: var(--primary-dark);
-  margin-bottom: 1rem;
+  font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
-.matchup-display-vs {
-  font-size: 1.5rem;
+
+.matchup-row {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  font-size: 1rem;
+}
+
+.matchup-row:last-child {
+  border-bottom: none;
+}
+
+.matchup-row:hover {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.col-table {
+  font-weight: 700;
+  color: var(--primary-dark);
+  text-align: center;
+}
+
+.col-vs {
   font-weight: 800;
   color: var(--primary);
-  margin: 1rem 0;
-  letter-spacing: 0.1em;
+  text-align: center;
+  font-size: 0.95rem;
 }
-.matchup-display-team {
-  font-size: 1.4rem;
+
+.col-team {
+  text-align: center;
+}
+
+.col-team.team-name {
   font-weight: 600;
-  padding: 0.75rem;
-  margin: 0.5rem 0;
-  background: rgba(255, 255, 255, 0.6);
-  border-radius: 10px;
   color: var(--primary-dark);
+  padding: 0.25rem 0.5rem;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 4px;
 }
+
+.bye-row {
+  background: rgba(0, 0, 0, 0.03);
+  color: var(--muted);
+}
+
+.bye-row .col-table {
+  color: var(--muted);
+}
+
+.bye-row .team-name {
+  color: var(--muted);
+}
+
 .matchup-display-start {
   text-align: center;
   margin-top: 2rem;
 }
+
 .btn-large {
   padding: 1rem 2.5rem;
   font-size: 1.2rem;

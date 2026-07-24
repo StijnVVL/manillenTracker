@@ -40,9 +40,4 @@ export class FinishedScreenComponent implements OnInit {
   getTeamName(teamId: string): string {
     return this.teamMap.get(teamId)?.name ?? 'Unknown team';
   }
-
-  startNewTournament(): void {
-    this.tournamentService.clearPersistedState();
-    this.tournamentService.dispatch({ type: 'RESET_TOURNAMENT' });
-  }
 }

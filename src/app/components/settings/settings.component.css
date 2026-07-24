@@ -1,0 +1,10 @@
+.settings-container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.field-hint {
+  margin: 0.5rem 0 0 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+}

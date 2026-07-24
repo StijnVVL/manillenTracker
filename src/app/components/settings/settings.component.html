@@ -1,0 +1,21 @@
+<div class="settings-container">
+  <div class="card">
+    <h2 class="card-title">Round Settings</h2>
+
+    <label class="field-label" for="round-duration">
+      Round duration (minutes)
+    </label>
+    <input
+      id="round-duration"
+      class="input-number"
+      type="number"
+      min="1"
+      max="240"
+      [ngModel]="state.roundDurationMinutes"
+      (ngModelChange)="onDurationChange($event)"
+    />
+    <p class="field-hint">
+      Set how long each round should last. The timer will count down from this value.
+    </p>
+  </div>
+</div>

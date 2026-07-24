@@ -1,11 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterOutlet, RouterLink } from '@angular/router';
 import { TournamentService } from './services/tournament.service';
-import { SetupScreenComponent } from './components/setup-screen/setup-screen.component';
-import { RoundScreenComponent } from './components/round-screen/round-screen.component';
-import { ScoringScreenComponent } from './components/scoring-screen/scoring-screen.component';
-import { FinishedScreenComponent } from './components/finished-screen/finished-screen.component';
-import { MatchupDisplayComponent } from './components/matchup-display/matchup-display.component';
+import { PageTitleService } from './services/page-title.service';
+import { ConfirmDialogService } from './services/confirm-dialog.service';
+import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
+import { AddTeamDialogComponent } from './components/add-team-dialog/add-team-dialog.component';
 import { TournamentState } from './models/tournament.model';
 
 @Component({
@@ -13,19 +13,24 @@ import { TournamentState } from './models/tournament.model';
   standalone: true,
   imports: [
     CommonModule,
-    SetupScreenComponent,
-    RoundScreenComponent,
-    ScoringScreenComponent,
-    FinishedScreenComponent,
-    MatchupDisplayComponent,
+    RouterOutlet,
+    RouterLink,
+    ConfirmDialogComponent,
+    AddTeamDialogComponent,
   ],
   templateUrl: './app.component.html',
-  styles: [],
+  styleUrl: './app.component.css',
 })
 export class AppComponent implements OnInit, OnDestroy {
   state: TournamentState;
+  menuOpen = false;
+  pageTitle = '';
 
-  constructor(private tournamentService: TournamentService) {
+  constructor(
+    private tournamentService: TournamentService,
+    private pageTitleService: PageTitleService,
+    private confirmDialogService: ConfirmDialogService
+  ) {
     this.state = tournamentService.state;
   }
 
@@ -33,12 +38,34 @@ export class AppComponent implements OnInit, OnDestroy {
     this.tournamentService.state$.subscribe((state) => {
       this.state = state;
     });
+    this.pageTitleService.title$.subscribe((title) => {
+      this.pageTitle = title;
+    });
   }
 
   ngOnDestroy(): void {}
 
-  resetTournament(): void {
-    this.tournamentService.clearPersistedState();
-    this.tournamentService.dispatch({ type: 'RESET_TOURNAMENT' });
+  toggleMenu(): void {
+    this.menuOpen = !this.menuOpen;
+  }
+
+  closeMenu(): void {
+    this.menuOpen = false;
+  }
+
+  async resetTournament(): Promise<void> {
+    this.closeMenu();
+
+    const confirmed = await this.confirmDialogService.confirm({
+      title: 'Reset Tournament',
+      message: 'Are you sure you want to reset the tournament? All progress will be lost.',
+      confirmText: 'Reset',
+      cancelText: 'Cancel'
+    });
+
+    if (confirmed) {
+      this.tournamentService.clearPersistedState();
+      this.tournamentService.dispatch({ type: 'RESET_TOURNAMENT' });
+    }
   }
 }

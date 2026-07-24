@@ -12,6 +12,7 @@ import {
   type TournamentState,
   type TournamentAction,
 } from '../models/tournament.model';
+import { DUMMY_TEAMS, USE_DUMMY_DATA } from '../data/dummy-teams';
 
 function createTeam(name: string): Team {
   return { id: crypto.randomUUID(), name: name.trim() };
@@ -50,7 +51,7 @@ function updateCurrentRound(state: TournamentState, round: Round): TournamentSta
 
 function createInitialState(): TournamentState {
   return {
-    teams: [],
+    teams: USE_DUMMY_DATA ? [...DUMMY_TEAMS] : [],
     ladder: [],
     rounds: [],
     currentRoundIndex: -1,

@@ -1,60 +1,40 @@
-<div class="card">
-  <h2 class="card-title">Tournament Setup</h2>
-  <p style="color: var(--muted); margin-top: 0">
-    Add fixed teams, set the round duration, then start the match. The tournament
+<div class="setup-container">
+  <p class="setup-description">
+    Add teams, then start the tournament. The tournament
     runs for 5 rounds. Round 1 pairings are randomized.
   </p>
 
-  <label class="field-label" for="round-duration">
-    Round duration (minutes)
-  </label>
-  <input
-    id="round-duration"
-    class="input-number"
-    type="number"
-    min="1"
-    max="240"
-    [ngModel]="state.roundDurationMinutes"
-    (ngModelChange)="onDurationChange($event)"
-  />
-
-  <div style="margin-top: 1.5rem">
-    <label class="field-label" for="team-name">
-      Team name
-    </label>
-    <div class="setup-team-row">
-      <input
-        id="team-name"
-        class="input"
-        [(ngModel)]="newTeamName"
-        placeholder="e.g. Team Alpha"
-        (keydown.enter)="addTeam()"
-      />
-      <button type="button" class="btn btn-secondary" (click)="addTeam()">
-        Add
-      </button>
-    </div>
+  <div class="setup-actions-top">
+    <button type="button" class="btn btn-secondary" (click)="openAddTeamDialog()">
+      Add Team
+    </button>
   </div>
 
   @if (state.teams.length > 0) {
-    <ul class="ladder-list" style="margin-top: 1rem">
+    <div class="teams-grid">
       @for (team of state.teams; track team.id) {
-        <li class="ladder-item">
+        <div class="team-item">
           <input
-            class="input"
+            class="input team-input"
             [ngModel]="editableNames[team.id]"
             (ngModelChange)="updateTeamName(team.id, $event)"
           />
           <button
             type="button"
-            class="btn btn-danger"
+            class="btn-icon btn-icon-danger"
             (click)="removeTeam(team.id)"
+            title="Remove team"
           >
-            Remove
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+              <line x1="10" y1="11" x2="10" y2="17"></line>
+              <line x1="14" y1="11" x2="14" y2="17"></line>
+            </svg>
           </button>
-        </li>
+        </div>
       }
-    </ul>
+    </div>
   }
 
   <div class="setup-actions">
