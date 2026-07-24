@@ -1,7 +1,7 @@
 <div class="card">
-  <h2 class="card-title">{{ title }}</h2>
+  <h2 class="card-title">{{ displayTitle }}</h2>
   @if (ladder.length === 0) {
-    <p class="empty-state">No teams on the ladder yet.</p>
+    <p class="empty-state">{{ 'ladderBoard.emptyState' | l10n }}</p>
   } @else {
     <ul class="ladder-list">
       @for (teamId of ladder; track teamId; let index = $index) {

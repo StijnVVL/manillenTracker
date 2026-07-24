@@ -15,12 +15,12 @@
     <div class="menu-overlay" (click)="closeMenu()"></div>
     <nav class="slide-menu">
       <div class="menu-top">
-        <a routerLink="/" class="menu-item" (click)="closeMenu()">Home</a>
-        <a routerLink="/credits" class="menu-item" (click)="closeMenu()">Credits</a>
+        <a routerLink="/" class="menu-item" (click)="closeMenu()">{{ 'menu.tournamentSetup' | l10n }}</a>
+        <a routerLink="/credits" class="menu-item" (click)="closeMenu()">{{ 'common.credits' | l10n }}</a>
       </div>
       <div class="menu-bottom">
-        <a routerLink="/settings" class="menu-item" (click)="closeMenu()">Settings</a>
-        <button class="menu-item menu-item-danger" (click)="resetTournament()">Reset Tournament</button>
+        <a routerLink="/settings" class="menu-item" (click)="closeMenu()">{{ 'common.settings' | l10n }}</a>
+        <button class="menu-item menu-item-danger" (click)="resetTournament()">{{ 'menu.resetTournament' | l10n }}</button>
       </div>
     </nav>
   }

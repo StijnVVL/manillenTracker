@@ -1,13 +1,13 @@
 <div class="card">
-  <h2 class="card-title">This Round's Matchups</h2>
+  <h2 class="card-title">{{ 'matchupList.title' | l10n }}</h2>
   @if (round && round.matchups.length === 0) {
-    <p class="empty-state">No matchups scheduled.</p>
+    <p class="empty-state">{{ 'matchupList.noMatchups' | l10n }}</p>
   } @else if (round) {
     <ul class="matchup-list">
       @for (matchup of round.matchups; track matchup.teamAId + matchup.teamBId; let index = $index) {
         <li class="matchup-item">
           <span class="matchup-teams">
-            Table {{ index + 1 }}: {{ getTeamName(matchup.teamAId) }} vs 
+            {{ 'common.table' | l10n }} {{ index + 1 }}: {{ getTeamName(matchup.teamAId) }} vs 
             {{ getTeamName(matchup.teamBId) }}
           </span>
         </li>
@@ -16,7 +16,7 @@
   }
   @if (round && round.byeTeamId) {
     <p class="bye-note">
-      Bye this round: {{ getTeamName(round.byeTeamId) }}
+      {{ 'common.bye' | l10n }}: {{ getTeamName(round.byeTeamId) }}
     </p>
   }
 </div>

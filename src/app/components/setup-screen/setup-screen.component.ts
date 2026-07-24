@@ -4,29 +4,40 @@ import { FormsModule } from '@angular/forms';
 import { TournamentService } from '../../services/tournament.service';
 import { PageTitleService } from '../../services/page-title.service';
 import { AddTeamDialogService } from '../../services/add-team-dialog.service';
+import { L10nService } from '../../services/l10n.service';
+import { L10nPipe } from '../../pipes/l10n.pipe';
 import { TournamentState } from '../../models/tournament.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-setup-screen',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, L10nPipe],
   templateUrl: './setup-screen.component.html',
   styleUrl: './setup-screen.component.css',
 })
 export class SetupScreenComponent implements OnInit, OnDestroy {
   state: TournamentState;
   editableNames: Record<string, string> = {};
+  private languageSubscription: Subscription | null = null;
 
   constructor(
     private tournamentService: TournamentService,
     private pageTitleService: PageTitleService,
-    private addTeamDialogService: AddTeamDialogService
+    private addTeamDialogService: AddTeamDialogService,
+    public l10n: L10nService
   ) {
     this.state = tournamentService.state;
   }
 
   ngOnInit(): void {
-    this.pageTitleService.setTitle('Tournament Setup');
+    this.updatePageTitle();
+
+    // Update page title when language changes
+    this.languageSubscription = this.l10n.language$.subscribe(() => {
+      this.updatePageTitle();
+    });
+
     this.tournamentService.state$.subscribe((state) => {
       this.state = state;
       this.updateEditableNames();
@@ -36,6 +47,11 @@ export class SetupScreenComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.pageTitleService.clearTitle();
+    this.languageSubscription?.unsubscribe();
+  }
+
+  private updatePageTitle(): void {
+    this.pageTitleService.setTitle(this.l10n.get('pageTitle.tournamentSetup'));
   }
 
   private updateEditableNames(): void {

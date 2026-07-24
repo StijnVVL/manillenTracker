@@ -1,22 +1,22 @@
 <div class="card champion-card">
   @if (championId) {
-    <div class="champion-label">Champion</div>
+    <div class="champion-label">{{ 'finished.championLabel' | l10n }}</div>
     <div class="champion-name">{{ getTeamName(championId) }}</div>
     <p class="champion-note">
-      Winner of Table 1 in the final round
+      {{ 'finished.championNote' | l10n }}
     </p>
   } @else {
-    <div class="champion-label">Tournament Complete</div>
-    <div class="champion-name">No champion</div>
+    <div class="champion-label">{{ 'finished.tournamentComplete' | l10n }}</div>
+    <div class="champion-name">{{ 'finished.noChampion' | l10n }}</div>
     <p class="champion-note">
-      Table 1 in the final round ended in a tie
+      {{ 'finished.noChampionNote' | l10n }}
     </p>
   }
 </div>
 
 <div class="grid-2" style="margin-top: 1rem">
-  <app-ladder-board [teams]="state.teams" [ladder]="state.ladder" title="Final Ladder" />
-  <app-team-standings [state]="state" title="Final Standings" />
+  <app-ladder-board [teams]="state.teams" [ladder]="state.ladder" [title]="l10n.get('finished.finalLadder')" />
+  <app-team-standings [state]="state" [title]="l10n.get('finished.finalStandings')" />
 </div>
 
 <div style="margin-top: 1rem">

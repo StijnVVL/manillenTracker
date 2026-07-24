@@ -8,17 +8,17 @@
   <div class="timer-controls">
     @if (isIdle) {
       <button type="button" class="btn btn-primary" (click)="startRound()">
-        Start Round
+        {{ 'roundScreen.startRound' | l10n }}
       </button>
     }
     @if (isRunning) {
       <button type="button" class="btn btn-secondary" (click)="pauseRound()">
-        Pause Round
+        {{ 'roundScreen.pauseRound' | l10n }}
       </button>
     }
     @if (isPaused) {
       <button type="button" class="btn btn-primary" (click)="resumeRound()">
-        Resume Round
+        {{ 'roundScreen.resumeRound' | l10n }}
       </button>
     }
     <button
@@ -27,7 +27,7 @@
       (click)="endRound()"
       [disabled]="state.timerStatus === 'ended'"
     >
-      End Round
+      {{ 'roundScreen.endRound' | l10n }}
     </button>
   </div>
 

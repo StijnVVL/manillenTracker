@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ConfirmDialogService, ConfirmDialogData } from '../../services/confirm-dialog.service';
+import { L10nService } from '../../services/l10n.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -15,7 +16,10 @@ export class ConfirmDialogComponent implements OnInit, OnDestroy {
   data: ConfirmDialogData | null = null;
   private subscription: Subscription | null = null;
 
-  constructor(private confirmDialogService: ConfirmDialogService) {}
+  constructor(
+    private confirmDialogService: ConfirmDialogService,
+    public l10n: L10nService
+  ) {}
 
   ngOnInit(): void {
     this.subscription = this.confirmDialogService.dialog$.subscribe((data) => {

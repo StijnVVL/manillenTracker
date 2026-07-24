@@ -1,12 +1,13 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Round, Team } from '../../models/tournament.model';
+import { L10nPipe } from '../../pipes/l10n.pipe';
 import { getTeamMap } from '../../utils/teams';
 
 @Component({
   selector: 'app-matchup-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, L10nPipe],
   templateUrl: './matchup-list.component.html',
   styles: [],
 })

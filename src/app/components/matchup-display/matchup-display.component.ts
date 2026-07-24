@@ -2,13 +2,16 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TournamentService } from '../../services/tournament.service';
 import { PageTitleService } from '../../services/page-title.service';
+import { L10nService } from '../../services/l10n.service';
+import { L10nPipe } from '../../pipes/l10n.pipe';
 import { getCurrentRound } from '../../utils/teams';
 import { TournamentState, Round, Team } from '../../models/tournament.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-matchup-display',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, L10nPipe],
   templateUrl: './matchup-display.component.html',
   styleUrl: './matchup-display.component.css',
 })
@@ -16,10 +19,12 @@ export class MatchupDisplayComponent implements OnInit, OnDestroy {
   state: TournamentState;
   currentRound: Round | null = null;
   teamMap: Map<string, Team> = new Map();
+  private languageSubscription: Subscription | null = null;
 
   constructor(
     private tournamentService: TournamentService,
-    private pageTitleService: PageTitleService
+    private pageTitleService: PageTitleService,
+    private l10n: L10nService
   ) {
     this.state = tournamentService.state;
   }
@@ -31,15 +36,21 @@ export class MatchupDisplayComponent implements OnInit, OnDestroy {
       this.teamMap = new Map(state.teams.map(t => [t.id, t]));
       this.updateTitle();
     });
+    this.languageSubscription = this.l10n.language$.subscribe(() => {
+      this.updateTitle();
+    });
   }
 
   ngOnDestroy(): void {
     this.pageTitleService.clearTitle();
+    this.languageSubscription?.unsubscribe();
   }
 
   private updateTitle(): void {
     if (this.currentRound) {
-      this.pageTitleService.setTitle(`Round ${this.currentRound.number} Matchups`);
+      this.pageTitleService.setTitle(
+        this.l10n.get('pageTitle.roundMatchups', { roundNumber: this.currentRound.number })
+      );
     }
   }
 

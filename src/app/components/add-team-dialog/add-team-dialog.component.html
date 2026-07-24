@@ -1,21 +1,21 @@
 @if (isOpen) {
   <div class="dialog-overlay" (click)="onOverlayClick($event)">
     <div class="dialog-box">
-      <h2 class="dialog-title">Add Team</h2>
+      <h2 class="dialog-title">{{ 'dialog.addTeam.title' | l10n }}</h2>
       <div class="dialog-content">
-        <label class="field-label" for="add-team-name-input">Team name</label>
+        <label class="field-label" for="add-team-name-input">{{ 'dialog.addTeam.teamNameLabel' | l10n }}</label>
         <input
           id="add-team-name-input"
           class="input"
           type="text"
           [(ngModel)]="teamName"
           (keydown)="onKeydown($event)"
-          placeholder="e.g. Team Alpha"
+          [placeholder]="l10n.get('dialog.addTeam.placeholder')"
         />
       </div>
       <div class="dialog-actions">
-        <button class="btn btn-secondary" (click)="onCancel()">Cancel</button>
-        <button class="btn btn-primary" (click)="onAdd()" [disabled]="!teamName.trim()">Add</button>
+        <button class="btn btn-secondary" (click)="onCancel()">{{ 'common.cancel' | l10n }}</button>
+        <button class="btn btn-primary" (click)="onAdd()" [disabled]="!teamName.trim()">{{ 'common.add' | l10n }}</button>
       </div>
     </div>
   </div>

@@ -2,18 +2,17 @@
   <app-round-progress [roundNumber]="currentRound.number" />
 
   <div class="card">
-    <h2 class="card-title">Enter Scores — Round {{ currentRound.number }}</h2>
+    <h2 class="card-title">{{ 'scoring.title' | l10n:{ roundNumber: currentRound.number } }}</h2>
     <p style="color: var(--muted); margin-top: 0">
-      Enter raw card points per team. Table movement is based on the score difference
-      between the winning and losing team.
+      {{ 'scoring.instructions' | l10n }}
       @if (currentRound.number === TOTAL_ROUNDS) {
-        This is the final round — the Table 1 winner becomes champion.
+        {{ 'scoring.finalRoundNote' | l10n }}
       }
     </p>
 
     @for (matchup of currentRound.matchups; track matchup.teamAId + matchup.teamBId; let index = $index) {
       <div class="card score-card">
-        <div class="score-card-header">Table {{ index + 1 }}</div>
+        <div class="score-card-header">{{ 'common.table' | l10n }} {{ index + 1 }}</div>
         <div class="score-inputs">
           <div>
             <label class="field-label" for="score-{{ matchup.teamAId }}">
@@ -29,10 +28,10 @@
               (ngModelChange)="onScoreChange(matchup.teamAId, $event)"
             />
             @if (matchupDiffs(matchup)?.winnerId === matchup.teamAId) {
-              <div class="score-preview">Winner: +{{ matchupDiffs(matchup)!.margin }}</div>
+              <div class="score-preview">{{ 'common.winner' | l10n }}: +{{ matchupDiffs(matchup)!.margin }}</div>
             }
             @if (matchupDiffs(matchup)?.loserId === matchup.teamAId) {
-              <div class="score-preview">Loser: -{{ matchupDiffs(matchup)!.margin }}</div>
+              <div class="score-preview">{{ 'common.loser' | l10n }}: -{{ matchupDiffs(matchup)!.margin }}</div>
             }
           </div>
           <div>
@@ -49,21 +48,20 @@
               (ngModelChange)="onScoreChange(matchup.teamBId, $event)"
             />
             @if (matchupDiffs(matchup)?.winnerId === matchup.teamBId) {
-              <div class="score-preview">Winner: +{{ matchupDiffs(matchup)!.margin }}</div>
+              <div class="score-preview">{{ 'common.winner' | l10n }}: +{{ matchupDiffs(matchup)!.margin }}</div>
             }
             @if (matchupDiffs(matchup)?.loserId === matchup.teamBId) {
-              <div class="score-preview">Loser: -{{ matchupDiffs(matchup)!.margin }}</div>
+              <div class="score-preview">{{ 'common.loser' | l10n }}: -{{ matchupDiffs(matchup)!.margin }}</div>
             }
           </div>
         </div>
         @if (matchupDiffs(matchup)) {
           <div class="score-preview">
-            Score difference: {{ matchupDiffs(matchup)!.margin }} — Winner: 
-            {{ getTeamName(matchupDiffs(matchup)!.winnerId) }}
+            {{ 'scoring.scoreDifference' | l10n:{ margin: matchupDiffs(matchup)!.margin, teamName: getTeamName(matchupDiffs(matchup)!.winnerId) } }}
           </div>
         }
         @if (!matchupDiffs(matchup) && winnerId(matchup) === null && scores[matchup.teamAId] !== undefined && scores[matchup.teamBId] !== undefined) {
-          <div class="score-preview">Tie — no table movement</div>
+          <div class="score-preview">{{ 'scoring.tieNoMovement' | l10n }}</div>
         }
         @if (warning(matchup)) {
           <div class="score-warning">{{ warning(matchup) }}</div>
@@ -73,7 +71,7 @@
 
     @if (currentRound.byeTeamId) {
       <p class="bye-note">
-        Bye: {{ getTeamName(currentRound.byeTeamId) }} (no score entry needed)
+        {{ 'scoring.byeNoScore' | l10n:{ teamName: getTeamName(currentRound.byeTeamId) } }}
       </p>
     }
 
@@ -84,11 +82,11 @@
         [disabled]="!allMatchupsFilled"
         (click)="confirmScores()"
       >
-        Confirm Scores
+        {{ 'scoring.confirmScores' | l10n }}
       </button>
       @if (confirmed && currentRound.number < TOTAL_ROUNDS) {
         <button type="button" class="btn btn-secondary" (click)="nextRound()">
-          Next Round
+          {{ 'scoring.nextRound' | l10n }}
         </button>
       }
     </div>
@@ -100,13 +98,13 @@
         [teams]="state.teams"
         [ladder]="state.lastLadderSnapshot!"
         [roundDiffs]="beforeDiffs"
-        title="Ladder Before"
+        [title]="l10n.get('scoring.ladderBefore')"
       />
       <app-ladder-board
         [teams]="state.teams"
         [ladder]="state.ladder"
         [roundDiffs]="afterDiffs"
-        title="Ladder After"
+        [title]="l10n.get('scoring.ladderAfter')"
       />
     </div>
   }

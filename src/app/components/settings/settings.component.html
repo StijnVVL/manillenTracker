@@ -1,9 +1,14 @@
 <div class="settings-container">
   <div class="card">
-    <h2 class="card-title">Round Settings</h2>
+    <h2 class="card-title">{{ 'settings.languageSettings' | l10n }}</h2>
+    <app-language-selector />
+  </div>
+
+  <div class="card">
+    <h2 class="card-title">{{ 'settings.roundSettings' | l10n }}</h2>
 
     <label class="field-label" for="round-duration">
-      Round duration (minutes)
+      {{ 'settings.roundDurationLabel' | l10n }}
     </label>
     <input
       id="round-duration"
@@ -15,7 +20,7 @@
       (ngModelChange)="onDurationChange($event)"
     />
     <p class="field-hint">
-      Set how long each round should last. The timer will count down from this value.
+      {{ 'settings.roundDurationHint' | l10n }}
     </p>
   </div>
 </div>

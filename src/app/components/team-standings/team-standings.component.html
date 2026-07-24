@@ -1,15 +1,15 @@
 <div class="card">
-  <h2 class="card-title">{{ title }}</h2>
+  <h2 class="card-title">{{ displayTitle }}</h2>
   <div class="standings-table-wrap">
     <table class="standings-table">
       <thead>
         <tr>
-          <th>Rank</th>
-          <th>Team</th>
-          <th>W</th>
-          <th>L</th>
-          <th>T</th>
-          <th>Margin</th>
+          <th>{{ 'common.rank' | l10n }}</th>
+          <th>{{ 'common.team' | l10n }}</th>
+          <th>{{ 'teamStandings.wins' | l10n }}</th>
+          <th>{{ 'teamStandings.losses' | l10n }}</th>
+          <th>{{ 'teamStandings.ties' | l10n }}</th>
+          <th>{{ 'common.margin' | l10n }}</th>
         </tr>
       </thead>
       <tbody>

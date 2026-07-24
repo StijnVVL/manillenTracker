@@ -4,8 +4,10 @@ import { RouterOutlet, RouterLink } from '@angular/router';
 import { TournamentService } from './services/tournament.service';
 import { PageTitleService } from './services/page-title.service';
 import { ConfirmDialogService } from './services/confirm-dialog.service';
+import { L10nService } from './services/l10n.service';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 import { AddTeamDialogComponent } from './components/add-team-dialog/add-team-dialog.component';
+import { L10nPipe } from './pipes/l10n.pipe';
 import { TournamentState } from './models/tournament.model';
 
 @Component({
@@ -17,6 +19,7 @@ import { TournamentState } from './models/tournament.model';
     RouterLink,
     ConfirmDialogComponent,
     AddTeamDialogComponent,
+    L10nPipe,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
@@ -29,7 +32,8 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(
     private tournamentService: TournamentService,
     private pageTitleService: PageTitleService,
-    private confirmDialogService: ConfirmDialogService
+    private confirmDialogService: ConfirmDialogService,
+    private l10n: L10nService
   ) {
     this.state = tournamentService.state;
   }
@@ -57,10 +61,10 @@ export class AppComponent implements OnInit, OnDestroy {
     this.closeMenu();
 
     const confirmed = await this.confirmDialogService.confirm({
-      title: 'Reset Tournament',
-      message: 'Are you sure you want to reset the tournament? All progress will be lost.',
-      confirmText: 'Reset',
-      cancelText: 'Cancel'
+      title: this.l10n.get('dialog.resetTournament.title'),
+      message: this.l10n.get('dialog.resetTournament.message'),
+      confirmText: this.l10n.get('common.reset'),
+      cancelText: this.l10n.get('common.cancel')
     });
 
     if (confirmed) {

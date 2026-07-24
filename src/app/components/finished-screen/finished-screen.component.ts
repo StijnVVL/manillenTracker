@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TournamentService } from '../../services/tournament.service';
+import { L10nService } from '../../services/l10n.service';
+import { L10nPipe } from '../../pipes/l10n.pipe';
 import { getTournamentWinner } from '../../logic/standings';
 import { getTeamMap } from '../../utils/teams';
 import { LadderBoardComponent } from '../ladder-board/ladder-board.component';
@@ -16,6 +18,7 @@ import { TournamentState, Team } from '../../models/tournament.model';
     LadderBoardComponent,
     RoundHistoryComponent,
     TeamStandingsComponent,
+    L10nPipe,
   ],
   templateUrl: './finished-screen.component.html',
   styles: [],
@@ -25,7 +28,10 @@ export class FinishedScreenComponent implements OnInit {
   teamMap: Map<string, Team> = new Map();
   championId: string | null = null;
 
-  constructor(private tournamentService: TournamentService) {
+  constructor(
+    private tournamentService: TournamentService,
+    public l10n: L10nService
+  ) {
     this.state = tournamentService.state;
   }
 

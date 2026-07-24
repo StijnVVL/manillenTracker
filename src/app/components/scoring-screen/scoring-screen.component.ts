@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TournamentService } from '../../services/tournament.service';
+import { L10nService } from '../../services/l10n.service';
+import { L10nPipe } from '../../pipes/l10n.pipe';
 import { getMatchupDiffs, getWinnerId, scoreWarning } from '../../logic/scoring';
 import { TOTAL_ROUNDS } from '../../models/tournament.model';
 import { getCurrentRound, getTeamMap } from '../../utils/teams';
@@ -21,6 +23,7 @@ import { TournamentState, Round, Matchup, Team } from '../../models/tournament.m
     RoundHistoryComponent,
     RoundProgressComponent,
     TeamStandingsComponent,
+    L10nPipe,
   ],
   templateUrl: './scoring-screen.component.html',
   styles: [],
@@ -33,7 +36,10 @@ export class ScoringScreenComponent implements OnInit {
   confirmed: boolean = false;
   TOTAL_ROUNDS = TOTAL_ROUNDS;
 
-  constructor(private tournamentService: TournamentService) {
+  constructor(
+    private tournamentService: TournamentService,
+    public l10n: L10nService
+  ) {
     this.state = tournamentService.state;
   }
 

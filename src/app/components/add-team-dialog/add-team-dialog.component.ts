@@ -2,12 +2,14 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AddTeamDialogService } from '../../services/add-team-dialog.service';
+import { L10nService } from '../../services/l10n.service';
+import { L10nPipe } from '../../pipes/l10n.pipe';
 import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-add-team-dialog',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, L10nPipe],
   templateUrl: './add-team-dialog.component.html',
   styleUrl: './add-team-dialog.component.css'
 })
@@ -16,7 +18,10 @@ export class AddTeamDialogComponent implements OnInit, OnDestroy {
   teamName = '';
   private subscription: Subscription | null = null;
 
-  constructor(private addTeamDialogService: AddTeamDialogService) {}
+  constructor(
+    private addTeamDialogService: AddTeamDialogService,
+    public l10n: L10nService
+  ) {}
 
   ngOnInit(): void {
     this.subscription = this.addTeamDialogService.dialog$.subscribe(() => {

@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TournamentService } from '../../services/tournament.service';
 import { TimerService, formatTime } from '../../services/timer.service';
+import { L10nPipe } from '../../pipes/l10n.pipe';
 import { getCurrentRound, getLatestRoundDiffs } from '../../utils/teams';
 import { CountdownTimerComponent } from '../countdown-timer/countdown-timer.component';
 import { LadderBoardComponent } from '../ladder-board/ladder-board.component';
@@ -20,6 +21,7 @@ import { TournamentState, Round, TournamentAction } from '../../models/tournamen
     MatchupListComponent,
     RoundHistoryComponent,
     TeamStandingsComponent,
+    L10nPipe,
   ],
   templateUrl: './round-screen.component.html',
   styles: [],

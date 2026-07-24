@@ -5,10 +5,10 @@
       <p class="dialog-message">{{ data.message }}</p>
       <div class="dialog-actions">
         <button class="btn btn-secondary" (click)="onCancel()">
-          {{ data.cancelText || 'Cancel' }}
+          {{ data.cancelText || l10n.get('common.cancel') }}
         </button>
         <button class="btn btn-danger" (click)="onConfirm()">
-          {{ data.confirmText || 'Confirm' }}
+          {{ data.confirmText || l10n.get('common.confirm') }}
         </button>
       </div>
     </div>

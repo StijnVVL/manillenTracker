@@ -1,0 +1,14 @@
+<div class="language-selector">
+  <label class="field-label">{{ 'setup.language' | l10n }}</label>
+  <select
+    class="language-select"
+    [value]="currentLanguage"
+    (change)="onLanguageChange($event)"
+  >
+    @for (lang of languages; track lang.code) {
+      <option [value]="lang.code">
+        {{ lang.flag }} {{ lang.nameKey | l10n }}
+      </option>
+    }
+  </select>
+</div>

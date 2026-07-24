@@ -1,21 +1,21 @@
 @if (completedRounds.length > 0) {
   <details class="card collapsible">
-    <summary>Round History</summary>
+    <summary>{{ 'roundHistory.title' | l10n }}</summary>
     <ul class="history-list">
       @for (round of completedRounds; track round.number) {
         <li class="history-item">
           <div>
-            <strong>Round {{ round.number }}</strong>
+            <strong>{{ 'roundHistory.round' | l10n:{ roundNumber: round.number } }}</strong>
             @for (matchup of round.matchups; track matchup.teamAId + matchup.teamBId; let tableIndex = $index) {
               <div [class]="'history-matchup ' + (tableIndex === 0 ? 'history-table-one' : '')">
                 <span>
-                  Table {{ tableIndex + 1 }}: {{ getTeamName(matchup.teamAId) }} {{ scoreLabel(matchup.teamAId, round) }} vs {{ getTeamName(matchup.teamBId) }} {{ scoreLabel(matchup.teamBId, round) }}
+                  {{ 'common.table' | l10n }} {{ tableIndex + 1 }}: {{ getTeamName(matchup.teamAId) }} {{ scoreLabel(matchup.teamAId, round) }} vs {{ getTeamName(matchup.teamBId) }} {{ scoreLabel(matchup.teamBId, round) }}
                 </span>
                 @if (tableWinnerId(round, tableIndex)) {
                   <span class="history-winner">
-                    Winner: {{ getTeamName(tableWinnerId(round, tableIndex)!) }}
+                    {{ 'common.winner' | l10n }}: {{ getTeamName(tableWinnerId(round, tableIndex)!) }}
                     @if (isFinalTable1(round, tableIndex)) {
-                      (Champion)
+                      {{ 'roundHistory.champion' | l10n }}
                     }
                   </span>
                 }
@@ -23,7 +23,7 @@
             }
             @if (round.byeTeamId) {
               <div style="margin-top: 0.35rem; color: var(--muted)">
-                Bye: {{ getTeamName(round.byeTeamId) }}
+                {{ 'common.bye' | l10n }}: {{ getTeamName(round.byeTeamId) }}
               </div>
             }
           </div>

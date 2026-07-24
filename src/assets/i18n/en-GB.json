@@ -1,0 +1,103 @@
+{
+  "common.cancel": "Cancel",
+  "common.add": "Add",
+  "common.confirm": "Confirm",
+  "common.reset": "Reset",
+  "common.home": "Home",
+  "common.settings": "Settings",
+  "common.credits": "Credits",
+  "common.team": "Team",
+  "common.table": "Table",
+  "common.vs": "VS",
+  "common.bye": "Bye",
+  "common.winner": "Winner",
+  "common.loser": "Loser",
+  "common.tie": "Tie",
+  "common.rank": "Rank",
+  "common.margin": "Margin",
+  "common.backToHome": "Back to Home",
+
+  "menu.tournamentSetup": "Tournament Setup",
+  "menu.resetTournament": "Reset Tournament",
+
+  "dialog.resetTournament.title": "Reset Tournament",
+  "dialog.resetTournament.message": "Are you sure you want to reset the tournament? All progress will be lost.",
+  "dialog.addTeam.title": "Add Team",
+  "dialog.addTeam.teamNameLabel": "Team name",
+  "dialog.addTeam.placeholder": "e.g. Team Alpha",
+
+  "pageTitle.tournamentSetup": "Tournament Setup",
+  "pageTitle.credits": "Credits",
+  "pageTitle.settings": "Settings",
+  "pageTitle.roundMatchups": "Round {roundNumber} Matchups",
+
+  "setup.description": "Add teams, then start the tournament. The tournament runs for 5 rounds. Round 1 pairings are randomized.",
+  "setup.addTeam": "Add Team",
+  "setup.removeTeam": "Remove team",
+  "setup.startTournament": "Start Tournament",
+  "setup.language": "Language",
+
+  "settings.languageSettings": "Language",
+  "settings.roundSettings": "Round Settings",
+  "settings.roundDurationLabel": "Round duration (minutes)",
+  "settings.roundDurationHint": "Set how long each round should last. The timer will count down from this value.",
+
+    "credits.appTitle": "Manillen Match Tracker",
+    "credits.appDescription": "A tournament tracking application for Manillen card games.",
+  "credits.developmentTitle": "Development",
+  "credits.builtWith": "Built with Angular",
+
+  "matchupDisplay.subtitle": "Please move to your assigned tables",
+  "matchupDisplay.startTimer": "Start Timer",
+
+  "matchupList.title": "This Round's Matchups",
+  "matchupList.noMatchups": "No matchups scheduled.",
+  "matchupList.tableMatchup": "Table {tableNumber}: {teamA} vs {teamB}",
+  "matchupList.byeThisRound": "Bye this round: {teamName}",
+
+  "ladderBoard.defaultTitle": "Ladder",
+  "ladderBoard.emptyState": "No teams on the ladder yet.",
+
+  "teamStandings.defaultTitle": "Team Standings",
+  "teamStandings.wins": "W",
+  "teamStandings.losses": "L",
+  "teamStandings.ties": "T",
+
+  "roundProgress.roundOf": "Round {roundNumber} of {totalRounds}",
+
+  "roundScreen.startRound": "Start Round",
+  "roundScreen.pauseRound": "Pause Round",
+  "roundScreen.resumeRound": "Resume Round",
+  "roundScreen.endRound": "End Round",
+
+  "roundHistory.title": "Round History",
+  "roundHistory.round": "Round {roundNumber}",
+  "roundHistory.tableResult": "Table {tableNumber}: {teamA} {scoreA} vs {teamB} {scoreB}",
+  "roundHistory.winnerLabel": "Winner: {teamName}",
+  "roundHistory.champion": "(Champion)",
+  "roundHistory.byeLabel": "Bye: {teamName}",
+
+  "scoring.title": "Enter Scores — Round {roundNumber}",
+  "scoring.instructions": "Enter raw card points per team. Table movement is based on the score difference between the winning and losing team.",
+  "scoring.finalRoundNote": "This is the final round — the Table 1 winner becomes champion.",
+  "scoring.winnerPoints": "Winner: +{margin}",
+  "scoring.loserPoints": "Loser: -{margin}",
+  "scoring.scoreDifference": "Score difference: {margin} — Winner: {teamName}",
+  "scoring.tieNoMovement": "Tie — no table movement",
+  "scoring.byeNoScore": "Bye: {teamName} (no score entry needed)",
+  "scoring.confirmScores": "Confirm Scores",
+  "scoring.nextRound": "Next Round",
+  "scoring.ladderBefore": "Ladder Before",
+  "scoring.ladderAfter": "Ladder After",
+
+  "finished.championLabel": "Champion",
+  "finished.tournamentComplete": "Tournament Complete",
+  "finished.noChampion": "No champion",
+  "finished.championNote": "Winner of Table 1 in the final round",
+  "finished.noChampionNote": "Table 1 in the final round ended in a tie",
+  "finished.finalLadder": "Final Ladder",
+  "finished.finalStandings": "Final Standings",
+
+  "language.english": "English",
+  "language.dutch": "Nederlands"
+}

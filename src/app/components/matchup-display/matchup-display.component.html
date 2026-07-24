@@ -1,25 +1,25 @@
 <div class="matchup-display-shell">
-  <p class="matchup-display-subtitle">Please move to your assigned tables</p>
+  <p class="matchup-display-subtitle">{{ 'matchupDisplay.subtitle' | l10n }}</p>
 
   @if (currentRound) {
     <div class="matchup-table">
       <div class="matchup-table-header">
-        <span class="col-table">Table</span>
-        <span class="col-team">Team</span>
+        <span class="col-table">{{ 'common.table' | l10n }}</span>
+        <span class="col-team">{{ 'common.team' | l10n }}</span>
         <span class="col-vs"></span>
-        <span class="col-team">Team</span>
+        <span class="col-team">{{ 'common.team' | l10n }}</span>
       </div>
       @for (matchup of currentRound.matchups; track matchup.teamAId + matchup.teamBId; let index = $index) {
         <div class="matchup-row">
           <span class="col-table">{{ index + 1 }}</span>
           <span class="col-team team-name">{{ getTeamName(matchup.teamAId) }}</span>
-          <span class="col-vs">VS</span>
+          <span class="col-vs">{{ 'common.vs' | l10n }}</span>
           <span class="col-team team-name">{{ getTeamName(matchup.teamBId) }}</span>
         </div>
       }
       @if (currentRound.byeTeamId) {
         <div class="matchup-row bye-row">
-          <span class="col-table">Bye</span>
+          <span class="col-table">{{ 'common.bye' | l10n }}</span>
           <span class="col-team team-name">{{ getTeamName(currentRound.byeTeamId) }}</span>
           <span class="col-vs"></span>
           <span class="col-team"></span>
@@ -33,7 +33,7 @@
         class="btn btn-primary btn-large"
         (click)="startRound()"
       >
-        Start Timer
+        {{ 'matchupDisplay.startTimer' | l10n }}
       </button>
     </div>
   }

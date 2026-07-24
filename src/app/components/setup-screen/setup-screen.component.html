@@ -1,12 +1,11 @@
 <div class="setup-container">
   <p class="setup-description">
-    Add teams, then start the tournament. The tournament
-    runs for 5 rounds. Round 1 pairings are randomized.
+    {{ 'setup.description' | l10n }}
   </p>
 
   <div class="setup-actions-top">
     <button type="button" class="btn btn-secondary" (click)="openAddTeamDialog()">
-      Add Team
+      {{ 'setup.addTeam' | l10n }}
     </button>
   </div>
 
@@ -23,7 +22,7 @@
             type="button"
             class="btn-icon btn-icon-danger"
             (click)="removeTeam(team.id)"
-            title="Remove team"
+            [title]="l10n.get('setup.removeTeam')"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="3 6 5 6 21 6"></polyline>
@@ -44,7 +43,7 @@
       [disabled]="state.teams.length < 2"
       (click)="startTournament()"
     >
-      Start Tournament
+      {{ 'setup.startTournament' | l10n }}
     </button>
   </div>
 </div>
