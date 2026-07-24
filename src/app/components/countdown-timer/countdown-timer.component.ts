@@ -1,7 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { formatTime } from '../../services/timer.service';
 import { RoundProgressComponent } from '../round-progress/round-progress.component';
+import { TournamentService } from '../../services/tournament.service';
 
 @Component({
   selector: 'app-countdown-timer',
@@ -11,11 +12,15 @@ import { RoundProgressComponent } from '../round-progress/round-progress.compone
   styles: [],
 })
 export class CountdownTimerComponent {
-  @Input() remainingMs: number = 0;
+  @Input() remainingSeconds: number | null = null;
   @Input() roundNumber: number = 0;
   @Input() isWarning: boolean = false;
 
   get formattedTime(): string {
-    return formatTime(this.remainingMs);
+    if (!this.remainingSeconds){
+      return "--:--";
+    }
+
+    return formatTime(this.remainingSeconds);
   }
 }

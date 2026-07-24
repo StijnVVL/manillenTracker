@@ -1,19 +1,24 @@
 @if (currentRound) {
   <app-countdown-timer
-    [remainingMs]="state.remainingMs"
+    [remainingSeconds]="remainingSeconds"
     [roundNumber]="currentRound.number"
     [isWarning]="isWarning"
   />
 
   <div class="timer-controls">
-    @if (isIdle || isPaused) {
-      <button type="button" class="btn btn-primary" (click)="startTimer()">
-        {{ isPaused ? 'Resume' : 'Start Round' }}
+    @if (isIdle) {
+      <button type="button" class="btn btn-primary" (click)="startRound()">
+        Start Round
       </button>
     }
     @if (isRunning) {
-      <button type="button" class="btn btn-secondary" (click)="pauseTimer()">
-        Pause
+      <button type="button" class="btn btn-secondary" (click)="pauseRound()">
+        Pause Round
+      </button>
+    }
+    @if (isPaused) {
+      <button type="button" class="btn btn-primary" (click)="resumeRound()">
+        Resume Round
       </button>
     }
     <button

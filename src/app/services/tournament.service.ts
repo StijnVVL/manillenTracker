@@ -29,12 +29,16 @@ function createRound(number: number, teamIds: string[], useRandom: boolean): Rou
     results: [],
     startedAt: null,
     endedAt: null,
-    elapsedMs: 0,
+    dueAt: null,
+    currentAt: null
   };
 }
 
 function getCurrentRound(state: TournamentState): Round | null {
-  if (state.currentRoundIndex < 0) return null;
+  if (state.currentRoundIndex < 0){
+    return null;
+  } 
+
   return state.rounds[state.currentRoundIndex] ?? null;
 }
 
@@ -53,7 +57,6 @@ function createInitialState(): TournamentState {
     roundDurationMinutes: DEFAULT_ROUND_DURATION_MINUTES,
     status: 'setup',
     timerStatus: 'idle',
-    remainingMs: DEFAULT_ROUND_DURATION_MINUTES * 60 * 1000,
     lastLadderSnapshot: null,
   };
 }
@@ -105,8 +108,7 @@ function tournamentReducer(
       const remainingMs = minutes * 60 * 1000;
       return {
         ...state,
-        roundDurationMinutes: minutes,
-        remainingMs: state.timerStatus === 'idle' ? remainingMs : state.remainingMs,
+        roundDurationMinutes: minutes
       };
     }
 
@@ -122,23 +124,25 @@ function tournamentReducer(
         currentRoundIndex: 0,
         status: 'matchup_display',
         timerStatus: 'idle',
-        remainingMs,
         lastLadderSnapshot: null,
       };
     }
 
     case 'START_ROUND': {
       const round = getCurrentRound(state);
-      if (!round) return state;
+      if (!round){
+        return state;
+      } 
       const now = Date.now();
       const updatedRound: Round = {
         ...round,
         startedAt: round.startedAt ?? now,
+        dueAt: action.dueTime
       };
       return {
         ...updateCurrentRound(state, updatedRound),
         status: 'round',
-        timerStatus: 'running',
+        timerStatus: 'idle',
       };
     }
 
@@ -150,14 +154,16 @@ function tournamentReducer(
 
     case 'TICK_TIMER': {
       const round = getCurrentRound(state);
-      if (!round) return state;
+      if (!round){
+        return state;
+      }
+      
       const updatedRound: Round = {
         ...round,
-        elapsedMs: action.elapsedMs,
+        currentAt: action.currentTime
       };
       return {
-        ...updateCurrentRound(state, updatedRound),
-        remainingMs: action.remainingMs,
+        ...updateCurrentRound(state, updatedRound)
       };
     }
 
@@ -166,14 +172,12 @@ function tournamentReducer(
       if (!round) return state;
       const updatedRound: Round = {
         ...round,
-        endedAt: Date.now(),
-        elapsedMs: action.elapsedMs,
+        endedAt: Date.now()
       };
       return {
         ...updateCurrentRound(state, updatedRound),
         status: 'scoring',
-        timerStatus: 'ended',
-        remainingMs: 0,
+        timerStatus: 'ended'        
       };
     }
 
@@ -203,18 +207,36 @@ function tournamentReducer(
       };
     }
 
-    case 'NEXT_ROUND': {
-      if (state.rounds.length >= TOTAL_ROUNDS) return state;
+    case 'INIT_ROUND': {
+      if (state.rounds.length >= TOTAL_ROUNDS){
+        return state;
+      }
+
       const nextNumber = state.rounds.length + 1;
       const round = createRound(nextNumber, state.ladder, false);
-      const remainingMs = state.roundDurationMinutes * 60 * 1000;
+      return {
+        ...state,
+        rounds: [...state.rounds, round],
+        currentRoundIndex: state.rounds.length,
+        status: 'round',
+        timerStatus: 'idle',
+        lastLadderSnapshot: null,
+      };
+    }
+
+    case 'NEXT_ROUND': {
+      if (state.rounds.length >= TOTAL_ROUNDS){
+        return state;
+      }
+
+      const nextNumber = state.rounds.length + 1;
+      const round = createRound(nextNumber, state.ladder, false);
       return {
         ...state,
         rounds: [...state.rounds, round],
         currentRoundIndex: state.rounds.length,
         status: 'matchup_display',
         timerStatus: 'idle',
-        remainingMs,
         lastLadderSnapshot: null,
       };
     }

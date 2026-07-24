@@ -8,7 +8,7 @@ import { LadderBoardComponent } from '../ladder-board/ladder-board.component';
 import { MatchupListComponent } from '../matchup-list/matchup-list.component';
 import { RoundHistoryComponent } from '../round-history/round-history.component';
 import { TeamStandingsComponent } from '../team-standings/team-standings.component';
-import { TournamentState, Round } from '../../models/tournament.model';
+import { TournamentState, Round, TournamentAction } from '../../models/tournament.model';
 
 @Component({
   selector: 'app-round-screen',
@@ -28,6 +28,7 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
   state: TournamentState;
   currentRound: Round | null = null;
   roundDiffs: Map<string, number> = new Map();
+  remainingSeconds: number | null = null;
 
   constructor(
     private tournamentService: TournamentService,
@@ -61,35 +62,57 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
   }
 
   get isWarning(): boolean {
-    return this.state.remainingMs <= 5 * 60 * 1000 && this.state.remainingMs > 0;
+    if (!this.currentRound?.dueAt) {
+      return false;
+    }
+
+    var nowTime = new Date().getTime();
+    var leftTimeMs = this.currentRound.dueAt - nowTime;
+    var thresholdMs = 5 * 60 * 1000;
+    return leftTimeMs < thresholdMs;
   }
 
-  startTimer(): void {
-    this.timerService.start(() => this.playTimeUpBeep());
+  startRound(): void {
+    var nowDate = new Date();
+    var nowTimeMs = nowDate.getTime()
+    var dueTimeMs = nowTimeMs + this.state.roundDurationMinutes * 60 * 1000;
+   
+    this.remainingSeconds = (dueTimeMs - nowTimeMs) / 1000;
+    this.tournamentService.dispatch({ type: 'START_ROUND', dueTime: dueTimeMs } as TournamentAction);
+    this.timerService.start(dueTimeMs, (timeCurrent) => this.onTick(timeCurrent));
   }
 
-  pauseTimer(): void {
-    this.timerService.pause();
+  onTick(timeCurrent: number): void {
+    console.log(timeCurrent);
+    this.remainingSeconds = (this.currentRound?.dueAt! - timeCurrent) / 1000;
+    this.tournamentService.dispatch({
+      type: 'TICK_TIMER',
+      currentTime: timeCurrent
+    } as TournamentAction);
+
+    if (timeCurrent >= this.currentRound?.dueAt!){
+      this.endRound();
+    }
+    
+  }
+
+  resumeRound(): void {
+    if (!this.currentRound?.dueAt){
+      return;
+    }
+    this.tournamentService.dispatch({ type: 'RESUME_ROUND' } as TournamentAction);
+    this.timerService.start(this.currentRound.dueAt, (currentTime) => this.onTick(currentTime));    
+  }
+
+  pauseRound(): void {
+    this.timerService.stop();
+    this.tournamentService.dispatch({ type: 'PAUSE_ROUND' } as TournamentAction);
   }
 
   endRound(): void {
-    this.timerService.endRound();
-  }
-
-  private playTimeUpBeep(): void {
-    try {
-      const context = new AudioContext();
-      const oscillator = context.createOscillator();
-      const gain = context.createGain();
-      oscillator.type = 'sine';
-      oscillator.frequency.value = 880;
-      gain.gain.value = 0.15;
-      oscillator.connect(gain);
-      gain.connect(context.destination);
-      oscillator.start();
-      oscillator.stop(context.currentTime + 0.35);
-    } catch {
-      // Audio not available in all environments.
-    }
+    var nowDate = new Date();
+    var nowTime = nowDate.getTime()
+    this.timerService.reset();
+    this.tournamentService.dispatch({ type: 'END_ROUND', endTime: nowTime } as TournamentAction);
   }
 }

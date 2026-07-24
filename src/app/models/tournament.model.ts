@@ -22,7 +22,8 @@ export interface Round {
   ladderSnapshot?: string[];
   startedAt: number | null;
   endedAt: number | null;
-  elapsedMs: number;
+  dueAt: number | null;
+  currentAt: number | null;
 }
 
 export type TournamentStatus = 'setup' | 'matchup_display' | 'round' | 'scoring' | 'finished';
@@ -36,11 +37,10 @@ export interface TournamentState {
   roundDurationMinutes: number;
   status: TournamentStatus;
   timerStatus: TimerStatus;
-  remainingMs: number;
   lastLadderSnapshot: string[] | null;
 }
 
-export const DEFAULT_ROUND_DURATION_MINUTES = 60;
+export const DEFAULT_ROUND_DURATION_MINUTES = 25;
 export const TOTAL_ROUNDS = 5;
 export const STORAGE_KEY = 'manillen-tournament';
 
@@ -50,11 +50,12 @@ export type TournamentAction =
   | { type: 'UPDATE_TEAM'; teamId: string; name: string }
   | { type: 'SET_ROUND_DURATION'; minutes: number }
   | { type: 'START_TOURNAMENT' }
-  | { type: 'START_ROUND' }
+  | { type: 'INIT_ROUND' }
+  | { type: 'START_ROUND', dueTime: number }
   | { type: 'PAUSE_ROUND' }
   | { type: 'RESUME_ROUND' }
-  | { type: 'TICK_TIMER'; remainingMs: number; elapsedMs: number }
-  | { type: 'END_ROUND'; elapsedMs: number }
+  | { type: 'TICK_TIMER', currentTime: number }
+  | { type: 'END_ROUND', endTime: number }
   | { type: 'SUBMIT_SCORES'; scores: Record<string, number> }
   | { type: 'NEXT_ROUND' }
   | { type: 'RESET_TOURNAMENT' }

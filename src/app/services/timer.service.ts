@@ -7,20 +7,11 @@ import { type TournamentState, type TournamentAction } from '../models/tournamen
 })
 export class TimerService implements OnDestroy {
   private intervalId: ReturnType<typeof setInterval> | null = null;
-  private timeUpCallback: (() => void) | null = null;
 
   constructor(private tournamentService: TournamentService) {}
 
   ngOnDestroy(): void {
     this.stopTimer();
-  }
-
-  private get state(): TournamentState {
-    return this.tournamentService.state;
-  }
-
-  private get durationMs(): number {
-    return this.state.roundDurationMinutes * 60 * 1000;
   }
 
   private stopTimer(): void {
@@ -33,61 +24,44 @@ export class TimerService implements OnDestroy {
   /**
    * Start the countdown timer - updates every 1000ms for accurate seconds
    */
-  start(onTimeUp?: () => void): void {
+  start(timeDue: number, onTick?: (timeCurrent: number) => void): void {
     this.stopTimer();
-    this.timeUpCallback = onTimeUp ?? null;
-
-    let remainingMs = this.state.remainingMs;
-    
-    if (this.state.timerStatus === 'idle') {
-      remainingMs = this.durationMs;
-      this.tournamentService.dispatch({ type: 'START_ROUND' } as TournamentAction);
-    } else if (this.state.timerStatus === 'paused') {
-      this.tournamentService.dispatch({ type: 'RESUME_ROUND' } as TournamentAction);
-    }
-
-    // Update every 1000ms for accurate second-by-second counting
+ 
+    // Update every 50ms for accurate second-by-second counting
     this.intervalId = setInterval(() => {
-      remainingMs = Math.max(0, remainingMs - 1000);
-      
-      this.tournamentService.dispatch({
-        type: 'TICK_TIMER',
-        remainingMs,
-        elapsedMs: 0, // Elapsed time removed - not needed
-      } as TournamentAction);
+     
+      var timeCurrent = new Date().getTime();
 
-      if (remainingMs <= 0) {
+      if (timeDue - timeCurrent <= 0) {
         this.stopTimer();
-        this.tournamentService.dispatch({
-          type: 'END_ROUND',
-          elapsedMs: this.durationMs,
-        } as TournamentAction);
-        this.timeUpCallback?.();
       }
-    }, 1000);
+      
+      if (onTick){
+        onTick(timeCurrent);
+      }
+    }, 50);
   }
 
   /**
    * Pause the countdown timer
    */
-  pause(): void {
-    if (this.state.timerStatus === 'running' && this.intervalId !== null) {
+  stop(): void {
+    if (this.tournamentService.state.timerStatus === 'running' && this.intervalId !== null) {
       this.stopTimer();
-      this.tournamentService.dispatch({ type: 'PAUSE_ROUND' } as TournamentAction);
     }
   }
 
   /**
-   * End the round manually
+   * Reset the time to its initial 
    */
-  endRound(): void {
+  reset(): void {
     this.stopTimer();
-    this.tournamentService.dispatch({ type: 'END_ROUND', elapsedMs: this.durationMs } as TournamentAction);
   }
 }
 
-export function formatTime(ms: number): string {
-  const totalSeconds = Math.max(0, Math.floor(ms / 1000));
+export function formatTime(secs: number): string {
+  console.log(secs);
+  const totalSeconds = Math.max(0, Math.floor(secs));
   const hours = Math.floor(totalSeconds / 3600);
   const minutes = Math.floor((totalSeconds % 3600) / 60);
   const seconds = totalSeconds % 60;

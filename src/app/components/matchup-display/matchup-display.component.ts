@@ -35,6 +35,6 @@ export class MatchupDisplayComponent implements OnInit {
   startRound(): void {
     // Start the timer - the state will change to running
     // and RoundScreen will be shown automatically
-    this.tournamentService.dispatch({ type: 'START_ROUND' });
+    this.tournamentService.dispatch({ type: 'INIT_ROUND' });
   }
 }
