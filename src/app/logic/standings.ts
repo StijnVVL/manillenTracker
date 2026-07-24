@@ -1,4 +1,4 @@
-import { Round, TournamentState } from '../models/tournament.model';
+import { Round, TournamentState, Matchup } from '../models/tournament.model';
 import { TOTAL_ROUNDS } from '../models/tournament.model';
 
 export interface TeamStanding {
@@ -11,38 +11,35 @@ export interface TeamStanding {
   roundRanks: { round: number; rank: number }[];
 }
 
-function getResultForTeam(round: Round, teamId: string) {
-  return round.results.find((result) => result.teamId === teamId);
+function getScoreForTeam(matchup: Matchup, teamId: string): number | undefined {
+  if (matchup.teamAId === teamId) return matchup.teamAScore;
+  if (matchup.teamBId === teamId) return matchup.teamBScore;
+  return undefined;
 }
 
 export function getMatchupWinner(round: Round, tableIndex: number): string | null {
   const matchup = round.matchups[tableIndex];
-  if (!matchup || round.results.length === 0) {
+  if (!matchup || matchup.teamAScore === undefined || matchup.teamBScore === undefined) {
     return null;
   }
 
-  const resultA = getResultForTeam(round, matchup.teamAId);
-  const resultB = getResultForTeam(round, matchup.teamBId);
-  if (!resultA || !resultB) {
-    return null;
-  }
+  if (matchup.teamAScore > matchup.teamBScore) return matchup.teamAId;
+  if (matchup.teamBScore > matchup.teamAScore) return matchup.teamBId;
 
-  if (resultA.matchDiff > 0) return matchup.teamAId;
-  if (resultB.matchDiff > 0) return matchup.teamBId;
-
-  if (resultA.rawScore > resultB.rawScore) return matchup.teamAId;
-  if (resultB.rawScore > resultA.rawScore) return matchup.teamBId;
-
-  return null;
+  return null; // Tie
 }
 
 export function getTournamentWinner(state: TournamentState): string | null {
   const finalRound = state.rounds.find((round) => round.number === TOTAL_ROUNDS);
-  if (!finalRound || finalRound.results.length === 0) {
+  if (!finalRound) {
     return null;
   }
 
   return getMatchupWinner(finalRound, 0);
+}
+
+function hasAnyScores(round: Round): boolean {
+  return round.matchups.some(m => m.teamAScore !== undefined || m.teamBScore !== undefined);
 }
 
 export function computeStandings(state: TournamentState): TeamStanding[] {
@@ -60,21 +57,34 @@ export function computeStandings(state: TournamentState): TeamStanding[] {
   }
 
   for (const round of state.rounds) {
-    if (round.results.length === 0) {
+    if (!hasAnyScores(round)) {
       continue;
     }
 
-    for (const result of round.results) {
-      const standing = stats.get(result.teamId);
-      if (!standing) continue;
+    // Process each matchup
+    for (const matchup of round.matchups) {
+      if (matchup.teamAScore === undefined || matchup.teamBScore === undefined) {
+        continue;
+      }
 
-      if (result.matchDiff > 0) {
-        standing.wins += 1;
-        standing.totalMarginWon += result.matchDiff;
-      } else if (result.matchDiff < 0) {
-        standing.losses += 1;
+      const standingA = stats.get(matchup.teamAId);
+      const standingB = stats.get(matchup.teamBId);
+
+      if (!standingA || !standingB) continue;
+
+      const margin = Math.abs(matchup.teamAScore - matchup.teamBScore);
+
+      if (matchup.teamAScore > matchup.teamBScore) {
+        standingA.wins += 1;
+        standingA.totalMarginWon += margin;
+        standingB.losses += 1;
+      } else if (matchup.teamBScore > matchup.teamAScore) {
+        standingB.wins += 1;
+        standingB.totalMarginWon += margin;
+        standingA.losses += 1;
       } else {
-        standing.ties += 1;
+        standingA.ties += 1;
+        standingB.ties += 1;
       }
     }
 

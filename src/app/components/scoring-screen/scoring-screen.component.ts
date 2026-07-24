@@ -55,15 +55,29 @@ export class ScoringScreenComponent implements OnInit {
   }
 
   initializeScores(): void {
-    if (!this.currentRound || this.currentRound.results.length === 0) {
+    if (!this.currentRound) {
       this.scores = {};
       this.confirmed = false;
       return;
     }
-    this.scores = Object.fromEntries(
-      this.currentRound.results.map((result) => [result.teamId, String(result.rawScore)]),
-    );
-    this.confirmed = this.currentRound.results.length > 0;
+
+    // Read scores from matchups
+    const scoresFromMatchups: Record<string, string> = {};
+    let hasAnyScores = false;
+
+    for (const matchup of this.currentRound.matchups) {
+      if (matchup.teamAScore !== undefined) {
+        scoresFromMatchups[matchup.teamAId] = String(matchup.teamAScore);
+        hasAnyScores = true;
+      }
+      if (matchup.teamBScore !== undefined) {
+        scoresFromMatchups[matchup.teamBId] = String(matchup.teamBScore);
+        hasAnyScores = true;
+      }
+    }
+
+    this.scores = scoresFromMatchups;
+    this.confirmed = hasAnyScores && this.allMatchupsFilled;
   }
 
   onScoreChange(teamId: string, value: string): void {
@@ -99,7 +113,27 @@ export class ScoringScreenComponent implements OnInit {
 
   get beforeDiffs(): Map<string, number> {
     if (!this.currentRound) return new Map();
-    return new Map(this.currentRound.results.map((r) => [r.teamId, r.matchDiff]));
+
+    // Calculate match diffs from matchup scores
+    const diffs = new Map<string, number>();
+    for (const matchup of this.currentRound.matchups) {
+      if (matchup.teamAScore !== undefined && matchup.teamBScore !== undefined) {
+        const diff = getMatchupDiffs(matchup.teamAId, matchup.teamBId, {
+          [matchup.teamAId]: matchup.teamAScore,
+          [matchup.teamBId]: matchup.teamBScore
+        });
+
+        if (diff) {
+          diffs.set(diff.winnerId, diff.margin);
+          diffs.set(diff.loserId, -diff.margin);
+        } else {
+          // Tie
+          diffs.set(matchup.teamAId, 0);
+          diffs.set(matchup.teamBId, 0);
+        }
+      }
+    }
+    return diffs;
   }
 
   get afterDiffs(): Map<string, number> {
@@ -158,6 +192,12 @@ export class ScoringScreenComponent implements OnInit {
       this.scores[matchup.teamAId] = String(result.scoreA);
       this.scores[matchup.teamBId] = String(result.scoreB);
       this.confirmed = false;
+
+      // Persist scores immediately without confirming/updating ladder
+      this.tournamentService.dispatch({ 
+        type: 'UPDATE_SCORES', 
+        scores: this.numericScores 
+      });
     }
   }
 

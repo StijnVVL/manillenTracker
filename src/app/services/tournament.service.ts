@@ -27,7 +27,6 @@ function createRound(number: number, teamIds: string[], useRandom: boolean): Rou
     number,
     matchups,
     byeTeamId,
-    results: [],
     startedAt: null,
     endedAt: null,
     dueAt: null,
@@ -128,7 +127,7 @@ function tournamentReducer(
         ...state,
         ladder,
         rounds: [round],
-        status: 'matchup_display',
+        status: 'round',
         timerStatus: 'idle',
         lastLadderSnapshot: null,
       };
@@ -215,19 +214,53 @@ function tournamentReducer(
       };
     }
 
+    case 'UPDATE_SCORES': {
+      const round = getCurrentRound(state);
+      if (!round){ 
+        return state;
+      }
+
+      // Update matchup scores directly
+      const updatedMatchups = round.matchups.map(matchup => ({
+        ...matchup,
+        teamAScore: action.scores[matchup.teamAId],
+        teamBScore: action.scores[matchup.teamBId]
+      }));
+
+      const updatedRound: Round = {
+        ...round,
+        matchups: updatedMatchups
+      };
+      const rounds = [...state.rounds];
+      rounds[state.rounds.length - 1] = updatedRound;
+
+      return {
+        ...state,
+        rounds
+      };
+    }
+
     case 'SUBMIT_SCORES': {
       const round = getCurrentRound(state);
       if (!round){ 
         return state;
       }
 
-      const results = buildRoundResults(round.matchups, action.scores);
+      // Update matchup scores
+      const updatedMatchups = round.matchups.map(matchup => ({
+        ...matchup,
+        teamAScore: action.scores[matchup.teamAId],
+        teamBScore: action.scores[matchup.teamBId]
+      }));
+
+      // Build results for ladder calculation
+      const results = buildRoundResults(updatedMatchups, action.scores);
       const snapshot = [...state.ladder];
       const { ladder } = applyLadderUpdate(state.ladder, results);
 
       const updatedRound: Round = {
         ...round,
-        results,
+        matchups: updatedMatchups,
         ladderSnapshot: ladder,
       };
       const rounds = [...state.rounds];
@@ -260,7 +293,7 @@ function tournamentReducer(
       return {
         ...state,
         rounds: isFinalRound ? state.rounds : [...state.rounds, createRound(currentRound.number + 1, state.ladder, false)],
-        status: isFinalRound ? 'finished' : 'matchup_display',
+        status: isFinalRound ? 'finished' : 'round',
         timerStatus: 'idle',
         lastLadderSnapshot: null,
       };

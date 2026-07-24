@@ -5,7 +5,6 @@ import { SetupScreenComponent } from '../setup-screen/setup-screen.component';
 import { RoundScreenComponent } from '../round-screen/round-screen.component';
 import { ScoringScreenComponent } from '../scoring-screen/scoring-screen.component';
 import { FinishedScreenComponent } from '../finished-screen/finished-screen.component';
-import { MatchupDisplayComponent } from '../matchup-display/matchup-display.component';
 import { TournamentState } from '../../models/tournament.model';
 
 @Component({
@@ -15,8 +14,7 @@ import { TournamentState } from '../../models/tournament.model';
     SetupScreenComponent,
     RoundScreenComponent,
     ScoringScreenComponent,
-    FinishedScreenComponent,
-    MatchupDisplayComponent
+    FinishedScreenComponent
 ],
   templateUrl: './home.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,

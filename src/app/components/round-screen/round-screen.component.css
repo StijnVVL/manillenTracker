@@ -1,16 +1,7 @@
-.matchup-display-shell {
+.matchup-table-container {
   max-width: 800px;
-  margin: 0 auto;
-  padding: 1rem 1.5rem;
-  display: flex;
-  flex-direction: column;
-}
-
-.matchup-display-subtitle {
-  font-size: 1rem;
-  margin: 0 0 1rem 0;
-  color: var(--muted);
-  text-align: center;
+  margin: 1.5rem auto 0;
+  padding: 0 1.5rem;
 }
 
 .matchup-table {
@@ -87,15 +78,4 @@
 
 .bye-row .team-name {
   color: var(--muted);
-}
-
-.matchup-display-start {
-  text-align: center;
-  margin-top: 2rem;
-}
-
-.btn-large {
-  padding: 1rem 2.5rem;
-  font-size: 1.2rem;
-  font-weight: 700;
 }

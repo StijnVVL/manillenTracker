@@ -5,11 +5,8 @@ import { TimerService, formatTime } from '../../services/timer.service';
 import { L10nPipe } from '../../pipes/l10n.pipe';
 import { getCurrentRound, getLatestRoundDiffs } from '../../utils/teams';
 import { CountdownTimerComponent } from '../countdown-timer/countdown-timer.component';
-import { LadderBoardComponent } from '../ladder-board/ladder-board.component';
-import { MatchupListComponent } from '../matchup-list/matchup-list.component';
 import { RoundHistoryComponent } from '../round-history/round-history.component';
-import { TeamStandingsComponent } from '../team-standings/team-standings.component';
-import { TournamentState, Round, TournamentAction } from '../../models/tournament.model';
+import { TournamentState, Round, TournamentAction, Team } from '../../models/tournament.model';
 import { ConfirmDialogService } from '../../services/confirm-dialog.service';
 import { L10nService } from '../../services/l10n.service';
 
@@ -18,21 +15,19 @@ import { L10nService } from '../../services/l10n.service';
   standalone: true,
   imports: [
     CountdownTimerComponent,
-    LadderBoardComponent,
-    MatchupListComponent,
     RoundHistoryComponent,
-    TeamStandingsComponent,
     L10nPipe
 ],
   templateUrl: './round-screen.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
-  styles: [],
+  styleUrl: './round-screen.component.css',
 })
 export class RoundScreenComponent implements OnInit, OnDestroy {
   state: TournamentState;
   currentRound: Round | null = null;
   roundDiffs: Map<string, number> = new Map();
   remainingSeconds: number | null = null;
+  teamMap: Map<string, Team> = new Map();
 
   constructor(
     private tournamentService: TournamentService,
@@ -48,6 +43,7 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
       this.state = state;
       this.currentRound = getCurrentRound(state);
       this.roundDiffs = getLatestRoundDiffs(state);
+      this.teamMap = new Map(state.teams.map(t => [t.id, t]));
     });
   }
 
@@ -132,5 +128,9 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
     if (confirmed) {
       this.#endRound();
     }
+  }
+
+  getTeamName(teamId: string): string {
+    return this.teamMap.get(teamId)?.name ?? 'Unknown team';
   }
 }

@@ -26,7 +26,10 @@ export class RoundHistoryComponent implements OnChanges {
       this.teamMap = getTeamMap(this.teams);
     }
     this.completedRounds = this.rounds.filter(
-      (round, index) => index < this.rounds.length - 1 || round.results.length > 0,
+      (round, index) => {
+        const hasScores = round.matchups.some(m => m.teamAScore !== undefined || m.teamBScore !== undefined);
+        return index < this.rounds.length - 1 || hasScores;
+      }
     );
   }
 
@@ -35,9 +38,18 @@ export class RoundHistoryComponent implements OnChanges {
   }
 
   scoreLabel(teamId: string, round: Round): string {
-    const result = round.results.find((r) => r.teamId === teamId);
-    if (!result) return '—';
-    return `${result.rawScore} (${result.matchDiff >= 0 ? '+' : ''}${result.matchDiff})`;
+    // Find the matchup containing this team
+    const matchup = round.matchups.find(m => m.teamAId === teamId || m.teamBId === teamId);
+    if (!matchup) return '—';
+
+    const isTeamA = matchup.teamAId === teamId;
+    const score = isTeamA ? matchup.teamAScore : matchup.teamBScore;
+    const opponentScore = isTeamA ? matchup.teamBScore : matchup.teamAScore;
+
+    if (score === undefined || opponentScore === undefined) return '—';
+
+    const diff = score - opponentScore;
+    return `${score} (${diff >= 0 ? '+' : ''}${diff})`;
   }
 
   tableWinnerId(round: Round, tableIndex: number): string | null {

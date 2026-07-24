@@ -1,10 +1,10 @@
 @if (currentRound) {
   <app-countdown-timer
     [remainingSeconds]="remainingSeconds"
+    [staticDurationMinutes]="isIdle ? state.roundDurationMinutes : null"
     [roundNumber]="currentRound.number"
     [isWarning]="isWarning"
   />
- <span>round-screen works!</span>
   <div class="timer-controls">
     @if (isIdle) {
       <button type="button" class="btn btn-primary" (click)="startRound()">
@@ -21,27 +21,43 @@
         {{ 'roundScreen.resumeRound' | l10n }}
       </button>
     }
-    <button
-      type="button"
-      class="btn btn-danger"
-      (click)="endRound()"
-      [disabled]="state.timerStatus === 'ended'"
-    >
-      {{ 'roundScreen.endRound' | l10n }}
-    </button>
+    @if (!isIdle) {
+      <button
+        type="button"
+        class="btn btn-danger"
+        (click)="endRound()"
+        [disabled]="state.timerStatus === 'ended'"
+      >
+        {{ 'roundScreen.endRound' | l10n }}
+      </button>
+    }
   </div>
 
-  <div class="grid-2" style="margin-top: 1.5rem">
-    <app-ladder-board
-      [teams]="state.teams"
-      [ladder]="state.ladder"
-      [roundDiffs]="roundDiffs"
-    />
-    <app-matchup-list [round]="currentRound" [teams]="state.teams" />
-  </div>
-
-  <div style="margin-top: 1rem">
-    <app-team-standings [state]="state" />
+  <div class="matchup-table-container">
+    <div class="matchup-table">
+      <div class="matchup-table-header">
+        <span class="col-table">{{ 'common.table' | l10n }}</span>
+        <span class="col-team">{{ 'common.team' | l10n }}</span>
+        <span class="col-vs"></span>
+        <span class="col-team">{{ 'common.team' | l10n }}</span>
+      </div>
+      @for (matchup of currentRound.matchups; track matchup.teamAId + matchup.teamBId; let index = $index) {
+        <div class="matchup-row">
+          <span class="col-table">{{ index + 1 }}</span>
+          <span class="col-team team-name">{{ getTeamName(matchup.teamAId) }}</span>
+          <span class="col-vs">{{ 'common.vs' | l10n }}</span>
+          <span class="col-team team-name">{{ getTeamName(matchup.teamBId) }}</span>
+        </div>
+      }
+      @if (currentRound.byeTeamId) {
+        <div class="matchup-row bye-row">
+          <span class="col-table">{{ 'common.bye' | l10n }}</span>
+          <span class="col-team team-name">{{ getTeamName(currentRound.byeTeamId) }}</span>
+          <span class="col-vs"></span>
+          <span class="col-team"></span>
+        </div>
+      }
+    </div>
   </div>
 
   <div style="margin-top: 1rem">

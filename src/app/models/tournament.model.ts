@@ -6,6 +6,8 @@ export interface Team {
 export interface Matchup {
   teamAId: string;
   teamBId: string;
+  teamAScore?: number;
+  teamBScore?: number;
 }
 
 export interface RoundResult {
@@ -18,7 +20,6 @@ export interface Round {
   number: number;
   matchups: Matchup[];
   byeTeamId: string | null;
-  results: RoundResult[];
   ladderSnapshot?: string[];
   startedAt: number | null;
   endedAt: number | null;
@@ -27,7 +28,7 @@ export interface Round {
   pausedAt: number | null;
 }
 
-export type TournamentStatus = 'setup' | 'matchup_display' | 'round' | 'scoring' | 'finished';
+export type TournamentStatus = 'setup' | 'round' | 'scoring' | 'finished';
 export type TimerStatus = 'idle' | 'running' | 'paused' | 'ended';
 
 export interface TournamentState {
@@ -56,6 +57,7 @@ export type TournamentAction =
   | { type: 'RESUME_ROUND', resumeTime: number }
   | { type: 'TICK_TIMER', currentTime: number }
   | { type: 'END_ROUND', endTime: number }
+  | { type: 'UPDATE_SCORES'; scores: Record<string, number> }
   | { type: 'SUBMIT_SCORES'; scores: Record<string, number> }
   | { type: 'NEXT_ROUND' }
   | { type: 'RESET_TOURNAMENT' }
