@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 
 import { TournamentService } from '../../services/tournament.service';
 import { TimerService, formatTime } from '../../services/timer.service';
@@ -25,6 +25,7 @@ import { L10nService } from '../../services/l10n.service';
     L10nPipe
 ],
   templateUrl: './round-screen.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [],
 })
 export class RoundScreenComponent implements OnInit, OnDestroy {

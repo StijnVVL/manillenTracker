@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
 
 import { Round, Team, TOTAL_ROUNDS } from '../../models/tournament.model';
 import { L10nPipe } from '../../pipes/l10n.pipe';
@@ -10,6 +10,7 @@ import { getTeamMap } from '../../utils/teams';
   standalone: true,
   imports: [L10nPipe],
   templateUrl: './round-history.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [],
 })
 export class RoundHistoryComponent implements OnChanges {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { TournamentService } from '../../services/tournament.service';
@@ -25,6 +25,7 @@ import { TournamentState, Round, Matchup, Team } from '../../models/tournament.m
     L10nPipe
 ],
   templateUrl: './scoring-screen.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [],
 })
 export class ScoringScreenComponent implements OnInit {

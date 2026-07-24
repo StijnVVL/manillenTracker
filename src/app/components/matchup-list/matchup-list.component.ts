@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
 
 import { Round, Team } from '../../models/tournament.model';
 import { L10nPipe } from '../../pipes/l10n.pipe';
@@ -9,6 +9,7 @@ import { getTeamMap } from '../../utils/teams';
   standalone: true,
   imports: [L10nPipe],
   templateUrl: './matchup-list.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [],
 })
 export class MatchupListComponent implements OnChanges {

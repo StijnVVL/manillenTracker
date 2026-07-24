@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 
 import { ConfirmDialogService, ConfirmDialogData } from '../../services/confirm-dialog.service';
 import { L10nService } from '../../services/l10n.service';
@@ -9,6 +9,7 @@ import { Subscription } from 'rxjs';
   standalone: true,
   imports: [],
   templateUrl: './confirm-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './confirm-dialog.component.css'
 })
 export class ConfirmDialogComponent implements OnInit, OnDestroy {

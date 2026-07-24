@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 
 import { TournamentService } from '../../services/tournament.service';
 import { SetupScreenComponent } from '../setup-screen/setup-screen.component';
@@ -19,6 +19,7 @@ import { TournamentState } from '../../models/tournament.model';
     MatchupDisplayComponent
 ],
   templateUrl: './home.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: []
 })
 export class HomeComponent implements OnInit, OnDestroy {

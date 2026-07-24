@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { AddTeamDialogService } from '../../services/add-team-dialog.service';
@@ -11,6 +11,7 @@ import { Subscription } from 'rxjs';
   standalone: true,
   imports: [FormsModule, L10nPipe],
   templateUrl: './add-team-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './add-team-dialog.component.css'
 })
 export class AddTeamDialogComponent implements OnInit, OnDestroy {

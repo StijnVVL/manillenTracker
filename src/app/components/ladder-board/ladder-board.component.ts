@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
 
 import { Team } from '../../models/tournament.model';
 import { L10nService } from '../../services/l10n.service';
@@ -10,6 +10,7 @@ import { getTeamMap } from '../../utils/teams';
   standalone: true,
   imports: [L10nPipe],
   templateUrl: './ladder-board.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [],
 })
 export class LadderBoardComponent implements OnChanges, OnInit {

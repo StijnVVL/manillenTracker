@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
 import { TOTAL_ROUNDS } from '../../models/tournament.model';
 import { L10nPipe } from '../../pipes/l10n.pipe';
@@ -8,6 +8,7 @@ import { L10nPipe } from '../../pipes/l10n.pipe';
   standalone: true,
   imports: [L10nPipe],
   templateUrl: './round-progress.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [],
 })
 export class RoundProgressComponent {

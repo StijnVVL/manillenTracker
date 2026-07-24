@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { TournamentService } from '../../services/tournament.service';
@@ -14,6 +14,7 @@ import { Subscription } from 'rxjs';
   standalone: true,
   imports: [FormsModule, L10nPipe, LanguageSelectorComponent],
   templateUrl: './settings.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './settings.component.css'
 })
 export class SettingsComponent implements OnInit, OnDestroy {

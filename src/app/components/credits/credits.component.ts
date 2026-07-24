@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 
 import { RouterLink } from '@angular/router';
 import { PageTitleService } from '../../services/page-title.service';
@@ -11,6 +11,7 @@ import { Subscription } from 'rxjs';
   standalone: true,
   imports: [RouterLink, L10nPipe],
   templateUrl: './credits.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './credits.component.css'
 })
 export class CreditsComponent implements OnInit, OnDestroy {

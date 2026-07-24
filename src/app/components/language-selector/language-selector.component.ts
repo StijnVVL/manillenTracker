@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { L10nService, SupportedLanguage, LanguageOption, LANGUAGES } from '../../services/l10n.service';
@@ -10,6 +10,7 @@ import { ClickOutsideDirective } from '../../directives/click-outside.directive'
   standalone: true,
   imports: [FormsModule, L10nPipe, ClickOutsideDirective],
   templateUrl: './language-selector.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './language-selector.component.css'
 })
 export class LanguageSelectorComponent {

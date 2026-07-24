@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 
 import { TournamentService } from '../../services/tournament.service';
 import { L10nService } from '../../services/l10n.service';
@@ -20,6 +20,7 @@ import { TournamentState, Team } from '../../models/tournament.model';
     L10nPipe
 ],
   templateUrl: './finished-screen.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [],
 })
 export class FinishedScreenComponent implements OnInit {

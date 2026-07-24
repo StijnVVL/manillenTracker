@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 
 import { TournamentService } from '../../services/tournament.service';
 import { PageTitleService } from '../../services/page-title.service';
@@ -13,6 +13,7 @@ import { Subscription } from 'rxjs';
   standalone: true,
   imports: [L10nPipe],
   templateUrl: './matchup-display.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './matchup-display.component.css',
 })
 export class MatchupDisplayComponent implements OnInit, OnDestroy {

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 
 import { formatTime } from '../../services/timer.service';
 import { RoundProgressComponent } from '../round-progress/round-progress.component';
@@ -9,6 +9,7 @@ import { TournamentService } from '../../services/tournament.service';
   standalone: true,
   imports: [RoundProgressComponent],
   templateUrl: './countdown-timer.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [],
 })
 export class CountdownTimerComponent {
