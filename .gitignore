@@ -12,6 +12,7 @@
 !.vscode/extensions.json
 *.swp
 *.swo
+.vs
 
 # System files
 .DS_Store
