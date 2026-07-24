@@ -1,7 +1,20 @@
-.matchup-table-container {
-  max-width: 800px;
+.matchup-tables-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 1.5rem;
+  max-width: 1600px;
   margin: 1.5rem auto 0;
   padding: 0 1.5rem;
+}
+
+.matchup-table-container {
+  width: 100%;
+}
+
+.matchup-table-container.bye-container {
+  grid-column: 1 / -1;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 .matchup-table {
@@ -78,4 +91,10 @@
 
 .bye-row .team-name {
   color: var(--muted);
+}
+
+@media (max-width: 768px) {
+  .matchup-tables-grid {
+    grid-template-columns: 1fr;
+  }
 }

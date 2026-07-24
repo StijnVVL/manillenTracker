@@ -4,7 +4,7 @@ import { applyLadderUpdate } from '../logic/ladder';
 import { ladderPairings, randomPairings } from '../logic/pairing';
 import { buildRoundResults } from '../logic/scoring';
 import {
-  DEFAULT_ROUND_DURATION_MINUTES,
+  DEFAULT_ROUND_DURATION_SECONDS,
   STORAGE_KEY,
   TOTAL_ROUNDS,
   type Round,
@@ -54,7 +54,7 @@ function createInitialState(): TournamentState {
     teams: USE_DUMMY_DATA ? [...DUMMY_TEAMS] : [],
     ladder: [],
     rounds: [],
-    roundDurationMinutes: DEFAULT_ROUND_DURATION_MINUTES,
+    roundDurationSeconds: DEFAULT_ROUND_DURATION_SECONDS,
     status: 'setup',
     timerStatus: 'idle',
     lastLadderSnapshot: null,
@@ -108,11 +108,10 @@ function tournamentReducer(
       };
 
     case 'SET_ROUND_DURATION': {
-      const minutes = Math.max(1, action.minutes);
-      const remainingMs = minutes * 60 * 1000;
+      const seconds = Math.max(1, action.minutes * 60);
       return {
         ...state,
-        roundDurationMinutes: minutes
+        roundDurationSeconds: seconds
       };
     }
 
@@ -142,6 +141,7 @@ function tournamentReducer(
       const updatedRound: Round = {
         ...round,
         startedAt: round.startedAt ?? now,
+        currentAt: now,
         dueAt: action.dueTime
       };
       return {

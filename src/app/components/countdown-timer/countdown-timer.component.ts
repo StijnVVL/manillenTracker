@@ -16,15 +16,15 @@ export class CountdownTimerComponent {
   @Input() remainingSeconds: number | null = null;
   @Input() roundNumber: number = 0;
   @Input() isWarning: boolean = false;
-  @Input() staticDurationMinutes: number | null = null;
+  @Input() staticDurationSeconds: number | null = null;
 
   get formattedTime(): string {
     if (this.remainingSeconds !== null){
       return formatTime(this.remainingSeconds);
     }
 
-    if (this.staticDurationMinutes !== null) {
-      const totalSeconds = this.staticDurationMinutes * 60;
+    if (this.staticDurationSeconds !== null) {
+      const totalSeconds = this.staticDurationSeconds;
       return formatTime(totalSeconds);
     }
 

@@ -6,7 +6,7 @@ import { L10nPipe } from '../../pipes/l10n.pipe';
 import { getCurrentRound, getLatestRoundDiffs } from '../../utils/teams';
 import { CountdownTimerComponent } from '../countdown-timer/countdown-timer.component';
 import { RoundHistoryComponent } from '../round-history/round-history.component';
-import { TournamentState, Round, TournamentAction, Team } from '../../models/tournament.model';
+import { TournamentState, Round, TournamentAction, Team, Matchup } from '../../models/tournament.model';
 import { ConfirmDialogService } from '../../services/confirm-dialog.service';
 import { L10nService } from '../../services/l10n.service';
 
@@ -77,7 +77,7 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
   startRound(): void {
     var nowDate = new Date();
     var nowTimeMs = nowDate.getTime()
-    var dueTimeMs = nowTimeMs + this.state.roundDurationMinutes * 60 * 1000;
+    var dueTimeMs = nowTimeMs + this.state.roundDurationSeconds * 1000;
    
     this.remainingSeconds = (dueTimeMs - nowTimeMs) / 1000;
     this.tournamentService.dispatch({ type: 'START_ROUND', dueTime: dueTimeMs } as TournamentAction);
@@ -91,10 +91,6 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
       currentTime: timeCurrent
     } as TournamentAction);
 
-    if (timeCurrent >= this.currentRound?.dueAt!){
-      this.endRound();
-    }
-    
   }
 
   resumeRound(): void {
@@ -118,13 +114,18 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
   }
 
   async endRound(): Promise<void> {
-    const confirmed = await this.confirmDialogService.confirm({
-      title: this.l10n.get('dialog.endRound.title'),
-      message: this.l10n.get('dialog.endRound.message'),
-      confirmText: this.l10n.get('dialog.endRound.confirm'),
-      cancelText: this.l10n.get('common.cancel')
-    });
+    var round = this.state.rounds[this.state.rounds.length - 1];
 
+    var confirmed = true;
+    if (round.currentAt! < round.dueAt!){
+      confirmed = await this.confirmDialogService.confirm({
+        title: this.l10n.get('dialog.endRound.title'),
+        message: this.l10n.get('dialog.endRound.message'),
+        confirmText: this.l10n.get('dialog.endRound.confirm'),
+        cancelText: this.l10n.get('common.cancel')
+      });
+    }
+    
     if (confirmed) {
       this.#endRound();
     }
@@ -132,5 +133,17 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
 
   getTeamName(teamId: string): string {
     return this.teamMap.get(teamId)?.name ?? 'Unknown team';
+  }
+
+  get leftColumnMatchups(): Matchup[] {
+    if (!this.currentRound) return [];
+    const mid = Math.ceil(this.currentRound.matchups.length / 2);
+    return this.currentRound.matchups.slice(0, mid);
+  }
+
+  get rightColumnMatchups(): Matchup[] {
+    if (!this.currentRound) return [];
+    const mid = Math.ceil(this.currentRound.matchups.length / 2);
+    return this.currentRound.matchups.slice(mid);
   }
 }

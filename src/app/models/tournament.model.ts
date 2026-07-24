@@ -35,13 +35,13 @@ export interface TournamentState {
   teams: Team[];
   ladder: string[];
   rounds: Round[];
-  roundDurationMinutes: number;
+  roundDurationSeconds: number;
   status: TournamentStatus;
   timerStatus: TimerStatus;
   lastLadderSnapshot: string[] | null;
 }
 
-export const DEFAULT_ROUND_DURATION_MINUTES = 25;
+export const DEFAULT_ROUND_DURATION_SECONDS = 10;
 export const TOTAL_ROUNDS = 1;
 export const STORAGE_KEY = 'manillen-tournament';
 
