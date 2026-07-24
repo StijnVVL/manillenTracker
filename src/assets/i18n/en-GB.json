@@ -28,6 +28,7 @@
 
   "dialog.endRound.title": "End Round",
   "dialog.endRound.message": "Are you sure you want to end the round early?",
+  "dialog.endRound.confirm": "End Round",
 
   "pageTitle.tournamentSetup": "Tournament Setup",
   "pageTitle.credits": "Credits",

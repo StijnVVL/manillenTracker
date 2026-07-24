@@ -126,7 +126,7 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
     const confirmed = await this.confirmDialogService.confirm({
       title: this.l10n.get('dialog.endRound.title'),
       message: this.l10n.get('dialog.endRound.message'),
-      confirmText: this.l10n.get('common.reset'),
+      confirmText: this.l10n.get('dialog.endRound.confirm'),
       cancelText: this.l10n.get('common.cancel')
     });
 
