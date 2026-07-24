@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { TournamentService } from '../../services/tournament.service';
 import { PageTitleService } from '../../services/page-title.service';
@@ -12,7 +12,7 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-setup-screen',
   standalone: true,
-  imports: [CommonModule, FormsModule, L10nPipe],
+  imports: [FormsModule, L10nPipe],
   templateUrl: './setup-screen.component.html',
   styleUrl: './setup-screen.component.css',
 })

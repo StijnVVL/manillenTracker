@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { AddTeamDialogService } from '../../services/add-team-dialog.service';
 import { L10nService } from '../../services/l10n.service';
@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-add-team-dialog',
   standalone: true,
-  imports: [CommonModule, FormsModule, L10nPipe],
+  imports: [FormsModule, L10nPipe],
   templateUrl: './add-team-dialog.component.html',
   styleUrl: './add-team-dialog.component.css'
 })

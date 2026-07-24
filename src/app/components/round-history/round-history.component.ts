@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Round, Team, TOTAL_ROUNDS } from '../../models/tournament.model';
 import { L10nPipe } from '../../pipes/l10n.pipe';
 import { getMatchupWinner } from '../../logic/standings';
@@ -8,7 +8,7 @@ import { getTeamMap } from '../../utils/teams';
 @Component({
   selector: 'app-round-history',
   standalone: true,
-  imports: [CommonModule, L10nPipe],
+  imports: [L10nPipe],
   templateUrl: './round-history.component.html',
   styles: [],
 })

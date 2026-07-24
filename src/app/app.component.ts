@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterOutlet, RouterLink } from '@angular/router';
 import { TournamentService } from './services/tournament.service';
 import { PageTitleService } from './services/page-title.service';
@@ -14,13 +14,12 @@ import { TournamentState } from './models/tournament.model';
   selector: 'app-root',
   standalone: true,
   imports: [
-    CommonModule,
     RouterOutlet,
     RouterLink,
     ConfirmDialogComponent,
     AddTeamDialogComponent,
-    L10nPipe,
-  ],
+    L10nPipe
+],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })

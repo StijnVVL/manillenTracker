@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { TournamentState, Team } from '../../models/tournament.model';
 import { L10nService } from '../../services/l10n.service';
 import { L10nPipe } from '../../pipes/l10n.pipe';
@@ -10,7 +10,7 @@ import { TeamStanding } from '../../logic/standings';
 @Component({
   selector: 'app-team-standings',
   standalone: true,
-  imports: [CommonModule, L10nPipe],
+  imports: [L10nPipe],
   templateUrl: './team-standings.component.html',
   styles: [],
 })

@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { TournamentService } from '../../services/tournament.service';
 import { SetupScreenComponent } from '../setup-screen/setup-screen.component';
 import { RoundScreenComponent } from '../round-screen/round-screen.component';
@@ -12,13 +12,12 @@ import { TournamentState } from '../../models/tournament.model';
   selector: 'app-home',
   standalone: true,
   imports: [
-    CommonModule,
     SetupScreenComponent,
     RoundScreenComponent,
     ScoringScreenComponent,
     FinishedScreenComponent,
-    MatchupDisplayComponent,
-  ],
+    MatchupDisplayComponent
+],
   templateUrl: './home.component.html',
   styles: []
 })

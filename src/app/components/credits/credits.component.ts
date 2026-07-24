@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterLink } from '@angular/router';
 import { PageTitleService } from '../../services/page-title.service';
 import { L10nService } from '../../services/l10n.service';
@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-credits',
   standalone: true,
-  imports: [CommonModule, RouterLink, L10nPipe],
+  imports: [RouterLink, L10nPipe],
   templateUrl: './credits.component.html',
   styleUrl: './credits.component.css'
 })

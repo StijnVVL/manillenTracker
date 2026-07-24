@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { ConfirmDialogService, ConfirmDialogData } from '../../services/confirm-dialog.service';
 import { L10nService } from '../../services/l10n.service';
 import { Subscription } from 'rxjs';
@@ -7,7 +7,7 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-confirm-dialog',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './confirm-dialog.component.html',
   styleUrl: './confirm-dialog.component.css'
 })

@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Team } from '../../models/tournament.model';
 import { L10nService } from '../../services/l10n.service';
 import { L10nPipe } from '../../pipes/l10n.pipe';
@@ -8,7 +8,7 @@ import { getTeamMap } from '../../utils/teams';
 @Component({
   selector: 'app-ladder-board',
   standalone: true,
-  imports: [CommonModule, L10nPipe],
+  imports: [L10nPipe],
   templateUrl: './ladder-board.component.html',
   styles: [],
 })

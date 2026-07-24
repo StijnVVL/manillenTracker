@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { formatTime } from '../../services/timer.service';
 import { RoundProgressComponent } from '../round-progress/round-progress.component';
 import { TournamentService } from '../../services/tournament.service';
@@ -7,7 +7,7 @@ import { TournamentService } from '../../services/tournament.service';
 @Component({
   selector: 'app-countdown-timer',
   standalone: true,
-  imports: [CommonModule, RoundProgressComponent],
+  imports: [RoundProgressComponent],
   templateUrl: './countdown-timer.component.html',
   styles: [],
 })

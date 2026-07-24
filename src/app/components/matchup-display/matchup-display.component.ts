@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { TournamentService } from '../../services/tournament.service';
 import { PageTitleService } from '../../services/page-title.service';
 import { L10nService } from '../../services/l10n.service';
@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-matchup-display',
   standalone: true,
-  imports: [CommonModule, L10nPipe],
+  imports: [L10nPipe],
   templateUrl: './matchup-display.component.html',
   styleUrl: './matchup-display.component.css',
 })

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { TournamentService } from '../../services/tournament.service';
 import { L10nService } from '../../services/l10n.service';
@@ -17,14 +17,13 @@ import { TournamentState, Round, Matchup, Team } from '../../models/tournament.m
   selector: 'app-scoring-screen',
   standalone: true,
   imports: [
-    CommonModule,
     FormsModule,
     LadderBoardComponent,
     RoundHistoryComponent,
     RoundProgressComponent,
     TeamStandingsComponent,
-    L10nPipe,
-  ],
+    L10nPipe
+],
   templateUrl: './scoring-screen.component.html',
   styles: [],
 })

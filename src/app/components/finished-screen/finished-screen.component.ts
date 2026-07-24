@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { TournamentService } from '../../services/tournament.service';
 import { L10nService } from '../../services/l10n.service';
 import { L10nPipe } from '../../pipes/l10n.pipe';
@@ -14,12 +14,11 @@ import { TournamentState, Team } from '../../models/tournament.model';
   selector: 'app-finished-screen',
   standalone: true,
   imports: [
-    CommonModule,
     LadderBoardComponent,
     RoundHistoryComponent,
     TeamStandingsComponent,
-    L10nPipe,
-  ],
+    L10nPipe
+],
   templateUrl: './finished-screen.component.html',
   styles: [],
 })
