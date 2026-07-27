@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TournamentService } from '../../services/tournament.service';
@@ -13,6 +13,7 @@ import { Subscription } from 'rxjs';
   standalone: true,
   imports: [CommonModule, RouterLink, L10nPipe],
   templateUrl: './setup-screen.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './setup-screen.component.css',
 })
 export class SetupScreenComponent implements OnInit, OnDestroy {

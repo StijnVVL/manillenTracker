@@ -22,9 +22,6 @@ export class TeamsPageComponent implements OnInit, OnDestroy {
   private stateSubscription: Subscription | null = null;
   private languageSubscription: Subscription | null = null;
 
-  protected leftColumnTeams: Team[] = [];
-  protected rightColumnTeams: Team[] = [];
-
   constructor(
     private tournamentService: TournamentService,
     private pageTitleService: PageTitleService,
@@ -44,8 +41,6 @@ export class TeamsPageComponent implements OnInit, OnDestroy {
 
     this.stateSubscription = this.tournamentService.state$.subscribe((state) => {
       this.state = state;
-
-      this.#updateTeams();
     });
   }
 
@@ -63,11 +58,14 @@ export class TeamsPageComponent implements OnInit, OnDestroy {
     return this.state.status === 'setup';
   }
 
-  #updateTeams() : void {
+  get leftColumnTeams(): Team[] {
     const midpoint = Math.ceil(this.state.teams.length / 2);
-    console.log("updateTeams!",this.state.teams.length, midpoint);
-    this.leftColumnTeams = this.state.teams.slice(0, midpoint);
-    this.rightColumnTeams = this.state.teams.slice(midpoint);
+    return this.state.teams.slice(0, midpoint);
+  }
+
+  get rightColumnTeams(): Team[] {
+    const midpoint = Math.ceil(this.state.teams.length / 2);
+    return this.state.teams.slice(midpoint);
   }
 
   getTeamIndex(team: Team): number {

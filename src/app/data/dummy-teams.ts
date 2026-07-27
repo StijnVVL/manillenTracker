@@ -7,7 +7,7 @@ import { Team } from '../models/tournament.model';
 
 export const DUMMY_TEAMS: Team[] = [
   { id: '00000000-0000-0000-0000-000000000000', name: 'The Aces', player1: '', player2: '' },
-  { id: '00000000-0000-0000-0000-000000000001', name: 'Royal FlushRoyal FlushRoyal FlushRoyal FlushRoyal FlushRoyal FlushRoyal FlushRoyal FlushRoyal Flush', player1: '', player2: '' },
+  { id: '00000000-0000-0000-0000-000000000001', name: 'Royal Flush', player1: '', player2: '' },
  { id: '00000000-0000-0000-0000-000000000002', name: 'Card Sharks', player1: '', player2: '' },
   { id: '00000000-0000-0000-0000-000000000003', name: 'The Jokers', player1: '', player2: '' },
   { id: '00000000-0000-0000-0000-000000000004', name: 'Diamond Kings', player1: '', player2: '' },
