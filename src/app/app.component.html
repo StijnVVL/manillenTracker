@@ -15,7 +15,8 @@
     <div class="menu-overlay" (click)="closeMenu()"></div>
     <nav class="slide-menu">
       <div class="menu-top">
-        <a routerLink="/" class="menu-item" (click)="closeMenu()">{{ 'menu.tournamentSetup' | l10n }}</a>
+        <a routerLink="/" class="menu-item" (click)="closeMenu()">{{ 'common.home' | l10n }}</a>
+        <a routerLink="/teams" class="menu-item" (click)="closeMenu()">{{ 'menu.teams' | l10n }}</a>
         <a routerLink="/credits" class="menu-item" (click)="closeMenu()">{{ 'common.credits' | l10n }}</a>
       </div>
       <div class="menu-bottom">

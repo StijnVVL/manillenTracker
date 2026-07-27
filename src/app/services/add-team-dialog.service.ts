@@ -1,18 +1,30 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
+import { Team } from '../models/tournament.model';
+
+export interface TeamDialogData {
+  mode: 'add' | 'edit';
+  team?: Team;
+}
+
+export interface TeamDialogResult {
+  name: string;
+  player1: string;
+  player2: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class AddTeamDialogService {
-  private dialogSubject = new Subject<void>();
-  private responseSubject = new Subject<string | null>();
+  private dialogSubject = new Subject<TeamDialogData>();
+  private responseSubject = new Subject<TeamDialogResult | null>();
 
   dialog$ = this.dialogSubject.asObservable();
 
-  open(): Promise<string | null> {
-    this.dialogSubject.next();
-    return new Promise<string | null>((resolve) => {
+  openAdd(): Promise<TeamDialogResult | null> {
+    this.dialogSubject.next({ mode: 'add' });
+    return new Promise<TeamDialogResult | null>((resolve) => {
       const subscription = this.responseSubject.subscribe((result) => {
         subscription.unsubscribe();
         resolve(result);
@@ -20,7 +32,17 @@ export class AddTeamDialogService {
     });
   }
 
-  respond(teamName: string | null): void {
-    this.responseSubject.next(teamName);
+  openEdit(team: Team): Promise<TeamDialogResult | null> {
+    this.dialogSubject.next({ mode: 'edit', team });
+    return new Promise<TeamDialogResult | null>((resolve) => {
+      const subscription = this.responseSubject.subscribe((result) => {
+        subscription.unsubscribe();
+        resolve(result);
+      });
+    });
+  }
+
+  respond(result: TeamDialogResult | null): void {
+    this.responseSubject.next(result);
   }
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
-import { AddTeamDialogService } from '../../services/add-team-dialog.service';
+import { AddTeamDialogService, TeamDialogData } from '../../services/add-team-dialog.service';
 import { L10nService } from '../../services/l10n.service';
 import { L10nPipe } from '../../pipes/l10n.pipe';
 import { Subscription } from 'rxjs';
@@ -16,7 +16,10 @@ import { Subscription } from 'rxjs';
 })
 export class AddTeamDialogComponent implements OnInit, OnDestroy {
   isOpen = false;
+  mode: 'add' | 'edit' = 'add';
   teamName = '';
+  player1 = '';
+  player2 = '';
   private subscription: Subscription | null = null;
 
   constructor(
@@ -25,11 +28,20 @@ export class AddTeamDialogComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.subscription = this.addTeamDialogService.dialog$.subscribe(() => {
-      this.teamName = '';
+    this.subscription = this.addTeamDialogService.dialog$.subscribe((data: TeamDialogData) => {
+      this.mode = data.mode;
+      if (data.mode === 'edit' && data.team) {
+        this.teamName = data.team.name;
+        this.player1 = data.team.player1;
+        this.player2 = data.team.player2;
+      } else {
+        this.teamName = '';
+        this.player1 = '';
+        this.player2 = '';
+      }
       this.isOpen = true;
       setTimeout(() => {
-        const input = document.getElementById('add-team-name-input');
+        const input = document.getElementById('team-name-input');
         input?.focus();
       }, 50);
     });
@@ -39,10 +51,26 @@ export class AddTeamDialogComponent implements OnInit, OnDestroy {
     this.subscription?.unsubscribe();
   }
 
-  onAdd(): void {
-    if (this.teamName.trim()) {
+  get titleKey(): string {
+    return this.mode === 'edit' ? 'dialog.editTeam.title' : 'dialog.addTeam.title';
+  }
+
+  get submitButtonKey(): string {
+    return this.mode === 'edit' ? 'common.save' : 'common.add';
+  }
+
+  get isValid(): boolean {
+    return this.teamName.trim().length > 0;
+  }
+
+  onSubmit(): void {
+    if (this.isValid) {
       this.isOpen = false;
-      this.addTeamDialogService.respond(this.teamName.trim());
+      this.addTeamDialogService.respond({
+        name: this.teamName.trim(),
+        player1: this.player1.trim(),
+        player2: this.player2.trim()
+      });
     }
   }
 
@@ -58,8 +86,8 @@ export class AddTeamDialogComponent implements OnInit, OnDestroy {
   }
 
   onKeydown(event: KeyboardEvent): void {
-    if (event.key === 'Enter') {
-      this.onAdd();
+    if (event.key === 'Enter' && this.isValid) {
+      this.onSubmit();
     }
   }
 }

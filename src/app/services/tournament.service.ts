@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, map, distinctUntilChanged, debounceTime } from 'rxjs';
+import { BehaviorSubject, Observable, map, distinctUntilChanged } from 'rxjs';
 import { applyLadderUpdate } from '../logic/ladder';
 import { ladderPairings, randomPairings } from '../logic/pairing';
 import { buildRoundResults } from '../logic/scoring';
@@ -14,8 +14,8 @@ import {
 } from '../models/tournament.model';
 import { DUMMY_TEAMS, USE_DUMMY_DATA } from '../data/dummy-teams';
 
-function createTeam(name: string): Team {
-  return { id: crypto.randomUUID(), name: name.trim() };
+function createTeam(name: string, player1: string, player2: string): Team {
+  return { id: crypto.randomUUID(), name: name.trim(), player1: player1.trim(), player2: player2.trim() };
 }
 
 function createRound(number: number, teamIds: string[], useRandom: boolean): Round {
@@ -67,6 +67,12 @@ function loadPersistedState(): TournamentState | null {
     if (!raw) return null;
     const parsed = JSON.parse(raw) as TournamentState;
     if (!parsed.teams || !Array.isArray(parsed.ladder)) return null;
+    // Migrate existing teams to include player names if missing
+    parsed.teams = parsed.teams.map(team => ({
+      ...team,
+      player1: team.player1 ?? '',
+      player2: team.player2 ?? '',
+    }));
     return parsed;
   } catch {
     return null;
@@ -89,7 +95,7 @@ function tournamentReducer(
     case 'ADD_TEAM': {
       const name = action.name.trim();
       if (!name) return state;
-      const team = createTeam(name);
+      const team = createTeam(name, action.player1, action.player2);
       return { ...state, teams: [...state.teams, team] };
     }
 
@@ -103,7 +109,7 @@ function tournamentReducer(
       return {
         ...state,
         teams: state.teams.map((t) =>
-          t.id === action.teamId ? { ...t, name: action.name.trim() } : t,
+          t.id === action.teamId ? { ...t, name: action.name.trim(), player1: action.player1.trim(), player2: action.player2.trim() } : t,
         ),
       };
 
@@ -322,16 +328,20 @@ export class TournamentService {
   public state$ = this.stateSubject.asObservable();
 
   constructor() {
+    // Persist state changes to localStorage
     this.state$.pipe(
-      distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)),
-      debounceTime(1000)
+      distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr))
     ).subscribe((state) => {
-      if (state.status === 'setup' && state.teams.length === 0) {
-        localStorage.removeItem(STORAGE_KEY);
-        return;
-      }
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      this.persistState(state);
     });
+  }
+
+  private persistState(state: TournamentState): void {
+    if (state.status === 'setup' && state.teams.length === 0) {
+      localStorage.removeItem(STORAGE_KEY);
+      return;
+    }
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   }
 
   get state(): TournamentState {

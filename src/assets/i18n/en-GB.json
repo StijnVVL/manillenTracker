@@ -1,6 +1,7 @@
 {
   "common.cancel": "Cancel",
   "common.add": "Add",
+  "common.save": "Save",
   "common.confirm": "Confirm",
   "common.reset": "Reset",
   "common.home": "Home",
@@ -18,6 +19,7 @@
   "common.backToHome": "Back to Home",
 
   "menu.tournamentSetup": "Tournament Setup",
+  "menu.teams": "Teams",
   "menu.resetTournament": "Reset Tournament",
 
   "dialog.resetTournament.title": "Reset Tournament",
@@ -25,6 +27,15 @@
   "dialog.addTeam.title": "Add Team",
   "dialog.addTeam.teamNameLabel": "Team name",
   "dialog.addTeam.placeholder": "e.g. Team Alpha",
+  "dialog.addTeam.player1Label": "Player 1",
+  "dialog.addTeam.player2Label": "Player 2",
+  "dialog.addTeam.playerPlaceholder": "Player name (optional)",
+
+  "dialog.editTeam.title": "Edit Team",
+
+  "dialog.removeTeam.title": "Remove Team",
+  "dialog.removeTeam.message": "Are you sure you want to remove {teamName}?",
+  "dialog.removeTeam.confirm": "Remove",
 
   "dialog.endRound.title": "End Round",
   "dialog.endRound.message": "Are you sure you want to end the round early?",
@@ -38,6 +49,7 @@
   "dialog.nextRound.confirm": "Next Round",
 
   "pageTitle.tournamentSetup": "Tournament Setup",
+  "pageTitle.teams": "Teams",
   "pageTitle.credits": "Credits",
   "pageTitle.settings": "Settings",
   "pageTitle.roundMatchups": "Round {roundNumber} Matchups",
@@ -47,6 +59,8 @@
   "setup.removeTeam": "Remove team",
   "setup.startTournament": "Start Tournament",
   "setup.language": "Language",
+  "setup.teamCount": "{count} teams registered",
+  "setup.manageTeams": "Manage Teams",
 
   "settings.languageSettings": "Language",
   "settings.roundSettings": "Round Settings",
@@ -106,6 +120,12 @@
   "finished.finalLadder": "Final Ladder",
   "finished.finalStandings": "Final Standings",
 
-  "language.english": "English",
+    "teams.addTeam": "Add Team",
+    "teams.editTeam": "Edit team",
+    "teams.removeTeam": "Remove team",
+    "teams.noTeams": "No teams have been added yet.",
+    "teams.actions": "Actions",
+
+    "language.english": "English",
   "language.dutch": "Nederlands"
 }

@@ -1,6 +1,8 @@
 export interface Team {
   id: string;
   name: string;
+  player1: string;
+  player2: string;
 }
 
 export interface Matchup {
@@ -46,9 +48,9 @@ export const TOTAL_ROUNDS = 1;
 export const STORAGE_KEY = 'manillen-tournament';
 
 export type TournamentAction =
-  | { type: 'ADD_TEAM'; name: string }
+  | { type: 'ADD_TEAM'; name: string; player1: string; player2: string }
   | { type: 'REMOVE_TEAM'; teamId: string }
-  | { type: 'UPDATE_TEAM'; teamId: string; name: string }
+  | { type: 'UPDATE_TEAM'; teamId: string; name: string; player1: string; player2: string }
   | { type: 'SET_ROUND_DURATION'; minutes: number }
   | { type: 'START_TOURNAMENT' }
   | { type: 'INIT_ROUND' }
