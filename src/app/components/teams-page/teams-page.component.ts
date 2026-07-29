@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TournamentService } from '../../services/tournament.service';
-import { PageTitleService } from '../../services/page-title.service';
 import { AddTeamDialogService } from '../../services/add-team-dialog.service';
 import { ConfirmDialogService } from '../../services/confirm-dialog.service';
 import { L10nService } from '../../services/l10n.service';
@@ -20,11 +19,9 @@ import { Subscription } from 'rxjs';
 export class TeamsPageComponent implements OnInit, OnDestroy {
   state: TournamentState;
   private stateSubscription: Subscription | null = null;
-  private languageSubscription: Subscription | null = null;
 
   constructor(
     private tournamentService: TournamentService,
-    private pageTitleService: PageTitleService,
     private addTeamDialogService: AddTeamDialogService,
     private confirmDialogService: ConfirmDialogService,
     public l10n: L10nService
@@ -33,25 +30,13 @@ export class TeamsPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.updatePageTitle();
-
-    this.languageSubscription = this.l10n.language$.subscribe(() => {
-      this.updatePageTitle();
-    });
-
     this.stateSubscription = this.tournamentService.state$.subscribe((state) => {
       this.state = state;
     });
   }
 
   ngOnDestroy(): void {
-    this.pageTitleService.clearTitle();
-    this.languageSubscription?.unsubscribe();
     this.stateSubscription?.unsubscribe();
-  }
-
-  private updatePageTitle(): void {
-    this.pageTitleService.setTitle(this.l10n.get('pageTitle.teams'));
   }
 
   get canModifyTeams(): boolean {

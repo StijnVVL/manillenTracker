@@ -1,13 +1,10 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { TournamentService } from '../../services/tournament.service';
-import { PageTitleService } from '../../services/page-title.service';
-import { L10nService } from '../../services/l10n.service';
 import { L10nPipe } from '../../pipes/l10n.pipe';
 import { LanguageSelectorComponent } from '../language-selector/language-selector.component';
 import { TournamentState } from '../../models/tournament.model';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-settings',
@@ -17,35 +14,17 @@ import { Subscription } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './settings.component.css'
 })
-export class SettingsComponent implements OnInit, OnDestroy {
+export class SettingsComponent implements OnInit {
   state: TournamentState;
-  private languageSubscription: Subscription | null = null;
 
-  constructor(
-    private tournamentService: TournamentService,
-    private pageTitleService: PageTitleService,
-    private l10n: L10nService
-  ) {
+  constructor(private tournamentService: TournamentService) {
     this.state = tournamentService.state;
   }
 
   ngOnInit(): void {
-    this.updatePageTitle();
-    this.languageSubscription = this.l10n.language$.subscribe(() => {
-      this.updatePageTitle();
-    });
     this.tournamentService.state$.subscribe((state) => {
       this.state = state;
     });
-  }
-
-  ngOnDestroy(): void {
-    this.pageTitleService.clearTitle();
-    this.languageSubscription?.unsubscribe();
-  }
-
-  private updatePageTitle(): void {
-    this.pageTitleService.setTitle(this.l10n.get('pageTitle.settings'));
   }
 
   onDurationChange(minutes: number): void {

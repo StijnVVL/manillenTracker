@@ -1,15 +1,13 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 
-import { RouterOutlet, RouterLink } from '@angular/router';
+import { RouterOutlet, RouterLink, ActivatedRoute } from '@angular/router';
 import { TournamentService } from './services/tournament.service';
-import { PageTitleService } from './services/page-title.service';
 import { ConfirmDialogService } from './services/confirm-dialog.service';
 import { L10nService } from './services/l10n.service';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 import { AddTeamDialogComponent } from './components/add-team-dialog/add-team-dialog.component';
 import { ScoreEditDialogComponent } from './components/score-edit-dialog/score-edit-dialog.component';
 import { L10nPipe } from './pipes/l10n.pipe';
-import { TournamentState } from './models/tournament.model';
 
 @Component({
   selector: 'app-root',
@@ -26,27 +24,23 @@ import { TournamentState } from './models/tournament.model';
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './app.component.css',
 })
-export class AppComponent implements OnInit, OnDestroy {
-  state: TournamentState;
+export class AppComponent implements OnDestroy {
   menuOpen = false;
-  pageTitle = '';
 
   constructor(
     private tournamentService: TournamentService,
-    private pageTitleService: PageTitleService,
     private confirmDialogService: ConfirmDialogService,
+    private activatedRoute: ActivatedRoute,
     private l10n: L10nService
-  ) {
-    this.state = tournamentService.state;
-  }
+  ) {}
 
-  ngOnInit(): void {
-    this.tournamentService.state$.subscribe((state) => {
-      this.state = state;
-    });
-    this.pageTitleService.title$.subscribe((title) => {
-      this.pageTitle = title;
-    });
+  get pageTitle(): string {
+    let route = this.activatedRoute;
+    while (route.firstChild) route = route.firstChild;
+    const titleKey = route.snapshot.data['titleKey'] as string | undefined;
+    if (titleKey) return this.l10n.get(titleKey);
+    if (this.tournamentService.state.status === 'setup') return this.l10n.get('pageTitle.tournamentSetup');
+    return '';
   }
 
   ngOnDestroy(): void {}
