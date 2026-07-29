@@ -4,9 +4,6 @@
   "common.save": "Save",
   "common.confirm": "Confirm",
   "common.reset": "Reset",
-  "common.home": "Home",
-  "common.settings": "Settings",
-  "common.credits": "Credits",
   "common.team": "Team",
   "common.table": "Table",
   "common.vs": "VS",
@@ -18,9 +15,11 @@
   "common.margin": "Margin",
   "common.backToHome": "Back to Home",
 
-  "menu.tournamentSetup": "Tournament Setup",
+  "menu.tournament": "Tournament",
+  "menu.credits": "Credits",
   "menu.teams": "Teams",
   "menu.resetTournament": "Reset Tournament",
+  "menu.settings": "Settings",
 
   "dialog.resetTournament.title": "Reset Tournament",
   "dialog.resetTournament.message": "Are you sure you want to reset the tournament? All progress will be lost.",

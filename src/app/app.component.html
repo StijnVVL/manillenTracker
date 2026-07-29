@@ -1,26 +1,26 @@
 <div class="app-shell">
-  <header class="app-header">
-    <button class="hamburger-btn" (click)="toggleMenu()" [class.active]="menuOpen">
-      <span class="hamburger-line"></span>
-      <span class="hamburger-line"></span>
-      <span class="hamburger-line"></span>
-    </button>
+    <header class="app-header">
+        <button class="hamburger-btn" (click)="toggleMenu()" [class.active]="menuOpen">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+        </button>
 
-    @if (pageTitle) {
-      <h1 class="header-title">{{ pageTitle }}</h1>
-    }
-  </header>
-
+        @if (pageTitle) {
+            <h1 class="header-title">{{ pageTitle }}</h1>
+        }
+    </header>
+ 
   @if (menuOpen) {
     <div class="menu-overlay" (click)="closeMenu()"></div>
     <nav class="slide-menu">
       <div class="menu-top">
-        <a routerLink="/" class="menu-item" (click)="closeMenu()">{{ 'common.home' | l10n }}</a>
+        <a routerLink="/" class="menu-item" (click)="closeMenu()">{{ 'menu.tournament' | l10n }}</a>
         <a routerLink="/teams" class="menu-item" (click)="closeMenu()">{{ 'menu.teams' | l10n }}</a>
-        <a routerLink="/credits" class="menu-item" (click)="closeMenu()">{{ 'common.credits' | l10n }}</a>
+        <a routerLink="/credits" class="menu-item" (click)="closeMenu()">{{ 'menu.credits' | l10n }}</a>
       </div>
       <div class="menu-bottom">
-        <a routerLink="/settings" class="menu-item" (click)="closeMenu()">{{ 'common.settings' | l10n }}</a>
+        <a routerLink="/settings" class="menu-item" (click)="closeMenu()">{{ 'menu.settings' | l10n }}</a>
         <button class="menu-item menu-item-danger" (click)="resetTournament()">{{ 'menu.resetTournament' | l10n }}</button>
       </div>
     </nav>
