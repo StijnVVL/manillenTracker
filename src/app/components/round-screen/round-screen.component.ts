@@ -169,6 +169,15 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
     this.router.navigate(['/tournament/round', this.roundNumber, 'round-winner']);
   }
 
+  get scoresConfirmed(): boolean {
+    return this.state.status === 'round-winner' || this.state.status === 'finished';
+  }
+
+  confirmScores(): void {
+    if (!this.isRoundEnded || !this.allScoresFilled) return;
+    this.tournamentService.dispatch({ type: 'SUBMIT_SCORES', scores: this.scores });
+  }
+
   loadScores(): void {
     if (!this.displayRound) return;
     const loaded: Record<string, number> = {};
@@ -254,6 +263,14 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
 
   getTeamName(teamId: string): string {
     return this.teamMap.get(teamId)?.name ?? 'Unknown team';
+  }
+
+  getTeamNameShort(teamId: string): string {
+    const name = this.getTeamName(teamId);
+    if (name.length <= 45) return name;
+    const cut = name.substring(0, 45);
+    const lastSpace = cut.lastIndexOf(' ');
+    return (lastSpace > 0 ? cut.substring(0, lastSpace) : cut) + '\u2026';
   }
 
   get leftColumnMatchups(): Matchup[] {

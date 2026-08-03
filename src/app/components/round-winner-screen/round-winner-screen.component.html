@@ -16,9 +16,8 @@
   </div>
 } @else if (displayRound) {
   <div class="card">
-    <h2 class="card-title">{{ 'roundWinner.title' | l10n:{ roundNumber: displayRound.number } }}</h2>
-
     <div class="winners-container">
+      <div class="round-champion-heading">{{ 'roundWinner.title' | l10n }}</div>
       @for (winner of winners; track winner.teamId) {
         <div class="winner-item" [class.first-place]="winner.place === 1" [class.second-place]="winner.place === 2" [class.third-place]="winner.place === 3">
           @if (winner.place === 1) {

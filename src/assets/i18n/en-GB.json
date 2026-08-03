@@ -154,6 +154,7 @@
   "roundScreen.resumeRound": "Resume Round",
   "roundScreen.endRound": "End Round",
   "roundScreen.roundFinished": "TIME'S UP",
+  "roundScreen.confirmScores": "Confirm Scores",
   "roundScreen.toRoundWinner": "To Round Winner",
 
   "roundHistory.title": "Round History",
@@ -169,7 +170,7 @@
   "scoring.nextRound": "Next Round",
   "scoring.editScore": "Edit score",
 
-  "roundWinner.title": "Round {roundNumber} Results",
+  "roundWinner.title": "Round Champion",
   "roundWinner.points": "points",
   "roundWinner.finish": "Finish Tournament",
   "roundWinner.backToMatchups": "Back to Matchups",

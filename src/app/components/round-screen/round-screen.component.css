@@ -51,10 +51,6 @@
   border-bottom: none;
 }
 
-.matchup-row:hover {
-  background: rgba(0, 0, 0, 0.02);
-}
-
 .col-table {
   font-weight: 700;
   color: var(--primary-dark);
@@ -143,6 +139,16 @@
 
 .btn-status-tag--warning:hover {
   background: rgba(180, 83, 9, 0.08);
+}
+
+.btn-status-tag--muted {
+  border-color: var(--muted);
+  color: var(--muted);
+  cursor: default;
+}
+
+.btn-status-tag--muted:hover {
+  background: transparent;
 }
 
 @media (max-width: 768px) {
