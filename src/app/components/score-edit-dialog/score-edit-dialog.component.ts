@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, HostListener } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ScoreEditDialogService, ScoreEditDialogData } from '../../services/score-edit-dialog.service';
 import { L10nService } from '../../services/l10n.service';
@@ -48,6 +48,11 @@ export class ScoreEditDialogComponent implements OnInit, OnDestroy {
     this.subscription?.unsubscribe();
   }
 
+  @HostListener('document:keydown.escape')
+  onEscape(): void {
+    if (this.isOpen) this.onCancel();
+  }
+
   get canSave(): boolean {
     return this.scoreA !== undefined && this.scoreB !== undefined &&
            !Number.isNaN(this.scoreA) && !Number.isNaN(this.scoreB);
@@ -66,12 +71,6 @@ export class ScoreEditDialogComponent implements OnInit, OnDestroy {
   onCancel(): void {
     this.isOpen = false;
     this.scoreEditDialogService.respond(null);
-  }
-
-  onOverlayClick(event: MouseEvent): void {
-    if (event.target === event.currentTarget) {
-      this.onCancel();
-    }
   }
 
   onKeydown(event: KeyboardEvent): void {

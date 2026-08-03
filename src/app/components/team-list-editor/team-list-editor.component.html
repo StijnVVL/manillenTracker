@@ -1,17 +1,19 @@
 <div class="team-editor">
   <!-- Counters row -->
-  <div class="team-editor-counters">
-    <span class="counter-item" [class.counter-ok]="infoIsFull" [class.counter-warn]="!infoIsFull">
-      <app-svg-icon [name]="infoIsFull ? 'check' : 'alert-triangle'" [width]="14" [height]="14" />
-      {{ 'teams.infoCounter' | l10n:{ count: fullInfoCount, total: teams.length } }}
-    </span>
-    @if (teamPresence !== null) {
-      <span class="counter-item" [class.counter-ok]="presenceIsFull" [class.counter-warn]="!presenceIsFull">
-        <app-svg-icon [name]="presenceIsFull ? 'check' : 'alert-triangle'" [width]="14" [height]="14" />
-        {{ 'setup.presenceCounter' | l10n:{ present: presentCount, total: teams.length } }}
+  @if (showCounters) {
+    <div class="team-editor-counters">
+      <span class="counter-item" [class.counter-ok]="infoIsFull" [class.counter-warn]="!infoIsFull">
+        <app-svg-icon [name]="infoIsFull ? 'check' : 'alert-triangle'" [width]="14" [height]="14" />
+        {{ 'teams.infoCounter' | l10n:{ count: fullInfoCount, total: teams.length } }}
       </span>
-    }
-  </div>
+      @if (teamPresence !== null) {
+        <span class="counter-item" [class.counter-ok]="presenceIsFull" [class.counter-warn]="!presenceIsFull">
+          <app-svg-icon [name]="presenceIsFull ? 'check' : 'alert-triangle'" [width]="14" [height]="14" />
+          {{ 'setup.presenceCounter' | l10n:{ present: presentCount, total: teams.length } }}
+        </span>
+      }
+    </div>
+  }
 
   <!-- Actions row -->
   <div class="team-editor-actions">

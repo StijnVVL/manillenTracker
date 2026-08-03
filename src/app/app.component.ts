@@ -69,6 +69,13 @@ export class AppComponent implements OnDestroy {
     return state.rounds[state.rounds.length - 1].number;
   }
 
+  get currentRoundSubRoute(): string {
+    const s = this.tournamentService.state.status;
+    if (s === 'scoring') return 'scoring';
+    if (s === 'round-winner') return 'round-winner';
+    return 'play';
+  }
+
   get isPostSetup(): boolean {
     const s = this.tournamentService.state.status;
     return s === 'round' || s === 'scoring' || s === 'round-winner' || s === 'finished';

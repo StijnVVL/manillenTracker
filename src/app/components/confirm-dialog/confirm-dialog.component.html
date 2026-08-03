@@ -1,6 +1,7 @@
 @if (isOpen && data) {
-  <div class="dialog-overlay" (mousedown)="onOverlayMousedown($event)" (click)="onOverlayClick($event)">
+  <div class="dialog-overlay">
     <div class="dialog-box">
+      <button class="dialog-close" (click)="onCancel()" [title]="l10n.get('common.close')">&#x2715;</button>
       <h2 class="dialog-title">{{ data.title }}</h2>
       <p class="dialog-message">{{ data.message }}</p>
       <div class="dialog-actions">

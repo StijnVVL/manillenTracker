@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, HostListener } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { AddTeamDialogService, TeamDialogData } from '../../services/add-team-dialog.service';
@@ -58,6 +58,11 @@ export class AddTeamDialogComponent implements OnInit, OnDestroy {
     this.subscription?.unsubscribe();
   }
 
+  @HostListener('document:keydown.escape')
+  onEscape(): void {
+    if (this.isOpen) this.onCancel();
+  }
+
   get titleKey(): string {
     return this.mode === 'edit' ? 'dialog.editTeam.title' : 'dialog.addTeam.title';
   }
@@ -85,22 +90,6 @@ export class AddTeamDialogComponent implements OnInit, OnDestroy {
   onCancel(): void {
     this.isOpen = false;
     this.addTeamDialogService.respond(null);
-  }
-
-  private overlayMousedownTarget: EventTarget | null = null;
-
-  onOverlayMousedown(event: MouseEvent): void {
-    this.overlayMousedownTarget = event.target;
-  }
-
-  onOverlayClick(event: MouseEvent): void {
-    if (
-      event.target === event.currentTarget &&
-      this.overlayMousedownTarget === event.currentTarget
-    ) {
-      this.onCancel();
-    }
-    this.overlayMousedownTarget = null;
   }
 
   onKeydown(event: KeyboardEvent): void {

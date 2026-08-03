@@ -19,9 +19,10 @@
 } @else if (displayRound) {
   <app-countdown-timer
     [remainingSeconds]="remainingSeconds"
-    [staticDurationSeconds]="isIdle ? state.roundDurationSeconds : null"
+    [staticDurationSeconds]="state.roundDurationSeconds"
     [roundNumber]="displayRound.number"
     [isWarning]="isWarning"
+    [isEnded]="isRoundEnded"
   />
   <div class="timer-controls">
     @if (isIdle && isCurrentRound) {
@@ -39,14 +40,18 @@
         {{ 'roundScreen.resumeRound' | l10n }}
       </button>
     }
-    @if (!isIdle && isCurrentRound) {
+    @if (!isIdle && !isRoundEnded && isCurrentRound) {
       <button
         type="button"
         class="btn btn-danger"
         (click)="endRound()"
-        [disabled]="state.timerStatus === 'ended'"
       >
         {{ 'roundScreen.endRound' | l10n }}
+      </button>
+    }
+    @if (isRoundEnded && isCurrentRound) {
+      <button type="button" class="btn btn-primary" (click)="goToScoring()">
+        {{ 'roundScreen.toScoring' | l10n }}
       </button>
     }
   </div>
@@ -104,12 +109,5 @@
         </div>
       </div>
     }
-  </div>
-
-  <div style="margin-top: 1rem">
-    <app-round-history
-      [rounds]="state.rounds"
-      [teams]="state.teams"
-    />
   </div>
 }

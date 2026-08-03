@@ -5,7 +5,6 @@ import { TimerService, formatTime } from '../../services/timer.service';
 import { L10nPipe } from '../../pipes/l10n.pipe';
 import { getRoundByNumber, getLatestRoundDiffs, getCurrentRound, isRoundInFuture, isPageInFuture } from '../../utils/teams';
 import { CountdownTimerComponent } from '../countdown-timer/countdown-timer.component';
-import { RoundHistoryComponent } from '../round-history/round-history.component';
 import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
 import { TournamentState, Round, TournamentAction, Team, Matchup } from '../../models/tournament.model';
 import { ConfirmDialogService } from '../../services/confirm-dialog.service';
@@ -16,7 +15,6 @@ import { L10nService } from '../../services/l10n.service';
   standalone: true,
   imports: [
     CountdownTimerComponent,
-    RoundHistoryComponent,
     BreadcrumbComponent,
     L10nPipe
 ],
@@ -61,6 +59,23 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
       this.roundDiffs = getLatestRoundDiffs(state);
       this.teamMap = new Map(state.teams.map(t => [t.id, t]));
     });
+
+    // Restore timer display and interval when navigating back to a running/paused round
+    const round = getCurrentRound(this.state);
+    if (round?.dueAt) {
+      if (this.state.timerStatus === 'running') {
+        this.remainingSeconds = (round.dueAt - Date.now()) / 1000;
+        if (this.remainingSeconds > 0) {
+          this.timerService.start(round.dueAt, (timeCurrent) => this.onTick(timeCurrent));
+        } else {
+          this.remainingSeconds = 0;
+          this.#endRound();
+          this.router.navigate(['/tournament/round', this.roundNumber, 'scoring']);
+        }
+      } else if (this.state.timerStatus === 'paused' && round.pausedAt) {
+        this.remainingSeconds = (round.dueAt - round.pausedAt) / 1000;
+      }
+    }
   }
 
   checkIfFutureRound(): void {
@@ -70,7 +85,10 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
 
   goToCurrentRound(): void {
     if (this.currentRound) {
-      this.router.navigate(['/tournament/round', this.currentRound.number, 'play']);
+      const sub = this.state.status === 'scoring' ? 'scoring'
+        : this.state.status === 'round-winner' ? 'round-winner'
+        : 'play';
+      this.router.navigate(['/tournament/round', this.currentRound.number, sub]);
     }
   }
 
@@ -98,6 +116,10 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
     return this.state.timerStatus === 'idle';
   }
 
+  get isRoundEnded(): boolean {
+    return this.displayRound?.endedAt !== null && this.displayRound?.endedAt !== undefined;
+  }
+
   get isWarning(): boolean {
     if (!this.currentRound?.dueAt) {
       return false;
@@ -121,11 +143,11 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
 
   onTick(timeCurrent: number): void {
     this.remainingSeconds = (this.currentRound?.dueAt! - timeCurrent) / 1000;
-    this.tournamentService.dispatch({
-      type: 'TICK_TIMER',
-      currentTime: timeCurrent
-    } as TournamentAction);
 
+    if (this.remainingSeconds <= 0) {
+      this.remainingSeconds = 0;
+      this.#endRound();
+    }
   }
 
   resumeRound(): void {
@@ -139,6 +161,10 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
   pauseRound(): void {
     this.timerService.stop();
     this.tournamentService.dispatch({ type: 'PAUSE_ROUND' } as TournamentAction);
+  }
+
+  goToScoring(): void {
+    this.router.navigate(['/tournament/round', this.roundNumber, 'scoring']);
   }
 
   #endRound(): void {

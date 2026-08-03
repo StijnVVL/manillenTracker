@@ -133,6 +133,8 @@ export class RoundWinnerScreenComponent implements OnInit {
     }).then((confirmed) => {
       if (confirmed) {
         this.tournamentService.dispatch({ type: 'NEXT_ROUND' });
+        const newRound = this.tournamentService.state.rounds[this.tournamentService.state.rounds.length - 1];
+        this.router.navigate(['/tournament/round', newRound.number, 'play']);
       }
     });
   }

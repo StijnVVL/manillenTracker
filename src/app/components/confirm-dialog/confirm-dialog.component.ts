@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, HostListener } from '@angular/core';
 
 import { ConfirmDialogService, ConfirmDialogData } from '../../services/confirm-dialog.service';
 import { L10nService } from '../../services/l10n.service';
@@ -33,6 +33,11 @@ export class ConfirmDialogComponent implements OnInit, OnDestroy {
     this.subscription?.unsubscribe();
   }
 
+  @HostListener('document:keydown.escape')
+  onEscape(): void {
+    if (this.isOpen) this.onCancel();
+  }
+
   onConfirm(): void {
     this.isOpen = false;
     this.confirmDialogService.respond(true);
@@ -41,21 +46,5 @@ export class ConfirmDialogComponent implements OnInit, OnDestroy {
   onCancel(): void {
     this.isOpen = false;
     this.confirmDialogService.respond(false);
-  }
-
-  private overlayMousedownTarget: EventTarget | null = null;
-
-  onOverlayMousedown(event: MouseEvent): void {
-    this.overlayMousedownTarget = event.target;
-  }
-
-  onOverlayClick(event: MouseEvent): void {
-    if (
-      event.target === event.currentTarget &&
-      this.overlayMousedownTarget === event.currentTarget
-    ) {
-      this.onCancel();
-    }
-    this.overlayMousedownTarget = null;
   }
 }

@@ -1,6 +1,6 @@
 <section class="timer-section">
   <app-round-progress [roundNumber]="roundNumber" />
-  <div [class]="'countdown ' + (isWarning ? 'countdown-warning' : '')">
+  <div class="countdown" [style.color]="timerColor">
     {{ formattedTime }}
   </div>
 </section>

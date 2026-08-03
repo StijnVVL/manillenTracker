@@ -3,6 +3,7 @@
     [teams]="state.teams"
     [teamPresence]="state.teamPresence"
     [readonly]="!isSetup"
+    [showCounters]="isSetup"
     [showStartButton]="isSetup"
     [startDisabled]="hasTeamWithTags"
     (teamAdded)="onTeamAdded($event)"

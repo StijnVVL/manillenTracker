@@ -1,5 +1,6 @@
 {
   "common.cancel": "Cancel",
+  "common.close": "Close",
   "common.add": "Add",
   "common.save": "Save",
   "common.confirm": "Confirm",
@@ -164,6 +165,8 @@
   "roundScreen.pauseRound": "Pause Round",
   "roundScreen.resumeRound": "Resume Round",
   "roundScreen.endRound": "End Round",
+  "roundScreen.roundFinished": "ROUND FINISHED",
+  "roundScreen.toScoring": "To Scoring",
 
   "roundHistory.title": "Round History",
   "roundHistory.round": "Round {roundNumber}",

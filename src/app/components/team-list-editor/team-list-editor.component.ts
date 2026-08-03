@@ -23,6 +23,8 @@ export class TeamListEditorComponent {
   @Input() readonly = false;
   /** When true, missing-info tags use orange (warning) styling instead of red (danger). */
   @Input() settingsMode = false;
+  /** When false, the counters row is hidden (e.g. after tournament has started). */
+  @Input() showCounters = true;
 
   get presentCount(): number {
     if (!this.teamPresence) return 0;

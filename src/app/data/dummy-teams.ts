@@ -28,6 +28,11 @@ export const DUMMY_TEAMS: Team[] = [
   { id: '00000000-0000-0000-0000-000000000019', name: 'Card Counters',    player1: 'Marco',    player2: 'Nina' },
 ];
 
+// All teams present except the first one (index 0 = 'The Aces')
+export const DUMMY_TEAM_PRESENCE: Record<string, boolean> = Object.fromEntries(
+  DUMMY_TEAMS.map((t, i) => [t.id, i !== 0])
+);
+
 /**
  * Set to true to load dummy teams on startup (when no persisted state exists).
  * Set to false to disable dummy data.

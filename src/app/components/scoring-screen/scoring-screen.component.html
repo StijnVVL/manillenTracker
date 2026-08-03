@@ -95,11 +95,6 @@
           {{ 'scoring.confirmScores' | l10n }}
         }
       </button>
-      @if (confirmed && displayRound.number < state.totalRounds && isCurrentRound && !scoresAlreadyConfirmed) {
-        <button type="button" class="btn btn-secondary" (click)="nextRound()">
-          {{ 'scoring.nextRound' | l10n }}
-        </button>
-      }
     </div>
   </div>
 }

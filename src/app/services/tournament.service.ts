@@ -13,6 +13,7 @@ import {
   type TournamentAction,
 } from '../models/tournament.model';
 import { SettingsService } from './settings.service';
+import { DUMMY_TEAM_PRESENCE, USE_DUMMY_DATA } from '../data/dummy-teams';
 
 function createTeam(name: string, player1: string, player2: string): Team {
   return { id: crypto.randomUUID(), name: name.trim(), player1: player1.trim(), player2: player2.trim() };
@@ -67,7 +68,8 @@ function createInitialState(
   defaultTotalRounds = DEFAULT_TOTAL_ROUNDS,
   teams: Team[] = [],
   roundDurationSeconds = DEFAULT_ROUND_DURATION_SECONDS,
-  tournamentName = ''
+  tournamentName = '',
+  teamPresence: Record<string, boolean> = {}
 ): TournamentState {
   return {
     tournamentName,
@@ -79,7 +81,7 @@ function createInitialState(
     status: 'setup',
     timerStatus: 'idle',
     lastLadderSnapshot: null,
-    teamPresence: {},
+    teamPresence,
   };
 }
 
@@ -355,7 +357,8 @@ function tournamentReducer(
       if (typeof localStorage !== 'undefined') {
         localStorage.removeItem(STORAGE_KEY);
       }
-      return createInitialState(action.defaultTotalRounds, action.teams, action.roundDurationSeconds, action.tournamentName);
+      const initialPresence = USE_DUMMY_DATA ? DUMMY_TEAM_PRESENCE : {};
+      return createInitialState(action.defaultTotalRounds, action.teams, action.roundDurationSeconds, action.tournamentName, initialPresence);
     }
 
     case 'RESTORE_STATE':

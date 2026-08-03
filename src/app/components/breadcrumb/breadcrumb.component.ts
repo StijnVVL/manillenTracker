@@ -26,6 +26,8 @@ export class BreadcrumbComponent implements OnInit {
 
   showRoundPopup: boolean = false;
   showPagePopup: boolean = false;
+  popupX: number = 0;
+  popupY: number = 0;
   rounds: number[] = [];
   pageOptions: PageOption[] = [
     { key: 'play', labelKey: 'breadcrumb.matchups', route: 'play' },
@@ -54,14 +56,22 @@ export class BreadcrumbComponent implements OnInit {
     }
   }
 
-  toggleRoundPopup(event: Event): void {
+  toggleRoundPopup(event: MouseEvent): void {
     event.stopPropagation();
+    if (!this.showRoundPopup) {
+      this.popupX = event.clientX;
+      this.popupY = event.clientY;
+    }
     this.showRoundPopup = !this.showRoundPopup;
     this.showPagePopup = false;
   }
 
-  togglePagePopup(event: Event): void {
+  togglePagePopup(event: MouseEvent): void {
     event.stopPropagation();
+    if (!this.showPagePopup) {
+      this.popupX = event.clientX;
+      this.popupY = event.clientY;
+    }
     this.showPagePopup = !this.showPagePopup;
     this.showRoundPopup = false;
   }

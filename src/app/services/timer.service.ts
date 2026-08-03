@@ -60,7 +60,8 @@ export class TimerService implements OnDestroy {
 }
 
 export function formatTime(secs: number): string {
-  const totalSeconds = Math.max(0, Math.floor(secs));
+  // Ceil so 24.01 shows 25, 0.x shows 1 — but 0 stays 0
+  const totalSeconds = secs <= 0 ? 0 : Math.ceil(secs);
   const hours = Math.floor(totalSeconds / 3600);
   const minutes = Math.floor((totalSeconds % 3600) / 60);
   const seconds = totalSeconds % 60;
