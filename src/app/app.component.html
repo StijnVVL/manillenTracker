@@ -15,13 +15,22 @@
     <div class="menu-overlay" (click)="closeMenu()"></div>
     <nav class="slide-menu">
       <div class="menu-top">
-        <a routerLink="/" class="menu-item" (click)="closeMenu()">{{ 'menu.tournament' | l10n }}</a>
-        <a routerLink="/teams" class="menu-item" (click)="closeMenu()">{{ 'menu.teams' | l10n }}</a>
-        <a routerLink="/credits" class="menu-item" (click)="closeMenu()">{{ 'menu.credits' | l10n }}</a>
+        <a routerLink="/" routerLinkActive="menu-item-active" [routerLinkActiveOptions]="{exact:true}" class="menu-item" (click)="closeMenu()">{{ 'menu.home' | l10n }}</a>
+        <a routerLink="/tournament" routerLinkActive="menu-item-active" [routerLinkActiveOptions]="{exact:true}" class="menu-item" (click)="closeMenu()">{{ 'menu.tournament' | l10n }}</a>
+        @if (hasTournament) {
+          <a routerLink="/tournament/setup" routerLinkActive="menu-item-active" class="menu-item menu-item-sub" (click)="closeMenu()">{{ 'menu.setup' | l10n }}</a>
+          <a routerLink="/tournament/teams" routerLinkActive="menu-item-active" class="menu-item menu-item-sub" (click)="closeMenu()">{{ 'menu.teams' | l10n }}</a>
+          @if (isPostSetup && currentRoundNumber !== null) {
+            <a [routerLink]="['/tournament/round', currentRoundNumber, 'play']" routerLinkActive="menu-item-active" class="menu-item menu-item-sub" (click)="closeMenu()">{{ 'menu.currentRound' | l10n }}</a>
+          } @else {
+            <span class="menu-item menu-item-sub menu-item-disabled">{{ 'menu.currentRound' | l10n }}</span>
+          }
+        }
+        <a routerLink="/credits" routerLinkActive="menu-item-active" class="menu-item" (click)="closeMenu()">{{ 'menu.credits' | l10n }}</a>
       </div>
       <div class="menu-bottom">
-        <a routerLink="/settings" class="menu-item" (click)="closeMenu()">{{ 'menu.settings' | l10n }}</a>
-        <button class="menu-item menu-item-danger" (click)="resetTournament()">{{ 'menu.resetTournament' | l10n }}</button>
+        <a routerLink="/settings" routerLinkActive="menu-item-active" class="menu-item" (click)="closeMenu()">{{ 'menu.settings' | l10n }}</a>
+        <button class="menu-item" [class.menu-item-danger]="hasTournament" [class.menu-item-disabled]="!hasTournament" [disabled]="!hasTournament" (click)="stopTournament()">{{ 'menu.stopTournament' | l10n }}</button>
       </div>
     </nav>
   }

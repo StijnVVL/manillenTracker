@@ -43,9 +43,19 @@ export class ConfirmDialogComponent implements OnInit, OnDestroy {
     this.confirmDialogService.respond(false);
   }
 
+  private overlayMousedownTarget: EventTarget | null = null;
+
+  onOverlayMousedown(event: MouseEvent): void {
+    this.overlayMousedownTarget = event.target;
+  }
+
   onOverlayClick(event: MouseEvent): void {
-    if (event.target === event.currentTarget) {
+    if (
+      event.target === event.currentTarget &&
+      this.overlayMousedownTarget === event.currentTarget
+    ) {
       this.onCancel();
     }
+    this.overlayMousedownTarget = null;
   }
 }

@@ -12,6 +12,7 @@ import { TournamentState, Round, Matchup, Team } from '../../models/tournament.m
 import { ScoreEditDialogService } from '../../services/score-edit-dialog.service';
 import { ConfirmDialogService } from '../../services/confirm-dialog.service';
 import { CommonModule } from '@angular/common';
+import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 
 @Component({
   selector: 'app-scoring-screen',
@@ -21,7 +22,8 @@ import { CommonModule } from '@angular/common';
     CommonModule,
     RoundProgressComponent,
     BreadcrumbComponent,
-    L10nPipe
+    L10nPipe,
+    SvgIconComponent,
 ],
   templateUrl: './scoring-screen.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
@@ -73,7 +75,7 @@ export class ScoringScreenComponent implements OnInit {
 
   goToCurrentRound(): void {
     if (this.currentRound) {
-      this.router.navigate(['/round', this.currentRound.number, 'scoring']);
+      this.router.navigate(['/tournament/round', this.currentRound.number, 'scoring']);
     }
   }
 
@@ -165,7 +167,7 @@ export class ScoringScreenComponent implements OnInit {
 
     // If scores already confirmed, just navigate to round winner screen
     if (this.scoresAlreadyConfirmed) {
-      this.router.navigate(['/round', this.displayRound.number, 'round-winner']);
+      this.router.navigate(['/tournament/round', this.displayRound.number, 'round-winner']);
       return;
     }
 

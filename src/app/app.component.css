@@ -124,12 +124,33 @@
   background: rgba(0, 0, 0, 0.05);
 }
 
+.menu-item-active {
+  font-weight: 700;
+  background: #d0e4d4;
+}
+
 .menu-item-danger {
   color: var(--danger);
 }
 
 .menu-item-danger:hover {
   background: rgba(180, 35, 24, 0.08);
+}
+
+.menu-item-sub {
+  padding-left: 2rem;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.menu-item-disabled {
+  opacity: 0.4;
+  cursor: default;
+  pointer-events: none;
+}
+
+.menu-item-disabled:hover {
+  background: transparent;
 }
 
 /* Content */

@@ -4,39 +4,77 @@
     <app-language-selector />
   </div>
 
-  <div class="card">
+  <div class="card card--spaced">
+    <h2 class="card-title">{{ 'settings.defaultTournamentSettings' | l10n }}</h2>
+
+    <label class="field-label" for="default-tournament-name">
+      {{ 'settings.defaultTournamentNameLabel' | l10n }}
+    </label>
+    <input
+      id="default-tournament-name"
+      class="input"
+      type="text"
+      [(ngModel)]="defaultTournamentNameValue"
+      (ngModelChange)="onDefaultTournamentNameChange($event)"
+      [placeholder]="'settings.defaultTournamentNamePlaceholder' | l10n"
+    />
+    <p class="field-hint">{{ 'settings.defaultTournamentNameHint' | l10n }}</p>
+  </div>
+
+  <div class="card card--spaced">
     <h2 class="card-title">{{ 'settings.roundSettings' | l10n }}</h2>
 
     <label class="field-label" for="round-duration">
       {{ 'settings.roundDurationLabel' | l10n }}
     </label>
-    <input
-      id="round-duration"
-      class="input-number"
-      type="number"
-      min="1"
-      max="240"
-      [ngModel]="state.roundDurationSeconds / 60"
-      (ngModelChange)="onDurationChange($event)"
-    />
-    <p class="field-hint">
-      {{ 'settings.roundDurationHint' | l10n }}
-    </p>
+    <div class="input-row">
+      <input
+        id="round-duration"
+        class="input-number"
+        [class.input-invalid]="durationError"
+        type="number"
+        min="1"
+        max="120"
+        [(ngModel)]="durationValue"
+        (ngModelChange)="onDurationChange($event)"
+      />
+      <span class="field-error" *ngIf="durationError">
+        <app-svg-icon name="alert-triangle" [width]="16" [height]="16"/>
+        {{ durationError | l10n }}
+      </span>
+    </div>
+    <p class="field-hint">{{ 'settings.roundDurationHint' | l10n }}</p>
 
     <label class="field-label" for="total-rounds">
       {{ 'settings.totalRoundsLabel' | l10n }}
     </label>
-    <input
-      id="total-rounds"
-      class="input-number"
-      type="number"
-      min="1"
-      max="20"
-      [ngModel]="state.totalRounds"
-      (ngModelChange)="onTotalRoundsChange($event)"
+    <div class="input-row">
+      <input
+        id="total-rounds"
+        class="input-number"
+        [class.input-invalid]="totalRoundsError"
+        type="number"
+        min="1"
+        max="10"
+        [(ngModel)]="totalRoundsValue"
+        (ngModelChange)="onTotalRoundsChange($event)"
+      />
+      <span class="field-error" *ngIf="totalRoundsError">
+        <app-svg-icon name="alert-triangle" [width]="16" [height]="16"/>
+        {{ totalRoundsError | l10n }}
+      </span>
+    </div>
+    <p class="field-hint">{{ 'settings.totalRoundsHint' | l10n }}</p>
+  </div>
+
+  <div class="card card--spaced">
+    <h2 class="card-title">{{ 'settings.teamsCard' | l10n }}</h2>
+    <app-team-list-editor
+      [teams]="settingsState.teams"
+      [settingsMode]="true"
+      (teamAdded)="onTeamAdded($event)"
+      (teamEdited)="onTeamEdited($event)"
+      (teamRemoved)="onTeamRemoved($event)"
     />
-    <p class="field-hint">
-      {{ 'settings.totalRoundsHint' | l10n }}
-    </p>
   </div>
 </div>

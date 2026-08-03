@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { L10nService, SupportedLanguage, LanguageOption, LANGUAGES } from '../../services/l10n.service';
 import { L10nPipe } from '../../pipes/l10n.pipe';
 import { ClickOutsideDirective } from '../../directives/click-outside.directive';
+import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 
 @Component({
   selector: 'app-language-selector',
   standalone: true,
-  imports: [FormsModule, L10nPipe, ClickOutsideDirective],
+  imports: [FormsModule, L10nPipe, ClickOutsideDirective, SvgIconComponent],
   templateUrl: './language-selector.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './language-selector.component.css'

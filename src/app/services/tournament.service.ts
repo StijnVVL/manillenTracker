@@ -12,7 +12,7 @@ import {
   type TournamentState,
   type TournamentAction,
 } from '../models/tournament.model';
-import { DUMMY_TEAMS, USE_DUMMY_DATA } from '../data/dummy-teams';
+import { SettingsService } from './settings.service';
 
 function createTeam(name: string, player1: string, player2: string): Team {
   return { id: crypto.randomUUID(), name: name.trim(), player1: player1.trim(), player2: player2.trim() };
@@ -30,7 +30,6 @@ function createRound(number: number, teamIds: string[], useRandom: boolean): Rou
     startedAt: null,
     endedAt: null,
     dueAt: null,
-    currentAt: null,
     pausedAt: null
   };
 }
@@ -49,16 +48,38 @@ function updateCurrentRound(state: TournamentState, round: Round): TournamentSta
   return { ...state, rounds };
 }
 
-function createInitialState(): TournamentState {
+function createEmptyState(): TournamentState {
   return {
-    teams: USE_DUMMY_DATA ? [...DUMMY_TEAMS] : [],
+    tournamentName: '',
+    teams: [],
     ladder: [],
     rounds: [],
     roundDurationSeconds: DEFAULT_ROUND_DURATION_SECONDS,
     totalRounds: DEFAULT_TOTAL_ROUNDS,
+    status: 'none',
+    timerStatus: 'idle',
+    lastLadderSnapshot: null,
+    teamPresence: {},
+  };
+}
+
+function createInitialState(
+  defaultTotalRounds = DEFAULT_TOTAL_ROUNDS,
+  teams: Team[] = [],
+  roundDurationSeconds = DEFAULT_ROUND_DURATION_SECONDS,
+  tournamentName = ''
+): TournamentState {
+  return {
+    tournamentName,
+    teams: teams.map(t => ({ ...t })),
+    ladder: [],
+    rounds: [],
+    roundDurationSeconds,
+    totalRounds: defaultTotalRounds,
     status: 'setup',
     timerStatus: 'idle',
     lastLadderSnapshot: null,
+    teamPresence: {},
   };
 }
 
@@ -74,14 +95,14 @@ function loadPersistedState(): TournamentState | null {
       player1: team.player1 ?? '',
       player2: team.player2 ?? '',
     }));
+    // Migrate teamPresence if missing
+    parsed.teamPresence = parsed.teamPresence ?? {};
+    // Migrate tournamentName if missing
+    parsed.tournamentName = parsed.tournamentName ?? '';
     return parsed;
   } catch {
     return null;
   }
-}
-
-function getInitialTournamentState(): TournamentState {
-  return loadPersistedState() ?? createInitialState();
 }
 
 function tournamentReducer(
@@ -96,7 +117,9 @@ function tournamentReducer(
     case 'ADD_TEAM': {
       const name = action.name.trim();
       if (!name) return state;
-      const team = createTeam(name, action.player1, action.player2);
+      const team = action.id
+        ? { id: action.id, name, player1: action.player1.trim(), player2: action.player2.trim() }
+        : createTeam(name, action.player1, action.player2);
       return { ...state, teams: [...state.teams, team] };
     }
 
@@ -104,6 +127,9 @@ function tournamentReducer(
       return {
         ...state,
         teams: state.teams.filter((t) => t.id !== action.teamId),
+        teamPresence: Object.fromEntries(
+          Object.entries(state.teamPresence).filter(([id]) => id !== action.teamId)
+        ),
       };
 
     case 'UPDATE_TEAM':
@@ -114,16 +140,31 @@ function tournamentReducer(
         ),
       };
 
-    case 'SET_ROUND_DURATION': {
-      const seconds = Math.max(1, action.minutes * 60);
-      return {
-        ...state,
-        roundDurationSeconds: seconds
-      };
+    case 'SET_TOURNAMENT_NAME': {
+      if (state.status !== 'setup') return state;
+      return { ...state, tournamentName: action.name };
+    }
+
+    case 'SET_SETUP_ROUND_DURATION': {
+      if (state.status !== 'setup') return state;
+      return { ...state, roundDurationSeconds: action.roundDurationSeconds };
+    }
+
+    case 'SET_TEAM_PRESENT': {
+      if (state.status !== 'setup') return state;
+      return { ...state, teamPresence: { ...state.teamPresence, [action.teamId]: true } };
+    }
+
+    case 'SET_TEAM_ABSENT': {
+      if (state.status !== 'setup') return state;
+      const { [action.teamId]: _, ...rest } = state.teamPresence;
+      return { ...state, teamPresence: rest };
     }
 
     case 'SET_TOTAL_ROUNDS': {
-      const totalRounds = Math.max(1, Math.min(20, action.totalRounds)); // Between 1 and 20
+      if (state.status !== 'setup') return state;
+      const n = Math.round(Number(action.totalRounds));
+      const totalRounds = (isFinite(n) && n >= 1 && n <= 10) ? n : DEFAULT_TOTAL_ROUNDS;
       return {
         ...state,
         totalRounds
@@ -156,7 +197,6 @@ function tournamentReducer(
       const updatedRound: Round = {
         ...round,
         startedAt: round.startedAt ?? now,
-        currentAt: now,
         dueAt: action.dueTime
       };
       return {
@@ -201,18 +241,7 @@ function tournamentReducer(
     }
 
     case 'TICK_TIMER': {
-      const round = getCurrentRound(state);
-      if (!round){
-        return state;
-      }
-      
-      const updatedRound: Round = {
-        ...round,
-        currentAt: action.currentTime
-      };
-      return {
-        ...updateCurrentRound(state, updatedRound)
-      };
+      return state;
     }
 
     case 'END_ROUND': {
@@ -315,11 +344,18 @@ function tournamentReducer(
       };
     }
 
+    case 'STOP_TOURNAMENT': {
+      if (typeof localStorage !== 'undefined') {
+        localStorage.removeItem(STORAGE_KEY);
+      }
+      return createEmptyState();
+    }
+
     case 'RESET_TOURNAMENT': {
       if (typeof localStorage !== 'undefined') {
         localStorage.removeItem(STORAGE_KEY);
       }
-      return createInitialState();
+      return createInitialState(action.defaultTotalRounds, action.teams, action.roundDurationSeconds, action.tournamentName);
     }
 
     case 'RESTORE_STATE':
@@ -334,10 +370,14 @@ function tournamentReducer(
   providedIn: 'root',
 })
 export class TournamentService {
-  private stateSubject = new BehaviorSubject<TournamentState>(getInitialTournamentState());
-  public state$ = this.stateSubject.asObservable();
+  private stateSubject: BehaviorSubject<TournamentState>;
+  public state$: Observable<TournamentState>;
 
-  constructor() {
+  constructor(private settingsService: SettingsService) {
+    const initialState = loadPersistedState() ?? createEmptyState();
+    this.stateSubject = new BehaviorSubject<TournamentState>(initialState);
+    this.state$ = this.stateSubject.asObservable();
+
     // Persist state changes to localStorage
     this.state$.pipe(
       distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr))
@@ -347,7 +387,7 @@ export class TournamentService {
   }
 
   private persistState(state: TournamentState): void {
-    if (state.status === 'setup' && state.teams.length === 0) {
+    if (state.status === 'none' || (state.status === 'setup' && state.teams.length === 0)) {
       localStorage.removeItem(STORAGE_KEY);
       return;
     }
@@ -359,7 +399,18 @@ export class TournamentService {
   }
 
   dispatch(action: TournamentAction): void {
-    const newState = tournamentReducer(this.stateSubject.value, action);
+    let processedAction = action;
+    if (action.type === 'RESET_TOURNAMENT') {
+      const s = this.settingsService.state;
+      processedAction = {
+        ...action,
+        defaultTotalRounds: s.defaultTotalRounds,
+        teams: s.teams,
+        roundDurationSeconds: s.roundDurationMinutes * 60,
+        tournamentName: s.defaultTournamentName,
+      };
+    }
+    const newState = tournamentReducer(this.stateSubject.value, processedAction);
     this.stateSubject.next(newState);
   }
 

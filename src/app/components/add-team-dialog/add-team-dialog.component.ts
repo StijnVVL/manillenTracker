@@ -20,6 +20,8 @@ export class AddTeamDialogComponent implements OnInit, OnDestroy {
   teamName = '';
   player1 = '';
   player2 = '';
+  showPresenceCheckbox = false;
+  markAsPresent = true;
   private subscription: Subscription | null = null;
 
   constructor(
@@ -30,6 +32,8 @@ export class AddTeamDialogComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subscription = this.addTeamDialogService.dialog$.subscribe((data: TeamDialogData) => {
       this.mode = data.mode;
+      this.showPresenceCheckbox = data.showPresenceCheckbox ?? false;
+      this.markAsPresent = true;
       if (data.mode === 'edit' && data.team) {
         this.teamName = data.team.name;
         this.player1 = data.team.player1;
@@ -41,8 +45,11 @@ export class AddTeamDialogComponent implements OnInit, OnDestroy {
       }
       this.isOpen = true;
       setTimeout(() => {
-        const input = document.getElementById('team-name-input');
-        input?.focus();
+        const firstEmptyId = !this.teamName.trim() ? 'team-name-input'
+          : !this.player1.trim() ? 'player1-input'
+          : !this.player2.trim() ? 'player2-input'
+          : 'team-name-input';
+        (document.getElementById(firstEmptyId) as HTMLElement)?.focus();
       }, 50);
     });
   }
@@ -69,7 +76,8 @@ export class AddTeamDialogComponent implements OnInit, OnDestroy {
       this.addTeamDialogService.respond({
         name: this.teamName.trim(),
         player1: this.player1.trim(),
-        player2: this.player2.trim()
+        player2: this.player2.trim(),
+        markAsPresent: this.showPresenceCheckbox ? this.markAsPresent : undefined,
       });
     }
   }
@@ -79,10 +87,20 @@ export class AddTeamDialogComponent implements OnInit, OnDestroy {
     this.addTeamDialogService.respond(null);
   }
 
+  private overlayMousedownTarget: EventTarget | null = null;
+
+  onOverlayMousedown(event: MouseEvent): void {
+    this.overlayMousedownTarget = event.target;
+  }
+
   onOverlayClick(event: MouseEvent): void {
-    if (event.target === event.currentTarget) {
+    if (
+      event.target === event.currentTarget &&
+      this.overlayMousedownTarget === event.currentTarget
+    ) {
       this.onCancel();
     }
+    this.overlayMousedownTarget = null;
   }
 
   onKeydown(event: KeyboardEvent): void {

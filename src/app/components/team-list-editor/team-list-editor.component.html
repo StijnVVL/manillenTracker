@@ -1,0 +1,102 @@
+<div class="team-editor">
+  <!-- Counters row -->
+  <div class="team-editor-counters">
+    <span class="counter-item" [class.counter-ok]="infoIsFull" [class.counter-warn]="!infoIsFull">
+      <app-svg-icon [name]="infoIsFull ? 'check' : 'alert-triangle'" [width]="14" [height]="14" />
+      {{ 'teams.infoCounter' | l10n:{ count: fullInfoCount, total: teams.length } }}
+    </span>
+    @if (teamPresence !== null) {
+      <span class="counter-item" [class.counter-ok]="presenceIsFull" [class.counter-warn]="!presenceIsFull">
+        <app-svg-icon [name]="presenceIsFull ? 'check' : 'alert-triangle'" [width]="14" [height]="14" />
+        {{ 'setup.presenceCounter' | l10n:{ present: presentCount, total: teams.length } }}
+      </span>
+    }
+  </div>
+
+  <!-- Actions row -->
+  <div class="team-editor-actions">
+    @if (!readonly) {
+      <button type="button" class="btn btn-primary" (click)="openAddTeamDialog()">
+        {{ 'teams.addTeam' | l10n }}
+      </button>
+    }
+    <span class="actions-spacer"></span>
+    @if (showStartButton) {
+      <button
+        type="button"
+        class="btn btn-primary"
+        [disabled]="startDisabled"
+        (click)="confirmStartTournament()"
+      >
+        {{ 'setup.startTournament' | l10n }}
+      </button>
+    }
+  </div>
+
+  @if (teams.length === 0) {
+    <div class="team-editor-empty">
+      <p>{{ 'teams.noTeams' | l10n }}</p>
+    </div>
+  } @else {
+    <div class="team-table">
+      <div class="team-table-header">
+        <span class="col-num">#</span>
+        <span class="col-name">{{ 'common.team' | l10n }}</span>
+        @if (!readonly) {
+          <span class="col-actions">{{ 'teams.actions' | l10n }}</span>
+        }
+      </div>
+      @for (team of teams; track team.id; let i = $index) {
+        <div class="team-row">
+          <span class="col-num">{{ i + 1 }}</span>
+          <span class="col-name">{{ team.name }}</span>
+          @if (!readonly) {
+            <span class="col-actions">
+              @if (teamPresence !== null) {
+                <button
+                  type="button"
+                  class="btn-status-tag"
+                  [class.btn-status-tag--success]="isPresent(team)"
+                  [class.btn-status-tag--warning]="!isPresent(team)"
+                  (click)="isPresent(team) ? confirmMarkAbsent(team) : confirmMarkPresent(team)"
+                  [title]="isPresent(team) ? l10n.get('teams.markAbsent') : l10n.get('teams.markPresent')"
+                >
+                  <app-svg-icon [name]="isPresent(team) ? 'check' : 'alert-triangle'" [width]="12" [height]="12" />
+                  {{ 'teams.presentTag' | l10n }}
+                </button>
+              }
+              <button
+                type="button"
+                class="btn-status-tag"
+                [class.btn-status-tag--success]="!isMissingInfo(team)"
+                [class.btn-status-tag--danger]="isMissingInfo(team) && !settingsMode"
+                [class.btn-status-tag--warning]="isMissingInfo(team) && settingsMode"
+                (click)="openEditTeamDialog(team)"
+                [title]="l10n.get('teams.editTeam')"
+              >
+                <app-svg-icon [name]="isMissingInfo(team) ? 'alert-triangle' : 'check'" [width]="12" [height]="12" />
+                {{ 'teams.infoSetTag' | l10n }}
+              </button>
+              <button
+                type="button"
+                class="btn-icon"
+                (click)="openEditTeamDialog(team)"
+                [title]="l10n.get('teams.editTeam')"
+              >
+                <app-svg-icon name="edit" [width]="18" [height]="18"/>
+              </button>
+              <button
+                type="button"
+                class="btn-icon btn-icon-danger"
+                (click)="confirmRemoveTeam(team)"
+                [title]="l10n.get('teams.removeTeam')"
+              >
+                <app-svg-icon name="trash" [width]="18" [height]="18"/>
+              </button>
+            </span>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>

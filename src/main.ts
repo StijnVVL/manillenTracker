@@ -7,7 +7,7 @@ import { routes } from './app/app.routes';
 
 bootstrapApplication(AppComponent, {
   providers: [
-    provideZoneChangeDetection(),provideAnimations(),
-    provideRouter(routes)
+    provideZoneChangeDetection(), provideAnimations(),
+    provideRouter(routes),
   ]
 }).catch((err) => console.error(err));

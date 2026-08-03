@@ -3,21 +3,76 @@
     {{ 'setup.description' | l10n }}
   </p>
 
-  <div class="setup-summary">
-    <p class="team-count">{{ 'setup.teamCount' | l10n:{ count: state.teams.length } }}</p>
-    <a routerLink="/teams" class="btn btn-secondary">
-      {{ 'setup.manageTeams' | l10n }}
-    </a>
+  <!-- Tournament Options -->
+  <div class="setup-card">
+    <h2 class="setup-card-title">{{ 'setup.tournamentOptionsCard' | l10n }}</h2>
+
+    <label class="field-label" for="setup-tournament-name">
+      {{ 'setup.tournamentNameLabel' | l10n }}
+    </label>
+    <input
+      id="setup-tournament-name"
+      class="input"
+      type="text"
+      [ngModel]="state.tournamentName"
+      (ngModelChange)="onTournamentNameChange($event)"
+      [placeholder]="l10n.get('setup.tournamentNamePlaceholder')"
+      [disabled]="!isSetup"
+    />
   </div>
 
-  <div class="setup-actions">
-    <button
-      type="button"
-      class="btn btn-primary"
-      [disabled]="state.teams.length < 2"
-      (click)="startTournament()"
-    >
-      {{ 'setup.startTournament' | l10n }}
-    </button>
+  <!-- Round Settings -->
+  <div class="setup-card">
+    <h2 class="setup-card-title">{{ 'setup.roundSettingsCard' | l10n }}</h2>
+
+    <label class="field-label" for="setup-round-duration">
+      {{ 'settings.roundDurationLabel' | l10n }}
+    </label>
+    <div class="input-row">
+      <input
+        id="setup-round-duration"
+        class="input-number"
+        [class.input-invalid]="durationError"
+        type="number"
+        min="1"
+        max="120"
+        [(ngModel)]="durationValue"
+        (ngModelChange)="onDurationChange($event)"
+        [disabled]="!isSetup"
+      />
+      <span class="field-error" *ngIf="durationError">
+        <app-svg-icon name="alert-triangle" [width]="16" [height]="16"/>
+        {{ durationError | l10n }}
+      </span>
+    </div>
+    <p class="field-hint">{{ 'settings.roundDurationHint' | l10n }}</p>
+
+    <label class="field-label" for="setup-total-rounds">
+      {{ 'setup.totalRoundsLabel' | l10n }}
+    </label>
+    <input
+      id="setup-total-rounds"
+      class="input-number"
+      type="number"
+      min="1"
+      max="10"
+      [ngModel]="state.totalRounds"
+      (ngModelChange)="onTotalRoundsChange($event)"
+      [disabled]="!isSetup"
+    />
+    <p class="field-hint">{{ 'setup.totalRoundsHint' | l10n }}</p>
   </div>
+
+  @if (isSetup) {
+    <div class="setup-actions">
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="goToTeams()"
+      >
+        {{ 'setup.setupTeams' | l10n }}
+      </button>
+    </div>
+  }
 </div>
+

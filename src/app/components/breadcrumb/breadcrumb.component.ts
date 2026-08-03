@@ -5,7 +5,7 @@ import { L10nPipe } from '../../pipes/l10n.pipe';
 import { L10nService } from '../../services/l10n.service';
 import { TournamentService } from '../../services/tournament.service';
 
-export type PageType = 'timer' | 'scoring' | 'round-winner';
+export type PageType = 'play' | 'scoring' | 'round-winner';
 
 interface PageOption {
   key: PageType;
@@ -22,13 +22,13 @@ interface PageOption {
 })
 export class BreadcrumbComponent implements OnInit {
   @Input() roundNumber: number = 1;
-  @Input() pageType: PageType = 'timer';
+  @Input() pageType: PageType = 'play';
 
   showRoundPopup: boolean = false;
   showPagePopup: boolean = false;
   rounds: number[] = [];
   pageOptions: PageOption[] = [
-    { key: 'timer', labelKey: 'breadcrumb.matchups', route: 'timer' },
+    { key: 'play', labelKey: 'breadcrumb.matchups', route: 'play' },
     { key: 'scoring', labelKey: 'breadcrumb.scoring', route: 'scoring' },
     { key: 'round-winner', labelKey: 'breadcrumb.roundWinner', route: 'round-winner' },
   ];
@@ -72,12 +72,12 @@ export class BreadcrumbComponent implements OnInit {
   }
 
   selectRound(round: number): void {
-    this.router.navigate(['/round', round, 'timer']);
+    this.router.navigate(['/tournament/round', round, 'play']);
     this.closePopups();
   }
 
   selectPage(option: PageOption): void {
-    this.router.navigate(['/round', this.roundNumber, option.route]);
+    this.router.navigate(['/tournament/round', this.roundNumber, option.route]);
     this.closePopups();
   }
 

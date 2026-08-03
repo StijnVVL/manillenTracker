@@ -1,17 +1,16 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { TournamentService } from '../../services/tournament.service';
-import { AddTeamDialogService } from '../../services/add-team-dialog.service';
-import { ConfirmDialogService } from '../../services/confirm-dialog.service';
 import { L10nService } from '../../services/l10n.service';
-import { L10nPipe } from '../../pipes/l10n.pipe';
-import { TournamentState, Team } from '../../models/tournament.model';
+import { TeamListEditorComponent } from '../team-list-editor/team-list-editor.component';
+import { TournamentState } from '../../models/tournament.model';
+import { TeamDialogResult } from '../../services/add-team-dialog.service';
 import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-teams-page',
   standalone: true,
-  imports: [CommonModule, L10nPipe],
+  imports: [TeamListEditorComponent],
   templateUrl: './teams-page.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './teams-page.component.css'
@@ -22,8 +21,7 @@ export class TeamsPageComponent implements OnInit, OnDestroy {
 
   constructor(
     private tournamentService: TournamentService,
-    private addTeamDialogService: AddTeamDialogService,
-    private confirmDialogService: ConfirmDialogService,
+    private router: Router,
     public l10n: L10nService
   ) {
     this.state = tournamentService.state;
@@ -39,59 +37,44 @@ export class TeamsPageComponent implements OnInit, OnDestroy {
     this.stateSubscription?.unsubscribe();
   }
 
-  get canModifyTeams(): boolean {
+  get isSetup(): boolean {
     return this.state.status === 'setup';
   }
 
-  get leftColumnTeams(): Team[] {
-    const midpoint = Math.ceil(this.state.teams.length / 2);
-    return this.state.teams.slice(0, midpoint);
-  }
-
-  get rightColumnTeams(): Team[] {
-    const midpoint = Math.ceil(this.state.teams.length / 2);
-    return this.state.teams.slice(midpoint);
-  }
-
-  getTeamIndex(team: Team): number {
-    return this.state.teams.indexOf(team) + 1;
-  }
-
-  async openAddTeamDialog(): Promise<void> {
-    const result = await this.addTeamDialogService.openAdd();
-    if (result) {
-      this.tournamentService.dispatch({
-        type: 'ADD_TEAM',
-        name: result.name,
-        player1: result.player1,
-        player2: result.player2
-      });
-    }
-  }
-
-  async openEditTeamDialog(team: Team): Promise<void> {
-    const result = await this.addTeamDialogService.openEdit(team);
-    if (result) {
-      this.tournamentService.dispatch({
-        type: 'UPDATE_TEAM',
-        teamId: team.id,
-        name: result.name,
-        player1: result.player1,
-        player2: result.player2
-      });
-    }
-  }
-
-  async confirmRemoveTeam(team: Team): Promise<void> {
-    const confirmed = await this.confirmDialogService.confirm({
-      title: this.l10n.get('dialog.removeTeam.title'),
-      message: this.l10n.get('dialog.removeTeam.message', { teamName: team.name }),
-      confirmText: this.l10n.get('dialog.removeTeam.confirm'),
-      cancelText: this.l10n.get('common.cancel')
+  get hasTeamWithTags(): boolean {
+    return this.state.teams.length < 2 || this.state.teams.some(t => {
+      const missingInfo = !t.name?.trim() || !t.player1?.trim() || !t.player2?.trim();
+      const absent = !this.state.teamPresence[t.id];
+      return missingInfo || absent;
     });
+  }
 
-    if (confirmed) {
-      this.tournamentService.dispatch({ type: 'REMOVE_TEAM', teamId: team.id });
+  startTournament(): void {
+    this.tournamentService.dispatch({ type: 'START_TOURNAMENT' });
+    this.router.navigate(['/tournament/round', 1, 'play']);
+  }
+
+  onTeamAdded(result: TeamDialogResult): void {
+    const id = crypto.randomUUID();
+    this.tournamentService.dispatch({ type: 'ADD_TEAM', id, ...result });
+    if (result.markAsPresent) {
+      this.tournamentService.dispatch({ type: 'SET_TEAM_PRESENT', teamId: id });
     }
+  }
+
+  onTeamEdited(result: { teamId: string } & TeamDialogResult): void {
+    this.tournamentService.dispatch({ type: 'UPDATE_TEAM', ...result });
+  }
+
+  onTeamRemoved(teamId: string): void {
+    this.tournamentService.dispatch({ type: 'REMOVE_TEAM', teamId });
+  }
+
+  onTeamPresent(teamId: string): void {
+    this.tournamentService.dispatch({ type: 'SET_TEAM_PRESENT', teamId });
+  }
+
+  onTeamAbsent(teamId: string): void {
+    this.tournamentService.dispatch({ type: 'SET_TEAM_ABSENT', teamId });
   }
 }

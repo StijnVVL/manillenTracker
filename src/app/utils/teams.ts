@@ -25,7 +25,7 @@ export function isRoundInFuture(state: TournamentState, roundNumber: number): bo
   return roundNumber > state.rounds.length;
 }
 
-export function isPageInFuture(state: TournamentState, roundNumber: number, pageType: 'timer' | 'scoring' | 'round-winner'): boolean {
+export function isPageInFuture(state: TournamentState, roundNumber: number, pageType: 'play' | 'scoring' | 'round-winner'): boolean {
   // First check if the entire round is in the future
   if (isRoundInFuture(state, roundNumber)) {
     return true;
@@ -36,10 +36,10 @@ export function isPageInFuture(state: TournamentState, roundNumber: number, page
   if (currentRound && roundNumber === currentRound.number) {
     // Map status to page stages
     const statusToPage: Record<string, string[]> = {
-      'round': ['timer'],
-      'scoring': ['timer', 'scoring'],
-      'round-winner': ['timer', 'scoring', 'round-winner'],
-      'finished': ['timer', 'scoring', 'round-winner']
+      'round': ['play'],
+      'scoring': ['play', 'scoring'],
+      'round-winner': ['play', 'scoring', 'round-winner'],
+      'finished': ['play', 'scoring', 'round-winner']
     };
 
     const allowedPages = statusToPage[state.status] || [];

@@ -1,0 +1,18 @@
+<div class="welcome-page">
+  <h1 class="welcome-title">{{ 'home.title' | l10n }}</h1>
+
+  <p class="welcome-intro">{{ 'home.intro' | l10n }}</p>
+
+  <div class="welcome-links">
+    <a routerLink="/tournament" class="welcome-link-card">
+      <span class="link-card-title">{{ 'menu.tournament' | l10n }}</span>
+      <span class="link-card-desc">{{ 'home.tournamentDesc' | l10n }}</span>
+    </a>
+    <a routerLink="/settings" class="welcome-link-card">
+      <span class="link-card-title">{{ 'menu.settings' | l10n }}</span>
+      <span class="link-card-desc">{{ 'home.settingsDesc' | l10n }}</span>
+    </a>
+  </div>
+
+  <p class="welcome-footer">{{ 'home.haveFun' | l10n }}</p>
+</div>

@@ -1,5 +1,5 @@
 @if (isOpen) {
-  <div class="dialog-overlay" (click)="onOverlayClick($event)">
+  <div class="dialog-overlay" (mousedown)="onOverlayMousedown($event)" (click)="onOverlayClick($event)">
     <div class="dialog-box">
       <h2 class="dialog-title">{{ titleKey | l10n }}</h2>
       <div class="dialog-content">
@@ -36,6 +36,12 @@
             [placeholder]="l10n.get('dialog.addTeam.playerPlaceholder')"
           />
         </div>
+        @if (showPresenceCheckbox) {
+          <div class="form-group form-group--checkbox">
+            <input id="mark-present-checkbox" type="checkbox" [(ngModel)]="markAsPresent" />
+            <label for="mark-present-checkbox">{{ 'dialog.addTeam.markPresent' | l10n }}</label>
+          </div>
+        }
       </div>
       <div class="dialog-actions">
         <button class="btn btn-secondary" (click)="onCancel()">{{ 'common.cancel' | l10n }}</button>

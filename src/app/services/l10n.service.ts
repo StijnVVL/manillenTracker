@@ -5,20 +5,15 @@ import { BehaviorSubject } from 'rxjs';
 import enGB from '../../assets/i18n/en-GB.json';
 import nlBE from '../../assets/i18n/nl-BE.json';
 
-export type SupportedLanguage = 'en-GB' | 'nl-BE';
+import {
+  LANGUAGES,
+  type LanguageOption,
+  type SupportedLanguage,
+} from '../models/settings.model';
+import { SettingsService } from './settings.service';
 
-export interface LanguageOption {
-  code: SupportedLanguage;
-  nameKey: string;
-}
-
-export const LANGUAGES: LanguageOption[] = [
-  { code: 'en-GB', nameKey: 'language.english' },
-  { code: 'nl-BE', nameKey: 'language.dutch' },
-];
-
-const LANGUAGE_STORAGE_KEY = 'manillen-language';
-const DEFAULT_LANGUAGE: SupportedLanguage = 'en-GB';
+export type { SupportedLanguage, LanguageOption };
+export { LANGUAGES };
 
 @Injectable({
   providedIn: 'root'
@@ -30,29 +25,26 @@ export class L10nService {
   };
 
   private fallbackLanguage: SupportedLanguage = 'en-GB';
-  private currentLanguageSubject = new BehaviorSubject<SupportedLanguage>(this.loadSavedLanguage());
+  private currentLanguageSubject: BehaviorSubject<SupportedLanguage>;
 
   /** Observable for language changes */
-  language$ = this.currentLanguageSubject.asObservable();
+  language$;
 
   /** Current language code */
   get currentLanguage(): SupportedLanguage {
     return this.currentLanguageSubject.value;
   }
 
-  private loadSavedLanguage(): SupportedLanguage {
-    const saved = localStorage.getItem(LANGUAGE_STORAGE_KEY);
-    if (saved && (saved === 'en-GB' || saved === 'nl-BE')) {
-      return saved;
-    }
-    return DEFAULT_LANGUAGE;
+  constructor(private settingsService: SettingsService) {
+    this.currentLanguageSubject = new BehaviorSubject<SupportedLanguage>(settingsService.state.language);
+    this.language$ = this.currentLanguageSubject.asObservable();
   }
 
   /**
    * Set the current language
    */
   setLanguage(language: SupportedLanguage): void {
-    localStorage.setItem(LANGUAGE_STORAGE_KEY, language);
+    this.settingsService.dispatch({ type: 'SET_LANGUAGE', language });
     this.currentLanguageSubject.next(language);
   }
 

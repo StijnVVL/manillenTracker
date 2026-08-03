@@ -1,5 +1,5 @@
 @if (isOpen && data) {
-  <div class="dialog-overlay" (click)="onOverlayClick($event)">
+  <div class="dialog-overlay" (mousedown)="onOverlayMousedown($event)" (click)="onOverlayClick($event)">
     <div class="dialog-box">
       <h2 class="dialog-title">{{ data.title }}</h2>
       <p class="dialog-message">{{ data.message }}</p>

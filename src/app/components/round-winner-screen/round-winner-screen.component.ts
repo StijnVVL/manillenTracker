@@ -65,7 +65,7 @@ export class RoundWinnerScreenComponent implements OnInit {
 
   goToCurrentRound(): void {
     if (this.currentRound) {
-      this.router.navigate(['/round', this.currentRound.number, 'round-winner']);
+      this.router.navigate(['/tournament/round', this.currentRound.number, 'round-winner']);
     }
   }
 
@@ -139,7 +139,7 @@ export class RoundWinnerScreenComponent implements OnInit {
 
   backToScoring(): void {
     if (this.displayRound) {
-      this.router.navigate(['/round', this.displayRound.number, 'scoring']);
+      this.router.navigate(['/tournament/round', this.displayRound.number, 'scoring']);
     }
   }
 }

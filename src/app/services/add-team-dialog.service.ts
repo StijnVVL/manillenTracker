@@ -5,12 +5,14 @@ import { Team } from '../models/tournament.model';
 export interface TeamDialogData {
   mode: 'add' | 'edit';
   team?: Team;
+  showPresenceCheckbox?: boolean;
 }
 
 export interface TeamDialogResult {
   name: string;
   player1: string;
   player2: string;
+  markAsPresent?: boolean;
 }
 
 @Injectable({
@@ -22,8 +24,8 @@ export class AddTeamDialogService {
 
   dialog$ = this.dialogSubject.asObservable();
 
-  openAdd(): Promise<TeamDialogResult | null> {
-    this.dialogSubject.next({ mode: 'add' });
+  openAdd(showPresenceCheckbox = false): Promise<TeamDialogResult | null> {
+    this.dialogSubject.next({ mode: 'add', showPresenceCheckbox });
     return new Promise<TeamDialogResult | null>((resolve) => {
       const subscription = this.responseSubject.subscribe((result) => {
         subscription.unsubscribe();

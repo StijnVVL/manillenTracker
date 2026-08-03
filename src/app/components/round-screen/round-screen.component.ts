@@ -65,12 +65,12 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
 
   checkIfFutureRound(): void {
     this.isFutureRound = isRoundInFuture(this.state, this.roundNumber);
-    this.isFuturePage = isPageInFuture(this.state, this.roundNumber, 'timer');
+    this.isFuturePage = isPageInFuture(this.state, this.roundNumber, 'play');
   }
 
   goToCurrentRound(): void {
     if (this.currentRound) {
-      this.router.navigate(['/round', this.currentRound.number, 'timer']);
+      this.router.navigate(['/tournament/round', this.currentRound.number, 'play']);
     }
   }
 
@@ -152,7 +152,7 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
     var round = this.state.rounds[this.state.rounds.length - 1];
 
     var confirmed = true;
-    if (round.currentAt! < round.dueAt!){
+    if (Date.now() < round.dueAt!) {
       confirmed = await this.confirmDialogService.confirm({
         title: this.l10n.get('dialog.endRound.title'),
         message: this.l10n.get('dialog.endRound.message'),

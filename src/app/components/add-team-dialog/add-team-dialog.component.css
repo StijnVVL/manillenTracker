@@ -73,3 +73,22 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+.form-group--checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.form-group--checkbox input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.form-group--checkbox label {
+  cursor: pointer;
+  font-size: 0.95rem;
+}

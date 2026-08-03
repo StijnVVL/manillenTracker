@@ -3,8 +3,32 @@
   margin: 0 auto;
 }
 
+.card--spaced {
+  margin-top: 1.5rem;
+}
+
 .field-hint {
   margin: 0.5rem 0 0 0;
   font-size: 0.9rem;
   color: var(--muted);
+}
+
+.input-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.input-invalid {
+  border-color: var(--error, #d32f2f) !important;
+  outline-color: var(--error, #d32f2f);
+}
+
+.field-error {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.9rem;
+  color: var(--error, #d32f2f);
+  white-space: nowrap;
 }
