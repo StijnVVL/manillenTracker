@@ -1,11 +1,12 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
-
+import { ActivatedRoute, Router } from '@angular/router';
 import { TournamentService } from '../../services/tournament.service';
 import { TimerService, formatTime } from '../../services/timer.service';
 import { L10nPipe } from '../../pipes/l10n.pipe';
-import { getCurrentRound, getLatestRoundDiffs } from '../../utils/teams';
+import { getRoundByNumber, getLatestRoundDiffs, getCurrentRound, isRoundInFuture, isPageInFuture } from '../../utils/teams';
 import { CountdownTimerComponent } from '../countdown-timer/countdown-timer.component';
 import { RoundHistoryComponent } from '../round-history/round-history.component';
+import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
 import { TournamentState, Round, TournamentAction, Team, Matchup } from '../../models/tournament.model';
 import { ConfirmDialogService } from '../../services/confirm-dialog.service';
 import { L10nService } from '../../services/l10n.service';
@@ -16,6 +17,7 @@ import { L10nService } from '../../services/l10n.service';
   imports: [
     CountdownTimerComponent,
     RoundHistoryComponent,
+    BreadcrumbComponent,
     L10nPipe
 ],
   templateUrl: './round-screen.component.html',
@@ -25,26 +27,59 @@ import { L10nService } from '../../services/l10n.service';
 export class RoundScreenComponent implements OnInit, OnDestroy {
   state: TournamentState;
   currentRound: Round | null = null;
+  displayRound: Round | null = null;
+  roundNumber: number = 1;
   roundDiffs: Map<string, number> = new Map();
   remainingSeconds: number | null = null;
   teamMap: Map<string, Team> = new Map();
+  isFutureRound: boolean = false;
+  isFuturePage: boolean = false;
 
   constructor(
     private tournamentService: TournamentService,
     private confirmDialogService: ConfirmDialogService,
     private timerService: TimerService,
-    private l10n: L10nService
+    private l10n: L10nService,
+    private route: ActivatedRoute,
+    private router: Router
   ) {
     this.state = tournamentService.state;
   }
 
   ngOnInit(): void {
+    this.route.params.subscribe(params => {
+      this.roundNumber = +params['roundNumber'];
+      this.checkIfFutureRound();
+      this.loadRound();
+    });
+
     this.tournamentService.state$.subscribe((state) => {
       this.state = state;
       this.currentRound = getCurrentRound(state);
+      this.checkIfFutureRound();
+      this.loadRound();
       this.roundDiffs = getLatestRoundDiffs(state);
       this.teamMap = new Map(state.teams.map(t => [t.id, t]));
     });
+  }
+
+  checkIfFutureRound(): void {
+    this.isFutureRound = isRoundInFuture(this.state, this.roundNumber);
+    this.isFuturePage = isPageInFuture(this.state, this.roundNumber, 'timer');
+  }
+
+  goToCurrentRound(): void {
+    if (this.currentRound) {
+      this.router.navigate(['/round', this.currentRound.number, 'timer']);
+    }
+  }
+
+  loadRound(): void {
+    this.displayRound = getRoundByNumber(this.state, this.roundNumber);
+  }
+
+  get isCurrentRound(): boolean {
+    return this.currentRound?.number === this.displayRound?.number;
   }
 
   ngOnDestroy(): void {
@@ -136,14 +171,14 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
   }
 
   get leftColumnMatchups(): Matchup[] {
-    if (!this.currentRound) return [];
-    const mid = Math.ceil(this.currentRound.matchups.length / 2);
-    return this.currentRound.matchups.slice(0, mid);
+    if (!this.displayRound) return [];
+    const mid = Math.ceil(this.displayRound.matchups.length / 2);
+    return this.displayRound.matchups.slice(0, mid);
   }
 
   get rightColumnMatchups(): Matchup[] {
-    if (!this.currentRound) return [];
-    const mid = Math.ceil(this.currentRound.matchups.length / 2);
-    return this.currentRound.matchups.slice(mid);
+    if (!this.displayRound) return [];
+    const mid = Math.ceil(this.displayRound.matchups.length / 2);
+    return this.displayRound.matchups.slice(mid);
   }
 }

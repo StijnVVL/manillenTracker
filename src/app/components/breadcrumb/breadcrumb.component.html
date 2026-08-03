@@ -1,0 +1,43 @@
+<nav class="breadcrumb">
+  <span class="breadcrumb-item">{{ 'breadcrumb.tournament' | l10n }}</span>
+
+  <span class="breadcrumb-separator">›</span>
+
+  <span class="breadcrumb-item clickable" (click)="toggleRoundPopup($event)">
+    {{ 'breadcrumb.round' | l10n:{ roundNumber: roundNumber } }}
+  </span>
+
+  @if (showRoundPopup) {
+    <div class="popup-menu round-popup">
+      @for (round of rounds; track round) {
+        <div 
+          class="popup-item" 
+          [class.active]="round === roundNumber"
+          (click)="selectRound(round)"
+        >
+          {{ 'breadcrumb.round' | l10n:{ roundNumber: round } }}
+        </div>
+      }
+    </div>
+  }
+
+  <span class="breadcrumb-separator">›</span>
+
+  <span class="breadcrumb-item clickable" (click)="togglePagePopup($event)">
+    {{ getPageLabel() }}
+  </span>
+
+  @if (showPagePopup) {
+    <div class="popup-menu page-popup">
+      @for (option of pageOptions; track option.key) {
+        <div 
+          class="popup-item" 
+          [class.active]="option.key === pageType"
+          (click)="selectPage(option)"
+        >
+          {{ option.labelKey | l10n }}
+        </div>
+      }
+    </div>
+  }
+</nav>

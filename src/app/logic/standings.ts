@@ -1,5 +1,4 @@
 import { Round, TournamentState, Matchup } from '../models/tournament.model';
-import { TOTAL_ROUNDS } from '../models/tournament.model';
 
 export interface TeamStanding {
   teamId: string;
@@ -30,7 +29,7 @@ export function getMatchupWinner(round: Round, tableIndex: number): string | nul
 }
 
 export function getTournamentWinner(state: TournamentState): string | null {
-  const finalRound = state.rounds.find((round) => round.number === TOTAL_ROUNDS);
+  const finalRound = state.rounds.find((round) => round.number === state.totalRounds);
   if (!finalRound) {
     return null;
   }

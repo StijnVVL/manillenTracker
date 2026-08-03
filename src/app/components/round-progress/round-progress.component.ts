@@ -1,6 +1,6 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
-import { TOTAL_ROUNDS } from '../../models/tournament.model';
+import { TournamentService } from '../../services/tournament.service';
 import { L10nPipe } from '../../pipes/l10n.pipe';
 
 @Component({
@@ -13,5 +13,10 @@ import { L10nPipe } from '../../pipes/l10n.pipe';
 })
 export class RoundProgressComponent {
   @Input() roundNumber: number = 0;
-  TOTAL_ROUNDS = TOTAL_ROUNDS;
+
+  constructor(public tournamentService: TournamentService) {}
+
+  get totalRounds(): number {
+    return this.tournamentService.state.totalRounds;
+  }
 }

@@ -5,8 +5,8 @@ import { ladderPairings, randomPairings } from '../logic/pairing';
 import { buildRoundResults } from '../logic/scoring';
 import {
   DEFAULT_ROUND_DURATION_SECONDS,
+  DEFAULT_TOTAL_ROUNDS,
   STORAGE_KEY,
-  TOTAL_ROUNDS,
   type Round,
   type Team,
   type TournamentState,
@@ -55,6 +55,7 @@ function createInitialState(): TournamentState {
     ladder: [],
     rounds: [],
     roundDurationSeconds: DEFAULT_ROUND_DURATION_SECONDS,
+    totalRounds: DEFAULT_TOTAL_ROUNDS,
     status: 'setup',
     timerStatus: 'idle',
     lastLadderSnapshot: null,
@@ -118,6 +119,14 @@ function tournamentReducer(
       return {
         ...state,
         roundDurationSeconds: seconds
+      };
+    }
+
+    case 'SET_TOTAL_ROUNDS': {
+      const totalRounds = Math.max(1, Math.min(20, action.totalRounds)); // Between 1 and 20
+      return {
+        ...state,
+        totalRounds
       };
     }
 
@@ -276,7 +285,8 @@ function tournamentReducer(
         ...state,
         rounds,
         ladder,
-        lastLadderSnapshot: snapshot
+        lastLadderSnapshot: snapshot,
+        status: 'round-winner'
       };
     }
 
@@ -291,8 +301,8 @@ function tournamentReducer(
 
     case 'NEXT_ROUND': {
       const currentRound = getCurrentRound(state)!;
-      const isFinalRound = currentRound.number === TOTAL_ROUNDS;
-      if (state.rounds.length >= TOTAL_ROUNDS){
+      const isFinalRound = currentRound.number === state.totalRounds;
+      if (state.rounds.length >= state.totalRounds){
         return state;
       }
 

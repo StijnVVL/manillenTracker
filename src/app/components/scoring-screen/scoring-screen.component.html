@@ -1,11 +1,29 @@
-@if (currentRound) {
-  <app-round-progress [roundNumber]="currentRound.number" />
+<app-breadcrumb [roundNumber]="roundNumber" [pageType]="'scoring'" />
+
+@if (isFutureRound) {
+  <div class="card future-round-message">
+    <h2 class="card-title">{{ 'futureRound.title' | l10n:{ roundNumber: roundNumber } }}</h2>
+    <p>{{ 'futureRound.message' | l10n }}</p>
+    <button type="button" class="btn btn-primary" (click)="goToCurrentRound()">
+      {{ 'futureRound.goToCurrent' | l10n }}
+    </button>
+  </div>
+} @else if (isFuturePage) {
+  <div class="card future-round-message">
+    <h2 class="card-title">{{ 'futurePage.title' | l10n }}</h2>
+    <p>{{ 'futurePage.message' | l10n }}</p>
+    <button type="button" class="btn btn-primary" (click)="goToCurrentRound()">
+      {{ 'futureRound.goToCurrent' | l10n }}
+    </button>
+  </div>
+} @else if (displayRound) {
+  <app-round-progress [roundNumber]="displayRound.number" />
 
   <div class="card">
-    <h2 class="card-title">{{ 'scoring.title' | l10n:{ roundNumber: currentRound.number } }}</h2>
+    <h2 class="card-title">{{ 'scoring.title' | l10n:{ roundNumber: displayRound.number } }}</h2>
     <p style="color: var(--muted); margin-top: 0">
       {{ 'scoring.instructions' | l10n }}
-      @if (currentRound.number === TOTAL_ROUNDS) {
+      @if (displayRound.number === state.totalRounds) {
         {{ 'scoring.finalRoundNote' | l10n }}
       }
     </p>
@@ -62,9 +80,9 @@
       }
     </div>
 
-    @if (currentRound.byeTeamId) {
+    @if (displayRound.byeTeamId) {
       <p class="bye-note">
-        {{ 'scoring.byeNoScore' | l10n:{ teamName: getTeamName(currentRound.byeTeamId) } }}
+        {{ 'scoring.byeNoScore' | l10n:{ teamName: getTeamName(displayRound.byeTeamId) } }}
       </p>
     }
 
@@ -72,33 +90,20 @@
       <button
         type="button"
         class="btn btn-primary"
-        [disabled]="!allMatchupsFilled"
+        [disabled]="!scoresAlreadyConfirmed && (!allMatchupsFilled || !isCurrentRound)"
         (click)="confirmScores()"
       >
-        {{ 'scoring.confirmScores' | l10n }}
+        @if (scoresAlreadyConfirmed) {
+          {{ 'scoring.showRoundWinner' | l10n }}
+        } @else {
+          {{ 'scoring.confirmScores' | l10n }}
+        }
       </button>
-      @if (confirmed && currentRound.number < TOTAL_ROUNDS) {
+      @if (confirmed && displayRound.number < state.totalRounds && isCurrentRound && !scoresAlreadyConfirmed) {
         <button type="button" class="btn btn-secondary" (click)="nextRound()">
           {{ 'scoring.nextRound' | l10n }}
         </button>
       }
     </div>
   </div>
-
-  @if (showUpdatedLadder) {
-    <div class="grid-2" style="margin-top: 1rem">
-      <app-ladder-board
-        [teams]="state.teams"
-        [ladder]="state.lastLadderSnapshot!"
-        [roundDiffs]="beforeDiffs"
-        [title]="l10n.get('scoring.ladderBefore')"
-      />
-      <app-ladder-board
-        [teams]="state.teams"
-        [ladder]="state.ladder"
-        [roundDiffs]="afterDiffs"
-        [title]="l10n.get('scoring.ladderAfter')"
-      />
-    </div>
-  }
 }

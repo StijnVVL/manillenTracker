@@ -15,6 +15,28 @@
   "common.margin": "Margin",
   "common.backToHome": "Back to Home",
 
+  "breadcrumb.tournament": "Tournament",
+  "breadcrumb.round": "Round {roundNumber}",
+  "breadcrumb.matchups": "Matchups",
+  "breadcrumb.scoring": "Scoring",
+  "breadcrumb.roundWinner": "Round Winner",
+
+  "pageTitle.setup": "Setup Tournament",
+  "pageTitle.roundTimer": "Round {roundNumber} — Matchups",
+  "pageTitle.scoring": "Round {roundNumber} — Scoring",
+  "pageTitle.roundWinner": "Round {roundNumber} — Winner",
+  "pageTitle.finished": "Tournament Complete",
+  "pageTitle.teams": "Manage Teams",
+  "pageTitle.credits": "Credits",
+  "pageTitle.settings": "Settings",
+
+  "futureRound.title": "Round {roundNumber} Not Started Yet",
+  "futureRound.message": "This round hasn't started yet. You can view it once the tournament progresses to this round.",
+  "futureRound.goToCurrent": "Go to Current Round",
+
+  "futurePage.title": "Not Available Yet",
+  "futurePage.message": "The current round hasn't progressed to this stage yet. You can view this page once the round advances.",
+
   "menu.tournament": "Tournament",
   "menu.credits": "Credits",
   "menu.teams": "Teams",
@@ -47,12 +69,6 @@
   "dialog.nextRound.message": "Are you sure you want to proceed to the next round? Scores will be finalized.",
   "dialog.nextRound.confirm": "Next Round",
 
-  "pageTitle.tournamentSetup": "Tournament Setup",
-  "pageTitle.teams": "Teams",
-  "pageTitle.credits": "Credits",
-  "pageTitle.settings": "Settings",
-  "pageTitle.roundMatchups": "Round {roundNumber} Matchups",
-
   "setup.description": "Add teams, then start the tournament. The tournament runs for 5 rounds. Round 1 pairings are randomized.",
   "setup.addTeam": "Add Team",
   "setup.removeTeam": "Remove team",
@@ -65,6 +81,8 @@
   "settings.roundSettings": "Round Settings",
   "settings.roundDurationLabel": "Round duration (minutes)",
   "settings.roundDurationHint": "Set how long each round should last. The timer will count down from this value.",
+  "settings.totalRoundsLabel": "Total rounds",
+  "settings.totalRoundsHint": "Set how many rounds the tournament will have (1-20).",
 
     "credits.appTitle": "Manillen Match Tracker",
     "credits.appDescription": "A tournament tracking application for Manillen card games.",
@@ -106,10 +124,16 @@
   "scoring.finalRoundNote": "This is the final round — the Table 1 winner becomes champion.",
   "scoring.byeNoScore": "Bye: {teamName} (no score entry needed)",
   "scoring.confirmScores": "Confirm Scores",
+  "scoring.showRoundWinner": "Show Round Winner",
   "scoring.nextRound": "Next Round",
   "scoring.editScore": "Edit score",
   "scoring.ladderBefore": "Ladder Before",
   "scoring.ladderAfter": "Ladder After",
+
+  "roundWinner.title": "Round {roundNumber} Results",
+  "roundWinner.points": "points",
+  "roundWinner.finish": "Finish Tournament",
+  "roundWinner.backToScoring": "Back to Scores",
 
   "finished.championLabel": "Champion",
   "finished.tournamentComplete": "Tournament Complete",

@@ -30,4 +30,8 @@ export class SettingsComponent implements OnInit {
   onDurationChange(minutes: number): void {
     this.tournamentService.dispatch({ type: 'SET_ROUND_DURATION', minutes });
   }
+
+  onTotalRoundsChange(totalRounds: number): void {
+    this.tournamentService.dispatch({ type: 'SET_TOTAL_ROUNDS', totalRounds });
+  }
 }

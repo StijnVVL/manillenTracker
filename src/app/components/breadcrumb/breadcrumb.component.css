@@ -1,0 +1,103 @@
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 0;
+  font-size: 0.95rem;
+  position: relative;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+.breadcrumb-item {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.breadcrumb-item.clickable {
+  color: var(--primary);
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 3px;
+}
+
+.breadcrumb-item.clickable:hover {
+  color: var(--primary-dark);
+  text-decoration-style: solid;
+}
+
+.breadcrumb-separator {
+  color: var(--text-muted);
+  user-select: none;
+  font-size: 1.1rem;
+}
+
+.popup-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 0.25rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  min-width: 150px;
+  max-height: 300px;
+  overflow-y: auto;
+  animation: popupFadeIn 0.15s ease-out;
+}
+
+@keyframes popupFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.popup-item {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.15s;
+  color: var(--text-primary);
+}
+
+.popup-item:hover {
+  background-color: var(--hover-bg);
+}
+
+.popup-item.active {
+  background-color: var(--primary-light);
+  color: var(--primary-dark);
+  font-weight: 600;
+}
+
+.popup-item:first-child {
+  border-radius: 0.5rem 0.5rem 0 0;
+}
+
+.popup-item:last-child {
+  border-radius: 0 0 0.5rem 0.5rem;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .breadcrumb {
+    font-size: 0.875rem;
+    padding: 0.5rem 0;
+  }
+
+  .popup-menu {
+    min-width: 120px;
+    max-height: 250px;
+  }
+
+  .popup-item {
+    padding: 0.625rem 0.875rem;
+  }
+}

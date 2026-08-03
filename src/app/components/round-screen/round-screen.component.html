@@ -1,27 +1,45 @@
-@if (currentRound) {
+<app-breadcrumb [roundNumber]="roundNumber" [pageType]="'timer'" />
+
+@if (isFutureRound) {
+  <div class="card future-round-message">
+    <h2 class="card-title">{{ 'futureRound.title' | l10n:{ roundNumber: roundNumber } }}</h2>
+    <p>{{ 'futureRound.message' | l10n }}</p>
+    <button type="button" class="btn btn-primary" (click)="goToCurrentRound()">
+      {{ 'futureRound.goToCurrent' | l10n }}
+    </button>
+  </div>
+} @else if (isFuturePage) {
+  <div class="card future-round-message">
+    <h2 class="card-title">{{ 'futurePage.title' | l10n }}</h2>
+    <p>{{ 'futurePage.message' | l10n }}</p>
+    <button type="button" class="btn btn-primary" (click)="goToCurrentRound()">
+      {{ 'futureRound.goToCurrent' | l10n }}
+    </button>
+  </div>
+} @else if (displayRound) {
   <app-countdown-timer
     [remainingSeconds]="remainingSeconds"
     [staticDurationSeconds]="isIdle ? state.roundDurationSeconds : null"
-    [roundNumber]="currentRound.number"
+    [roundNumber]="displayRound.number"
     [isWarning]="isWarning"
   />
   <div class="timer-controls">
-    @if (isIdle) {
+    @if (isIdle && isCurrentRound) {
       <button type="button" class="btn btn-primary" (click)="startRound()">
         {{ 'roundScreen.startRound' | l10n }}
       </button>
     }
-    @if (isRunning) {
+    @if (isRunning && isCurrentRound) {
       <button type="button" class="btn btn-secondary" (click)="pauseRound()">
         {{ 'roundScreen.pauseRound' | l10n }}
       </button>
     }
-    @if (isPaused) {
+    @if (isPaused && isCurrentRound) {
       <button type="button" class="btn btn-primary" (click)="resumeRound()">
         {{ 'roundScreen.resumeRound' | l10n }}
       </button>
     }
-    @if (!isIdle) {
+    @if (!isIdle && isCurrentRound) {
       <button
         type="button"
         class="btn btn-danger"
@@ -74,12 +92,12 @@
       </div>
     }
 
-    @if (currentRound.byeTeamId) {
+    @if (displayRound.byeTeamId) {
       <div class="matchup-table-container bye-container">
         <div class="matchup-table">
           <div class="matchup-row bye-row">
             <span class="col-table">{{ 'common.bye' | l10n }}</span>
-            <span class="col-team team-name">{{ getTeamName(currentRound.byeTeamId) }}</span>
+            <span class="col-team team-name">{{ getTeamName(displayRound.byeTeamId) }}</span>
             <span class="col-vs"></span>
             <span class="col-team"></span>
           </div>

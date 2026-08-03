@@ -16,11 +16,27 @@
       type="number"
       min="1"
       max="240"
-      [ngModel]="state.roundDurationSeconds"
+      [ngModel]="state.roundDurationSeconds / 60"
       (ngModelChange)="onDurationChange($event)"
     />
     <p class="field-hint">
       {{ 'settings.roundDurationHint' | l10n }}
+    </p>
+
+    <label class="field-label" for="total-rounds">
+      {{ 'settings.totalRoundsLabel' | l10n }}
+    </label>
+    <input
+      id="total-rounds"
+      class="input-number"
+      type="number"
+      min="1"
+      max="20"
+      [ngModel]="state.totalRounds"
+      (ngModelChange)="onTotalRoundsChange($event)"
+    />
+    <p class="field-hint">
+      {{ 'settings.totalRoundsHint' | l10n }}
     </p>
   </div>
 </div>

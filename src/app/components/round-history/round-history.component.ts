@@ -1,6 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
 
-import { Round, Team, TOTAL_ROUNDS } from '../../models/tournament.model';
+import { Round, Team } from '../../models/tournament.model';
+import { TournamentService } from '../../services/tournament.service';
 import { L10nPipe } from '../../pipes/l10n.pipe';
 import { getMatchupWinner } from '../../logic/standings';
 import { getTeamMap } from '../../utils/teams';
@@ -19,7 +20,12 @@ export class RoundHistoryComponent implements OnChanges {
 
   teamMap: Map<string, Team> = new Map();
   completedRounds: Round[] = [];
-  TOTAL_ROUNDS = TOTAL_ROUNDS;
+
+  constructor(private tournamentService: TournamentService) {}
+
+  get totalRounds(): number {
+    return this.tournamentService.state.totalRounds;
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['teams']) {
@@ -57,6 +63,6 @@ export class RoundHistoryComponent implements OnChanges {
   }
 
   isFinalTable1(round: Round, tableIndex: number): boolean {
-    return round.number === this.TOTAL_ROUNDS && tableIndex === 0 && this.tableWinnerId(round, tableIndex) !== null;
+    return round.number === this.totalRounds && tableIndex === 0 && this.tableWinnerId(round, tableIndex) !== null;
   }
 }

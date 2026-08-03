@@ -1,0 +1,51 @@
+<app-breadcrumb [roundNumber]="roundNumber" [pageType]="'round-winner'" />
+
+@if (isFutureRound) {
+  <div class="card future-round-message">
+    <h2 class="card-title">{{ 'futureRound.title' | l10n:{ roundNumber: roundNumber } }}</h2>
+    <p>{{ 'futureRound.message' | l10n }}</p>
+    <button type="button" class="btn btn-primary" (click)="goToCurrentRound()">
+      {{ 'futureRound.goToCurrent' | l10n }}
+    </button>
+  </div>
+} @else if (isFuturePage) {
+  <div class="card future-round-message">
+    <h2 class="card-title">{{ 'futurePage.title' | l10n }}</h2>
+    <p>{{ 'futurePage.message' | l10n }}</p>
+    <button type="button" class="btn btn-primary" (click)="goToCurrentRound()">
+      {{ 'futureRound.goToCurrent' | l10n }}
+    </button>
+  </div>
+} @else if (displayRound) {
+  <div class="card">
+    <h2 class="card-title">{{ 'roundWinner.title' | l10n:{ roundNumber: displayRound.number } }}</h2>
+
+    <div class="winners-container">
+      @for (winner of winners; track winner.teamId) {
+        <div class="winner-item" [class.first-place]="winner.place === 1" [class.second-place]="winner.place === 2" [class.third-place]="winner.place === 3">
+          @if (winner.place === 1) {
+            <span class="trophy-emoji">🏆</span>
+          }
+          <div class="winner-name">{{ winner.teamName }}</div>
+          <div class="winner-diff">+{{ winner.pointDifference }} {{ 'roundWinner.points' | l10n }}</div>
+        </div>
+      }
+    </div>
+
+    <div class="setup-actions">
+      @if (displayRound.number < state.totalRounds && isCurrentRound) {
+        <button type="button" class="btn btn-primary" (click)="nextRound()">
+          {{ 'scoring.nextRound' | l10n }}
+        </button>
+      }
+      @if (displayRound.number === state.totalRounds && isCurrentRound) {
+        <button type="button" class="btn btn-primary" (click)="nextRound()">
+          {{ 'roundWinner.finish' | l10n }}
+        </button>
+      }
+      <button type="button" class="btn btn-secondary" (click)="backToScoring()">
+        {{ 'roundWinner.backToScoring' | l10n }}
+      </button>
+    </div>
+  </div>
+}

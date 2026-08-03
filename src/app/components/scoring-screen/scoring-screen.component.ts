@@ -1,14 +1,13 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { TournamentService } from '../../services/tournament.service';
 import { L10nService } from '../../services/l10n.service';
 import { L10nPipe } from '../../pipes/l10n.pipe';
 import { getMatchupDiffs, getWinnerId, scoreWarning } from '../../logic/scoring';
-import { TOTAL_ROUNDS } from '../../models/tournament.model';
-import { getCurrentRound, getTeamMap } from '../../utils/teams';
-import { LadderBoardComponent } from '../ladder-board/ladder-board.component';
+import { getRoundByNumber, getCurrentRound, getTeamMap, isRoundInFuture, isPageInFuture } from '../../utils/teams';
 import { RoundProgressComponent } from '../round-progress/round-progress.component';
+import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
 import { TournamentState, Round, Matchup, Team } from '../../models/tournament.model';
 import { ScoreEditDialogService } from '../../services/score-edit-dialog.service';
 import { ConfirmDialogService } from '../../services/confirm-dialog.service';
@@ -20,8 +19,8 @@ import { CommonModule } from '@angular/common';
   imports: [
     FormsModule,
     CommonModule,
-    LadderBoardComponent,
     RoundProgressComponent,
+    BreadcrumbComponent,
     L10nPipe
 ],
   templateUrl: './scoring-screen.component.html',
@@ -31,31 +30,70 @@ import { CommonModule } from '@angular/common';
 export class ScoringScreenComponent implements OnInit {
   state: TournamentState;
   currentRound: Round | null = null;
+  displayRound: Round | null = null;
+  roundNumber: number = 1;
   teamMap: Map<string, Team> = new Map();
   scores: Record<string, string> = {};
   confirmed: boolean = false;
-  TOTAL_ROUNDS = TOTAL_ROUNDS;
+  isFutureRound: boolean = false;
+  isFuturePage: boolean = false;
 
   constructor(
     private tournamentService: TournamentService,
     public l10n: L10nService,
     private scoreEditDialogService: ScoreEditDialogService,
-    private confirmDialogService: ConfirmDialogService
+    private confirmDialogService: ConfirmDialogService,
+    private route: ActivatedRoute,
+    private router: Router
   ) {
     this.state = tournamentService.state;
   }
 
   ngOnInit(): void {
+    this.route.params.subscribe(params => {
+      this.roundNumber = +params['roundNumber'];
+      this.checkIfFutureRound();
+      this.loadRound();
+    });
+
     this.tournamentService.state$.subscribe((state) => {
       this.state = state;
       this.currentRound = getCurrentRound(state);
+      this.checkIfFutureRound();
+      this.loadRound();
       this.teamMap = getTeamMap(state.teams);
       this.initializeScores();
     });
   }
 
+  checkIfFutureRound(): void {
+    this.isFutureRound = isRoundInFuture(this.state, this.roundNumber);
+    this.isFuturePage = isPageInFuture(this.state, this.roundNumber, 'scoring');
+  }
+
+  goToCurrentRound(): void {
+    if (this.currentRound) {
+      this.router.navigate(['/round', this.currentRound.number, 'scoring']);
+    }
+  }
+
+  loadRound(): void {
+    this.displayRound = getRoundByNumber(this.state, this.roundNumber);
+  }
+
+  get isCurrentRound(): boolean {
+    return this.currentRound?.number === this.displayRound?.number;
+  }
+
+  get scoresAlreadyConfirmed(): boolean {
+    // Scores are confirmed if:
+    // 1. Viewing a past round (not current), OR
+    // 2. Current round but status has moved beyond 'scoring'
+    return !this.isCurrentRound || (this.state.status !== 'round' && this.state.status !== 'scoring');
+  }
+
   initializeScores(): void {
-    if (!this.currentRound) {
+    if (!this.displayRound) {
       this.scores = {};
       this.confirmed = false;
       return;
@@ -65,7 +103,7 @@ export class ScoringScreenComponent implements OnInit {
     const scoresFromMatchups: Record<string, string> = {};
     let hasAnyScores = false;
 
-    for (const matchup of this.currentRound.matchups) {
+    for (const matchup of this.displayRound.matchups) {
       if (matchup.teamAScore !== undefined) {
         scoresFromMatchups[matchup.teamAId] = String(matchup.teamAScore);
         hasAnyScores = true;
@@ -90,8 +128,8 @@ export class ScoringScreenComponent implements OnInit {
   }
 
   get allMatchupsFilled(): boolean {
-    if (!this.currentRound) return false;
-    return this.currentRound.matchups.every((matchup) => {
+    if (!this.displayRound) return false;
+    return this.displayRound.matchups.every((matchup) => {
       const scoreA = this.numericScores[matchup.teamAId];
       const scoreB = this.numericScores[matchup.teamBId];
       return scoreA !== undefined && scoreB !== undefined;
@@ -105,39 +143,6 @@ export class ScoringScreenComponent implements OnInit {
       if (!Number.isNaN(num)) parsed[teamId] = num;
     }
     return parsed;
-  }
-
-  get showUpdatedLadder(): boolean {
-    return this.confirmed && this.state.lastLadderSnapshot !== null;
-  }
-
-  get beforeDiffs(): Map<string, number> {
-    if (!this.currentRound) return new Map();
-
-    // Calculate match diffs from matchup scores
-    const diffs = new Map<string, number>();
-    for (const matchup of this.currentRound.matchups) {
-      if (matchup.teamAScore !== undefined && matchup.teamBScore !== undefined) {
-        const diff = getMatchupDiffs(matchup.teamAId, matchup.teamBId, {
-          [matchup.teamAId]: matchup.teamAScore,
-          [matchup.teamBId]: matchup.teamBScore
-        });
-
-        if (diff) {
-          diffs.set(diff.winnerId, diff.margin);
-          diffs.set(diff.loserId, -diff.margin);
-        } else {
-          // Tie
-          diffs.set(matchup.teamAId, 0);
-          diffs.set(matchup.teamBId, 0);
-        }
-      }
-    }
-    return diffs;
-  }
-
-  get afterDiffs(): Map<string, number> {
-    return this.beforeDiffs;
   }
 
   matchupDiffs(matchup: Matchup) {
@@ -156,12 +161,23 @@ export class ScoringScreenComponent implements OnInit {
   }
 
   confirmScores(): void {
-    if (!this.allMatchupsFilled) return;
+    if (!this.displayRound) return;
+
+    // If scores already confirmed, just navigate to round winner screen
+    if (this.scoresAlreadyConfirmed) {
+      this.router.navigate(['/round', this.displayRound.number, 'round-winner']);
+      return;
+    }
+
+    // Otherwise, confirm scores normally (only for current round in 'scoring' status)
+    if (!this.allMatchupsFilled || !this.isCurrentRound) return;
     this.tournamentService.dispatch({ type: 'SUBMIT_SCORES', scores: this.numericScores });
     this.confirmed = true;
   }
 
   nextRound(): void {
+    if (!this.isCurrentRound || !this.displayRound) return;
+
     this.confirmDialogService.confirm({
       title: this.l10n.get('dialog.nextRound.title'),
       message: this.l10n.get('dialog.nextRound.message'),
@@ -216,14 +232,14 @@ export class ScoringScreenComponent implements OnInit {
   }
 
   get leftColumnMatchups(): Matchup[] {
-    if (!this.currentRound) return [];
-    const mid = Math.ceil(this.currentRound.matchups.length / 2);
-    return this.currentRound.matchups.slice(0, mid);
+    if (!this.displayRound) return [];
+    const mid = Math.ceil(this.displayRound.matchups.length / 2);
+    return this.displayRound.matchups.slice(0, mid);
   }
 
   get rightColumnMatchups(): Matchup[] {
-    if (!this.currentRound) return [];
-    const mid = Math.ceil(this.currentRound.matchups.length / 2);
-    return this.currentRound.matchups.slice(mid);
+    if (!this.displayRound) return [];
+    const mid = Math.ceil(this.displayRound.matchups.length / 2);
+    return this.displayRound.matchups.slice(mid);
   }
 }

@@ -16,6 +16,44 @@ export function getCurrentRound(state: TournamentState): Round | null {
   return state.rounds[state.rounds.length - 1] ?? null;
 }
 
+export function getRoundByNumber(state: TournamentState, roundNumber: number): Round | null {
+  return state.rounds.find(r => r.number === roundNumber) ?? null;
+}
+
+export function isRoundInFuture(state: TournamentState, roundNumber: number): boolean {
+  // A round is in the future if it doesn't exist yet in the rounds array
+  return roundNumber > state.rounds.length;
+}
+
+export function isPageInFuture(state: TournamentState, roundNumber: number, pageType: 'timer' | 'scoring' | 'round-winner'): boolean {
+  // First check if the entire round is in the future
+  if (isRoundInFuture(state, roundNumber)) {
+    return true;
+  }
+
+  // Check if we're on the current round but the page type is ahead of the current status
+  const currentRound = getCurrentRound(state);
+  if (currentRound && roundNumber === currentRound.number) {
+    // Map status to page stages
+    const statusToPage: Record<string, string[]> = {
+      'round': ['timer'],
+      'scoring': ['timer', 'scoring'],
+      'round-winner': ['timer', 'scoring', 'round-winner'],
+      'finished': ['timer', 'scoring', 'round-winner']
+    };
+
+    const allowedPages = statusToPage[state.status] || [];
+    return !allowedPages.includes(pageType);
+  }
+
+  // Past rounds are always accessible
+  return false;
+}
+
+export function roundExists(state: TournamentState, roundNumber: number): boolean {
+  return state.rounds.some(r => r.number === roundNumber);
+}
+
 function getMatchDiffsFromRound(round: Round): Map<string, number> {
   const diffs = new Map<string, number>();
   for (const matchup of round.matchups) {

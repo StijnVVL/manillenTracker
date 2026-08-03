@@ -38,7 +38,17 @@ export class AppComponent implements OnDestroy {
     let route = this.activatedRoute;
     while (route.firstChild) route = route.firstChild;
     const titleKey = route.snapshot.data['titleKey'] as string | undefined;
-    if (titleKey) return this.l10n.get(titleKey);
+
+    // Get round number from params if available
+    const roundNumber = route.snapshot.params['roundNumber'];
+
+    if (titleKey) {
+      // If we have a roundNumber, pass it as a parameter
+      if (roundNumber) {
+        return this.l10n.get(titleKey, { roundNumber: +roundNumber });
+      }
+      return this.l10n.get(titleKey);
+    }
     if (this.tournamentService.state.status === 'setup') return this.l10n.get('pageTitle.tournamentSetup');
     return '';
   }

@@ -1,0 +1,107 @@
+.winners-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3rem;
+  padding: 3rem 0;
+  margin: 2rem 0;
+}
+
+.winner-item {
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.winner-item.first-place {
+  opacity: 1;
+}
+
+.winner-item.first-place .winner-name {
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-top: 1rem;
+}
+
+.winner-item.first-place .winner-diff {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--primary);
+  margin-top: 0.5rem;
+}
+
+.winner-item.second-place {
+  opacity: 0.8;
+}
+
+.winner-item.second-place .winner-name {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #4a4a4a;
+}
+
+.winner-item.second-place .winner-diff {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+.winner-item.third-place {
+  opacity: 0.6;
+}
+
+.winner-item.third-place .winner-name {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #999;
+}
+
+.winner-item.third-place .winner-diff {
+  font-size: 1rem;
+  font-weight: 400;
+  color: #aaa;
+  margin-top: 0.25rem;
+}
+
+.trophy-emoji {
+  font-size: 5rem;
+  display: block;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .winners-container {
+    gap: 2rem;
+    padding: 2rem 0;
+  }
+
+  .winner-item.first-place .winner-name {
+    font-size: 2rem;
+  }
+
+  .winner-item.first-place .winner-diff {
+    font-size: 1.2rem;
+  }
+
+  .winner-item.second-place .winner-name {
+    font-size: 1.5rem;
+  }
+
+  .winner-item.second-place .winner-diff {
+    font-size: 1rem;
+  }
+
+  .winner-item.third-place .winner-name {
+    font-size: 1.2rem;
+  }
+
+  .winner-item.third-place .winner-diff {
+    font-size: 0.9rem;
+  }
+
+  .trophy-emoji {
+    font-size: 3.5rem;
+  }
+}
