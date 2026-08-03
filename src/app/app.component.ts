@@ -57,7 +57,6 @@ export class AppComponent implements OnDestroy {
 
   get currentRoundSubRoute(): string {
     const s = this.tournamentService.state.status;
-    if (s === 'scoring') return 'scoring';
     if (s === 'round-winner') return 'round-winner';
     return 'play';
   }

@@ -54,8 +54,10 @@ export class ScoreEditDialogComponent implements OnInit, OnDestroy {
   }
 
   get canSave(): boolean {
-    return this.scoreA !== undefined && this.scoreB !== undefined &&
-           !Number.isNaN(this.scoreA) && !Number.isNaN(this.scoreB);
+    return this.scoreA !== undefined && this.scoreA !== null &&
+           this.scoreB !== undefined && this.scoreB !== null &&
+           !Number.isNaN(this.scoreA) && !Number.isNaN(this.scoreB) &&
+           this.scoreA >= 0 && this.scoreB >= 0;
   }
 
   onSave(): void {

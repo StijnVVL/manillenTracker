@@ -3,18 +3,21 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TournamentService } from '../../services/tournament.service';
 import { TimerService, formatTime } from '../../services/timer.service';
 import { L10nPipe } from '../../pipes/l10n.pipe';
-import { getRoundByNumber, getLatestRoundDiffs, getCurrentRound, isRoundInFuture, isPageInFuture } from '../../utils/teams';
+import { getRoundByNumber, getLatestRoundDiffs, getCurrentRound, getTeamMap, isRoundInFuture, isPageInFuture } from '../../utils/teams';
 import { CountdownTimerComponent } from '../countdown-timer/countdown-timer.component';
 import { TournamentState, Round, TournamentAction, Team, Matchup } from '../../models/tournament.model';
 import { ConfirmDialogService } from '../../services/confirm-dialog.service';
 import { L10nService } from '../../services/l10n.service';
+import { ScoreEditDialogService } from '../../services/score-edit-dialog.service';
+import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 
 @Component({
   selector: 'app-round-screen',
   standalone: true,
   imports: [
     CountdownTimerComponent,
-    L10nPipe
+    L10nPipe,
+    SvgIconComponent
   ],
   templateUrl: './round-screen.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
@@ -31,9 +34,12 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
   isFutureRound: boolean = false;
   isFuturePage: boolean = false;
 
+  scores: Record<string, number> = {};
+
   constructor(
     private tournamentService: TournamentService,
     private confirmDialogService: ConfirmDialogService,
+    private scoreEditDialogService: ScoreEditDialogService,
     private timerService: TimerService,
     private l10n: L10nService,
     private route: ActivatedRoute,
@@ -56,6 +62,7 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
       this.loadRound();
       this.roundDiffs = getLatestRoundDiffs(state);
       this.teamMap = new Map(state.teams.map(t => [t.id, t]));
+      this.loadScores();
     });
 
     // Restore timer display and interval when navigating back to a running/paused round
@@ -68,7 +75,6 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
         } else {
           this.remainingSeconds = 0;
           this.#endRound();
-          this.router.navigate(['/tournament/round', this.roundNumber, 'scoring']);
         }
       } else if (this.state.timerStatus === 'paused' && round.pausedAt) {
         this.remainingSeconds = (round.dueAt - round.pausedAt) / 1000;
@@ -83,9 +89,7 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
 
   goToCurrentRound(): void {
     if (this.currentRound) {
-      const sub = this.state.status === 'scoring' ? 'scoring'
-        : this.state.status === 'round-winner' ? 'round-winner'
-        : 'play';
+      const sub = this.state.status === 'round-winner' ? 'round-winner' : 'play';
       this.router.navigate(['/tournament/round', this.currentRound.number, sub]);
     }
   }
@@ -161,8 +165,66 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
     this.tournamentService.dispatch({ type: 'PAUSE_ROUND' } as TournamentAction);
   }
 
-  goToScoring(): void {
-    this.router.navigate(['/tournament/round', this.roundNumber, 'scoring']);
+  goToRoundWinner(): void {
+    this.router.navigate(['/tournament/round', this.roundNumber, 'round-winner']);
+  }
+
+  loadScores(): void {
+    if (!this.displayRound) return;
+    const loaded: Record<string, number> = {};
+    for (const m of this.displayRound.matchups) {
+      if (typeof m.teamAScore === 'number' && !Number.isNaN(m.teamAScore) && m.teamAScore >= 0)
+        loaded[m.teamAId] = m.teamAScore;
+      if (typeof m.teamBScore === 'number' && !Number.isNaN(m.teamBScore) && m.teamBScore >= 0)
+        loaded[m.teamBId] = m.teamBScore;
+    }
+    this.scores = loaded;
+  }
+
+  hasScore(matchup: Matchup): boolean {
+    const a = this.scores[matchup.teamAId];
+    const b = this.scores[matchup.teamBId];
+    return typeof a === 'number' && !Number.isNaN(a) && a >= 0 &&
+           typeof b === 'number' && !Number.isNaN(b) && b >= 0;
+  }
+
+  get allScoresFilled(): boolean {
+    if (!this.displayRound) return false;
+    return this.displayRound.matchups.every(m => this.hasScore(m));
+  }
+
+  getScoreDisplay(matchup: Matchup): string {
+    const a = this.scores[matchup.teamAId];
+    const b = this.scores[matchup.teamBId];
+    if (a !== undefined && b !== undefined) return `${a} - ${b}`;
+    return '';
+  }
+
+  async editMatchScore(matchup: Matchup): Promise<void> {
+    const result = await this.scoreEditDialogService.open({
+      teamAId: matchup.teamAId,
+      teamBId: matchup.teamBId,
+      teamAName: this.getTeamName(matchup.teamAId),
+      teamBName: this.getTeamName(matchup.teamBId),
+      scoreA: this.scores[matchup.teamAId],
+      scoreB: this.scores[matchup.teamBId]
+    });
+    if (result) {
+      const a = result.scoreA;
+      const b = result.scoreB;
+      const valid = a !== null && a !== undefined && !Number.isNaN(a) && a >= 0 &&
+                    b !== null && b !== undefined && !Number.isNaN(b) && b >= 0;
+      const updated = { ...this.scores };
+      if (valid) {
+        updated[matchup.teamAId] = a;
+        updated[matchup.teamBId] = b;
+      } else {
+        delete updated[matchup.teamAId];
+        delete updated[matchup.teamBId];
+      }
+      this.scores = updated;
+      this.tournamentService.dispatch({ type: 'UPDATE_SCORES', scores: this.scores });
+    }
   }
 
   #endRound(): void {

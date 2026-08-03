@@ -7,7 +7,7 @@ import { L10nPipe } from '../../pipes/l10n.pipe';
 import { L10nService } from '../../services/l10n.service';
 import { TournamentService } from '../../services/tournament.service';
 
-export type PageType = 'play' | 'scoring' | 'round-winner';
+export type PageType = 'play' | 'round-winner';
 
 interface PageOption {
   key: PageType;
@@ -38,7 +38,6 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
 
   pageOptions: PageOption[] = [
     { key: 'play', labelKey: 'breadcrumb.matchups', route: 'play' },
-    { key: 'scoring', labelKey: 'breadcrumb.scoring', route: 'scoring' },
     { key: 'round-winner', labelKey: 'breadcrumb.roundWinner', route: 'round-winner' },
   ];
 
@@ -65,7 +64,7 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
 
   private parseUrl(url: string): void {
     this.currentUrl = url;
-    const roundMatch = url.match(/\/tournament\/round\/(\d+)\/(play|scoring|round-winner)/);
+    const roundMatch = url.match(/\/tournament\/round\/(\d+)\/(play|round-winner)/);
     if (roundMatch) {
       this.roundNumber = +roundMatch[1];
       this.pageType = roundMatch[2] as PageType;

@@ -48,8 +48,8 @@
       </button>
     }
     @if (isRoundEnded && isCurrentRound) {
-      <button type="button" class="btn btn-primary" (click)="goToScoring()">
-        {{ 'roundScreen.toScoring' | l10n }}
+      <button type="button" class="btn btn-primary" (click)="goToRoundWinner()" [disabled]="!allScoresFilled">
+        {{ 'roundScreen.toRoundWinner' | l10n }}
       </button>
     }
   </div>
@@ -62,13 +62,32 @@
           <span class="col-team">{{ 'common.team' | l10n }}</span>
           <span class="col-vs"></span>
           <span class="col-team">{{ 'common.team' | l10n }}</span>
+          <span class="col-score"></span>
         </div>
         @for (matchup of leftColumnMatchups; track matchup.teamAId + matchup.teamBId; let index = $index) {
           <div class="matchup-row">
             <span class="col-table">{{ index + 1 }}</span>
             <span class="col-team team-name">{{ getTeamName(matchup.teamAId) }}</span>
-            <span class="col-vs">{{ 'common.vs' | l10n }}</span>
+            <span class="col-vs" [class.has-score]="hasScore(matchup)">
+              @if (hasScore(matchup)) {
+                {{ getScoreDisplay(matchup) }}
+              } @else {
+                {{ 'common.vs' | l10n }}
+              }
+            </span>
             <span class="col-team team-name">{{ getTeamName(matchup.teamBId) }}</span>
+            <span class="col-score">
+              <button
+                class="btn-status-tag"
+                [class.btn-status-tag--success]="hasScore(matchup)"
+                [class.btn-status-tag--warning]="!hasScore(matchup)"
+                type="button"
+                (click)="editMatchScore(matchup)"
+              >
+                <app-svg-icon [name]="hasScore(matchup) ? 'check' : 'alert-triangle'" [width]="12" [height]="12" />
+                {{ 'common.score' | l10n }}
+              </button>
+            </span>
           </div>
         }
       </div>
@@ -82,13 +101,32 @@
             <span class="col-team">{{ 'common.team' | l10n }}</span>
             <span class="col-vs"></span>
             <span class="col-team">{{ 'common.team' | l10n }}</span>
+            <span class="col-score"></span>
           </div>
           @for (matchup of rightColumnMatchups; track matchup.teamAId + matchup.teamBId; let index = $index) {
             <div class="matchup-row">
               <span class="col-table">{{ leftColumnMatchups.length + index + 1 }}</span>
               <span class="col-team team-name">{{ getTeamName(matchup.teamAId) }}</span>
-              <span class="col-vs">{{ 'common.vs' | l10n }}</span>
+              <span class="col-vs" [class.has-score]="hasScore(matchup)">
+                @if (hasScore(matchup)) {
+                  {{ getScoreDisplay(matchup) }}
+                } @else {
+                  {{ 'common.vs' | l10n }}
+                }
+              </span>
               <span class="col-team team-name">{{ getTeamName(matchup.teamBId) }}</span>
+              <span class="col-score">
+                <button
+                  class="btn-status-tag"
+                  [class.btn-status-tag--success]="hasScore(matchup)"
+                  [class.btn-status-tag--warning]="!hasScore(matchup)"
+                  type="button"
+                  (click)="editMatchScore(matchup)"
+                >
+                  <app-svg-icon [name]="hasScore(matchup) ? 'check' : 'alert-triangle'" [width]="12" [height]="12" />
+                  {{ 'common.score' | l10n }}
+                </button>
+              </span>
             </div>
           }
         </div>

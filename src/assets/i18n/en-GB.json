@@ -8,6 +8,7 @@
   "common.table": "Table",
   "common.vs": "VS",
   "common.bye": "Bye",
+  "common.score": "Score",
   "common.winner": "Winner",
   "common.rank": "Rank",
   "common.margin": "Margin",
@@ -153,7 +154,7 @@
   "roundScreen.resumeRound": "Resume Round",
   "roundScreen.endRound": "End Round",
   "roundScreen.roundFinished": "TIME'S UP",
-  "roundScreen.toScoring": "To Scoring",
+  "roundScreen.toRoundWinner": "To Round Winner",
 
   "roundHistory.title": "Round History",
   "roundHistory.round": "Round {roundNumber}",
@@ -171,7 +172,7 @@
   "roundWinner.title": "Round {roundNumber} Results",
   "roundWinner.points": "points",
   "roundWinner.finish": "Finish Tournament",
-  "roundWinner.backToScoring": "Back to Scores",
+  "roundWinner.backToMatchups": "Back to Matchups",
 
   "finished.championLabel": "Champion",
   "finished.tournamentComplete": "Tournament Complete",

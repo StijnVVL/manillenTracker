@@ -64,8 +64,7 @@ export class RoundWinnerScreenComponent implements OnInit {
 
   goToCurrentRound(): void {
     if (this.currentRound) {
-      const subPage = this.state.status === 'round' ? 'play' :
-                      this.state.status === 'scoring' ? 'scoring' : 'round-winner';
+      const subPage = this.state.status === 'round-winner' ? 'round-winner' : 'play';
       this.router.navigate(['/tournament/round', this.currentRound.number, subPage]);
     }
   }
@@ -140,9 +139,9 @@ export class RoundWinnerScreenComponent implements OnInit {
     });
   }
 
-  backToScoring(): void {
+  backToMatchups(): void {
     if (this.displayRound) {
-      this.router.navigate(['/tournament/round', this.displayRound.number, 'scoring']);
+      this.router.navigate(['/tournament/round', this.displayRound.number, 'play']);
     }
   }
 }
