@@ -86,6 +86,7 @@ button {
   border-radius: 10px;
   padding: 0.7rem 1.1rem;
   font-weight: 600;
+  text-decoration: none;
   transition: transform 0.15s ease, background 0.15s ease;
 }
 
@@ -115,6 +116,15 @@ button {
 .btn-danger {
   background: #fde8e6;
   color: var(--danger);
+}
+
+.btn-danger-filled {
+  background: var(--danger);
+  color: white;
+}
+
+.btn-danger-filled:hover:not(:disabled) {
+  background: #8a1b12;
 }
 
 .btn-ghost {
@@ -156,21 +166,30 @@ button {
 }
 
 .timer-section {
-  text-align: center;
-  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  max-width: 1600px;
+  margin: 0 auto 1.5rem;
+  padding: 0 1.5rem;
 }
 
-.timer-round-label {
-  font-size: 1rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 0.5rem;
+.countdown-round {
+  display: flex;
+  flex-direction: column;
+  color: var(--primary-dark) !important;
+}
+
+.round-label {
+  font-size: clamp(2rem, 7vw, 4rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.05em;
 }
 
 .countdown {
   font-size: clamp(4rem, 14vw, 8rem);
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1;
   color: var(--primary-dark);
   font-variant-numeric: tabular-nums;
@@ -188,10 +207,14 @@ button {
 
 .timer-controls {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   flex-wrap: wrap;
   gap: 0.75rem;
   margin-top: 1rem;
+  max-width: 1600px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 1.5rem;
 }
 
 .ladder-list,

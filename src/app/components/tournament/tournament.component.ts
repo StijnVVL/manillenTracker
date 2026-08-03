@@ -26,7 +26,7 @@ import { L10nService } from '../../services/l10n.service';
             <span class="link-card-title">{{ 'menu.teams' | l10n }}</span>
             <span class="link-card-desc">{{ 'tournament.viewTeamsDesc' | l10n }}</span>
           </a>
-          <a class="ongoing-link-card" (click)="redirectToCurrentState()" style="cursor:pointer">
+          <a class="ongoing-link-card" (click)="redirectToCurrentState()">
             <span class="link-card-title">{{ 'menu.currentRound' | l10n }}</span>
             <span class="link-card-desc">{{ 'tournament.currentRoundDesc' | l10n }}</span>
           </a>
@@ -64,15 +64,16 @@ import { L10nService } from '../../services/l10n.service';
       flex-direction: column;
       gap: 0.25rem;
       padding: 1rem 1.25rem;
-      border: 1px solid var(--border-color, #e2e8f0);
+      border: none;
       border-radius: 8px;
       text-decoration: none;
-      color: inherit;
-      transition: background 0.15s, border-color 0.15s;
+      color: white;
+      background: var(--primary, #1f6b3a);
+      transition: background 0.15s;
+      cursor: pointer;
     }
     .ongoing-link-card:hover {
-      background: var(--surface-hover, #f8fafc);
-      border-color: var(--primary, #3b82f6);
+      background: var(--primary-dark, #14502b);
     }
     .link-card-title {
       font-weight: 600;

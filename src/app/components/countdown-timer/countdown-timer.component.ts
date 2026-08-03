@@ -1,13 +1,12 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
 import { formatTime } from '../../services/timer.service';
-import { RoundProgressComponent } from '../round-progress/round-progress.component';
 import { L10nService } from '../../services/l10n.service';
 
 @Component({
   selector: 'app-countdown-timer',
   standalone: true,
-  imports: [RoundProgressComponent],
+  imports: [],
   templateUrl: './countdown-timer.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styles: [],

@@ -1,5 +1,8 @@
 <section class="timer-section">
-  <app-round-progress [roundNumber]="roundNumber" />
+  <div class="countdown countdown-round">
+    <span class="round-label">ROUND</span>
+    <span>{{ roundNumber }}</span>
+  </div>
   <div class="countdown" [style.color]="timerColor">
     {{ formattedTime }}
   </div>
