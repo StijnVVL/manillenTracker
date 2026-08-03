@@ -45,6 +45,10 @@ export class AppComponent implements OnDestroy {
     return this.tournamentService.state.status;
   }
 
+  get tournamentName(): string {
+    return this.tournamentService.state.tournamentName;
+  }
+
   get currentRoundNumber(): number | null {
     const state = this.tournamentService.state;
     if (!state.rounds || state.rounds.length === 0) return null;

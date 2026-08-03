@@ -28,7 +28,7 @@
 }
 
 .teams-table {
-  background: var(--bg-card);
+  background: #ffffff;
   border-radius: 12px;
   box-shadow: var(--shadow);
   overflow: hidden;

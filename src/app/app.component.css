@@ -54,6 +54,19 @@
   padding: 0 0.5rem;
 }
 
+.header-tournament-name {
+  font-size: clamp(1rem, 3.5vw, 2rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--primary-dark);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-shrink: 0;
+  padding-right: 0.75rem;
+}
+
 /* Header Actions */
 .header-actions {
   padding-right: 0.5rem;

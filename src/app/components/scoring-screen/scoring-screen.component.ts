@@ -73,8 +73,14 @@ export class ScoringScreenComponent implements OnInit {
 
   goToCurrentRound(): void {
     if (this.currentRound) {
-      this.router.navigate(['/tournament/round', this.currentRound.number, 'scoring']);
+      const subPage = this.state.status === 'round' ? 'play' :
+                      this.state.status === 'scoring' ? 'scoring' : 'round-winner';
+      this.router.navigate(['/tournament/round', this.currentRound.number, subPage]);
     }
+  }
+
+  get roundOngoing(): boolean {
+    return this.isCurrentRound && this.state.status === 'round';
   }
 
   loadRound(): void {

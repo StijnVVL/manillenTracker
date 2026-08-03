@@ -36,7 +36,7 @@ export function isPageInFuture(state: TournamentState, roundNumber: number, page
   if (currentRound && roundNumber === currentRound.number) {
     // Map status to page stages
     const statusToPage: Record<string, string[]> = {
-      'round': ['play'],
+      'round': ['play', 'scoring'],
       'scoring': ['play', 'scoring'],
       'round-winner': ['play', 'scoring', 'round-winner'],
       'finished': ['play', 'scoring', 'round-winner']

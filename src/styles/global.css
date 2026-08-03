@@ -167,7 +167,7 @@ button {
 
 .timer-section {
   display: flex;
-  align-items: flex-start;
+  align-items: baseline;
   justify-content: space-between;
   max-width: 1600px;
   margin: 0 auto 1.5rem;
@@ -176,8 +176,9 @@ button {
 
 .countdown-round {
   display: flex;
-  flex-direction: column;
-  color: var(--primary-dark) !important;
+  flex-direction: row;
+  align-items: baseline;
+  color: var(--primary-dark);
 }
 
 .round-label {
@@ -185,6 +186,19 @@ button {
   font-weight: 700;
   line-height: 1;
   letter-spacing: 0.05em;
+}
+
+.round-number {
+  font-size: clamp(4rem, 14vw, 8rem);
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  margin-left: 0.5ch;
+  background-color: var(--primary-dark);
+  color: var(--bg-card);
+  padding: 0.12em;
+  border-radius: 0.12em;
+  text-box: trim-both cap alphabetic;
 }
 
 .countdown {
