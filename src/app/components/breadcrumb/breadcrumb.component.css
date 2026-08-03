@@ -2,11 +2,11 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 0;
   font-size: 0.95rem;
   position: relative;
   color: var(--muted);
-  margin-bottom: 1rem;
+  flex: 1;
+  min-width: 0;
 }
 
 .breadcrumb-item {
@@ -22,7 +22,15 @@
   text-underline-offset: 3px;
 }
 
-.breadcrumb-item.clickable:hover {
+a.breadcrumb-item.clickable {
+  color: var(--primary);
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 3px;
+}
+
+.breadcrumb-item.clickable:hover,
+a.breadcrumb-item.clickable:hover {
   color: var(--primary-dark);
   text-decoration-style: solid;
 }

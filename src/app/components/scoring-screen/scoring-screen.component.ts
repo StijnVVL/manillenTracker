@@ -7,7 +7,6 @@ import { L10nPipe } from '../../pipes/l10n.pipe';
 import { getMatchupDiffs, getWinnerId, scoreWarning } from '../../logic/scoring';
 import { getRoundByNumber, getCurrentRound, getTeamMap, isRoundInFuture, isPageInFuture } from '../../utils/teams';
 import { RoundProgressComponent } from '../round-progress/round-progress.component';
-import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
 import { TournamentState, Round, Matchup, Team } from '../../models/tournament.model';
 import { ScoreEditDialogService } from '../../services/score-edit-dialog.service';
 import { ConfirmDialogService } from '../../services/confirm-dialog.service';
@@ -21,7 +20,6 @@ import { SvgIconComponent } from '../svg-icon/svg-icon.component';
     FormsModule,
     CommonModule,
     RoundProgressComponent,
-    BreadcrumbComponent,
     L10nPipe,
     SvgIconComponent,
 ],

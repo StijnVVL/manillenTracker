@@ -1,43 +1,63 @@
 <nav class="breadcrumb">
-  <span class="breadcrumb-item">{{ 'breadcrumb.tournament' | l10n }}</span>
-
-  <span class="breadcrumb-separator">›</span>
-
-  <span class="breadcrumb-item clickable" (click)="toggleRoundPopup($event)">
-    {{ 'breadcrumb.round' | l10n:{ roundNumber: roundNumber } }}
-  </span>
-
-  @if (showRoundPopup) {
-    <div class="popup-menu round-popup" [style.left.px]="popupX" [style.top.px]="popupY">
-      @for (round of rounds; track round) {
-        <div 
-          class="popup-item" 
-          [class.active]="round === roundNumber"
-          (click)="selectRound(round)"
-        >
-          {{ 'breadcrumb.round' | l10n:{ roundNumber: round } }}
-        </div>
-      }
-    </div>
+  @if (mode === 'home') {
+    <span class="breadcrumb-item">{{ 'menu.home' | l10n }}</span>
   }
 
-  <span class="breadcrumb-separator">›</span>
+  @if (mode === 'tournament') {
+    <span class="breadcrumb-item">{{ 'breadcrumb.tournament' | l10n }}</span>
+  }
 
-  <span class="breadcrumb-item clickable" (click)="togglePagePopup($event)">
-    {{ getPageLabel() }}
-  </span>
+  @if (mode === 'tournament-sub') {
+    <a class="breadcrumb-item clickable" routerLink="/tournament">{{ 'breadcrumb.tournament' | l10n }}</a>
+    <span class="breadcrumb-separator">›</span>
+    <span class="breadcrumb-item">{{ subPageLabelKey | l10n }}</span>
+  }
 
-  @if (showPagePopup) {
-    <div class="popup-menu page-popup" [style.left.px]="popupX" [style.top.px]="popupY">
-      @for (option of pageOptions; track option.key) {
-        <div 
-          class="popup-item" 
-          [class.active]="option.key === pageType"
-          (click)="selectPage(option)"
-        >
-          {{ option.labelKey | l10n }}
-        </div>
-      }
-    </div>
+  @if (mode === 'tournament-round') {
+    <a class="breadcrumb-item clickable" routerLink="/tournament">{{ 'breadcrumb.tournament' | l10n }}</a>
+
+    <span class="breadcrumb-separator">›</span>
+
+    <span class="breadcrumb-item clickable" (click)="toggleRoundPopup($event)">
+      {{ 'breadcrumb.round' | l10n:{ roundNumber: roundNumber } }}
+    </span>
+
+    @if (showRoundPopup) {
+      <div class="popup-menu" [style.left.px]="popupX" [style.top.px]="popupY">
+        @for (round of rounds; track round) {
+          <div
+            class="popup-item"
+            [class.active]="round === roundNumber"
+            (click)="selectRound(round)"
+          >
+            {{ 'breadcrumb.round' | l10n:{ roundNumber: round } }}
+          </div>
+        }
+      </div>
+    }
+
+    <span class="breadcrumb-separator">›</span>
+
+    <span class="breadcrumb-item clickable" (click)="togglePagePopup($event)">
+      {{ getPageLabel() }}
+    </span>
+
+    @if (showPagePopup) {
+      <div class="popup-menu" [style.left.px]="popupX" [style.top.px]="popupY">
+        @for (option of pageOptions; track option.key) {
+          <div
+            class="popup-item"
+            [class.active]="option.key === pageType"
+            (click)="selectPage(option)"
+          >
+            {{ option.labelKey | l10n }}
+          </div>
+        }
+      </div>
+    }
+  }
+
+  @if (mode === 'other') {
+    <span class="breadcrumb-item">{{ subPageLabelKey | l10n }}</span>
   }
 </nav>

@@ -7,7 +7,6 @@ import { L10nPipe } from '../../pipes/l10n.pipe';
 import { TournamentState, Round, Matchup } from '../../models/tournament.model';
 import { getRoundByNumber, getCurrentRound, getTeamMap, isRoundInFuture, isPageInFuture } from '../../utils/teams';
 import { ConfirmDialogService } from '../../services/confirm-dialog.service';
-import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
 
 interface RoundWinner {
   teamId: string;
@@ -19,7 +18,7 @@ interface RoundWinner {
 @Component({
   selector: 'app-round-winner-screen',
   standalone: true,
-  imports: [CommonModule, L10nPipe, BreadcrumbComponent],
+  imports: [CommonModule, L10nPipe],
   templateUrl: './round-winner-screen.component.html',
   styleUrl: './round-winner-screen.component.css',
 })

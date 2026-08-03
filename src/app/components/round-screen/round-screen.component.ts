@@ -5,7 +5,6 @@ import { TimerService, formatTime } from '../../services/timer.service';
 import { L10nPipe } from '../../pipes/l10n.pipe';
 import { getRoundByNumber, getLatestRoundDiffs, getCurrentRound, isRoundInFuture, isPageInFuture } from '../../utils/teams';
 import { CountdownTimerComponent } from '../countdown-timer/countdown-timer.component';
-import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
 import { TournamentState, Round, TournamentAction, Team, Matchup } from '../../models/tournament.model';
 import { ConfirmDialogService } from '../../services/confirm-dialog.service';
 import { L10nService } from '../../services/l10n.service';
@@ -15,9 +14,8 @@ import { L10nService } from '../../services/l10n.service';
   standalone: true,
   imports: [
     CountdownTimerComponent,
-    BreadcrumbComponent,
     L10nPipe
-],
+  ],
   templateUrl: './round-screen.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './round-screen.component.css',

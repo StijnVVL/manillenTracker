@@ -48,15 +48,10 @@
 }
 
 /* Header Title */
-.header-title {
+.app-header app-breadcrumb {
   flex: 1;
-  margin: 0;
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--primary-dark);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  min-width: 0;
+  padding: 0 0.5rem;
 }
 
 /* Header Actions */
