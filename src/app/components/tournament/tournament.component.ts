@@ -3,19 +3,34 @@ import { Router } from '@angular/router';
 import { TournamentService } from '../../services/tournament.service';
 import { TournamentState } from '../../models/tournament.model';
 import { getCurrentRound } from '../../utils/teams';
+import { RouterLink } from '@angular/router';
 import { L10nPipe } from '../../pipes/l10n.pipe';
 import { L10nService } from '../../services/l10n.service';
 
 @Component({
   selector: 'app-tournament',
   standalone: true,
-  imports: [L10nPipe],
+  imports: [L10nPipe, RouterLink],
   template: `
     @if (state.status === 'none') {
       <div class="no-tournament">
         <button class="btn btn-primary" (click)="startNewTournament()">
           {{ 'home.setupNewTournament' | l10n }}
         </button>
+      </div>
+    } @else {
+      <div class="tournament-ongoing">
+        <p class="ongoing-message">{{ 'tournament.ongoingMessage' | l10n }}</p>
+        <div class="ongoing-links">
+          <a routerLink="/tournament/teams" class="ongoing-link-card">
+            <span class="link-card-title">{{ 'menu.teams' | l10n }}</span>
+            <span class="link-card-desc">{{ 'tournament.viewTeamsDesc' | l10n }}</span>
+          </a>
+          <a class="ongoing-link-card" (click)="redirectToCurrentState()" style="cursor:pointer">
+            <span class="link-card-title">{{ 'menu.currentRound' | l10n }}</span>
+            <span class="link-card-desc">{{ 'tournament.currentRoundDesc' | l10n }}</span>
+          </a>
+        </div>
       </div>
     }
   `,
@@ -26,6 +41,46 @@ import { L10nService } from '../../services/l10n.service';
       align-items: center;
       height: 100%;
       padding: 2rem;
+    }
+    .tournament-ongoing {
+      max-width: 560px;
+      margin: 3rem auto;
+      padding: 0 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .ongoing-message {
+      margin: 0;
+      line-height: 1.6;
+    }
+    .ongoing-links {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .ongoing-link-card {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      padding: 1rem 1.25rem;
+      border: 1px solid var(--border-color, #e2e8f0);
+      border-radius: 8px;
+      text-decoration: none;
+      color: inherit;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .ongoing-link-card:hover {
+      background: var(--surface-hover, #f8fafc);
+      border-color: var(--primary, #3b82f6);
+    }
+    .link-card-title {
+      font-weight: 600;
+      font-size: 1rem;
+    }
+    .link-card-desc {
+      font-size: 0.875rem;
+      opacity: 0.7;
     }
   `],
   changeDetection: ChangeDetectionStrategy.Eager,
