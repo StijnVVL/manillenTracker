@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, map, distinctUntilChanged } from 'rxjs';
 import { applyLadderUpdate } from '../logic/ladder';
-import { ladderPairings, randomPairings } from '../logic/pairing';
+import { getAlgorithmById, DEFAULT_MATCHUP_ALGORITHM_ID } from '../logic/matchup-algorithm';
+import { shuffle } from '../logic/pairing';
 import { buildRoundResults } from '../logic/scoring';
 import {
   DEFAULT_ROUND_DURATION_SECONDS,
@@ -19,15 +20,16 @@ function createTeam(name: string, player1: string, player2: string): Team {
   return { id: crypto.randomUUID(), name: name.trim(), player1: player1.trim(), player2: player2.trim() };
 }
 
-function createRound(number: number, teamIds: string[], useRandom: boolean): Round {
-  const { matchups, byeTeamId } = useRandom
-    ? randomPairings(teamIds)
-    : ladderPairings(teamIds);
+function createRound(number: number, teamIds: string[], algorithmId: string, previouslyExcludedIds: string[], useRandom: boolean): Round {
+  const algorithm = getAlgorithmById(algorithmId);
+  const orderedIds = useRandom ? shuffle(teamIds) : teamIds;
+  const { matchups, excludedTeamId } = algorithm.buildMatchups(orderedIds, previouslyExcludedIds);
 
   return {
     number,
     matchups,
-    byeTeamId,
+    excludedTeamId,
+    excludedTeamScore: null,
     startedAt: null,
     endedAt: null,
     dueAt: null,
@@ -57,6 +59,7 @@ function createEmptyState(): TournamentState {
     rounds: [],
     roundDurationSeconds: DEFAULT_ROUND_DURATION_SECONDS,
     totalRounds: DEFAULT_TOTAL_ROUNDS,
+    matchupAlgorithmId: DEFAULT_MATCHUP_ALGORITHM_ID,
     status: 'none',
     timerStatus: 'idle',
     lastLadderSnapshot: null,
@@ -69,7 +72,8 @@ function createInitialState(
   teams: Team[] = [],
   roundDurationSeconds = DEFAULT_ROUND_DURATION_SECONDS,
   tournamentName = '',
-  teamPresence: Record<string, boolean> = {}
+  teamPresence: Record<string, boolean> = {},
+  matchupAlgorithmId = DEFAULT_MATCHUP_ALGORITHM_ID,
 ): TournamentState {
   return {
     tournamentName,
@@ -78,6 +82,7 @@ function createInitialState(
     rounds: [],
     roundDurationSeconds,
     totalRounds: defaultTotalRounds,
+    matchupAlgorithmId,
     status: 'setup',
     timerStatus: 'idle',
     lastLadderSnapshot: null,
@@ -101,6 +106,19 @@ function loadPersistedState(): TournamentState | null {
     parsed.teamPresence = parsed.teamPresence ?? {};
     // Migrate tournamentName if missing
     parsed.tournamentName = parsed.tournamentName ?? '';
+    // Migrate matchupAlgorithmId if missing
+    parsed.matchupAlgorithmId = parsed.matchupAlgorithmId ?? DEFAULT_MATCHUP_ALGORITHM_ID;
+    // Migrate rounds: byeTeamId -> excludedTeamId
+    if (parsed.rounds) {
+      parsed.rounds = parsed.rounds.map(r => {
+        const anyR = r as any;
+        return {
+          ...r,
+          excludedTeamId: r.excludedTeamId ?? anyR['byeTeamId'] ?? null,
+          excludedTeamScore: r.excludedTeamScore ?? null,
+        };
+      });
+    }
     return parsed;
   } catch {
     return null;
@@ -142,6 +160,11 @@ function tournamentReducer(
         ),
       };
 
+    case 'SET_MATCHUP_ALGORITHM_TOURNAMENT': {
+      if (state.status !== 'setup') return state;
+      return { ...state, matchupAlgorithmId: action.algorithmId };
+    }
+
     case 'SET_TOURNAMENT_NAME': {
       if (state.status !== 'setup') return state;
       return { ...state, tournamentName: action.name };
@@ -179,7 +202,7 @@ function tournamentReducer(
       } 
 
       const ladder = state.teams.map((t) => t.id);
-      const round = createRound(1, ladder, true);
+      const round = createRound(1, ladder, state.matchupAlgorithmId, [], true);
       return {
         ...state,
         ladder,
@@ -301,12 +324,22 @@ function tournamentReducer(
 
       // Build results for ladder calculation
       const results = buildRoundResults(updatedMatchups, action.scores);
+
+      // Compute excluded team score if applicable
+      let excludedTeamScore: number | null = null;
+      if (round.excludedTeamId) {
+        const algorithm = getAlgorithmById(state.matchupAlgorithmId);
+        excludedTeamScore = algorithm.calculateExcludedScore(results);
+        results.push({ teamId: round.excludedTeamId, rawScore: excludedTeamScore, matchDiff: 0 });
+      }
+
       const snapshot = [...state.ladder];
       const { ladder } = applyLadderUpdate(state.ladder, results);
 
       const updatedRound: Round = {
         ...round,
         matchups: updatedMatchups,
+        excludedTeamScore,
         ladderSnapshot: ladder,
       };
       const rounds = [...state.rounds];
@@ -337,9 +370,13 @@ function tournamentReducer(
         return state;
       }
 
+      const previouslyExcludedIds = state.rounds
+        .map(r => r.excludedTeamId)
+        .filter((id): id is string => id !== null);
+
       return {
         ...state,
-        rounds: isFinalRound ? state.rounds : [...state.rounds, createRound(currentRound.number + 1, state.ladder, false)],
+        rounds: isFinalRound ? state.rounds : [...state.rounds, createRound(currentRound.number + 1, state.ladder, state.matchupAlgorithmId, previouslyExcludedIds, false)],
         status: isFinalRound ? 'finished' : 'round',
         timerStatus: 'idle',
         lastLadderSnapshot: null,
@@ -358,7 +395,7 @@ function tournamentReducer(
         localStorage.removeItem(STORAGE_KEY);
       }
       const initialPresence = USE_DUMMY_DATA ? DUMMY_TEAM_PRESENCE : {};
-      return createInitialState(action.defaultTotalRounds, action.teams, action.roundDurationSeconds, action.tournamentName, initialPresence);
+      return createInitialState(action.defaultTotalRounds, action.teams, action.roundDurationSeconds, action.tournamentName, initialPresence, action.matchupAlgorithmId);
     }
 
     case 'RESTORE_STATE':
@@ -411,6 +448,7 @@ export class TournamentService {
         teams: s.teams,
         roundDurationSeconds: s.roundDurationMinutes * 60,
         tournamentName: s.defaultTournamentName,
+        matchupAlgorithmId: s.matchupAlgorithmId,
       };
     }
     const newState = tournamentReducer(this.stateSubject.value, processedAction);

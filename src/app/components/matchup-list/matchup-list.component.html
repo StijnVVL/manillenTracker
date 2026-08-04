@@ -14,9 +14,10 @@
       }
     </ul>
   }
-  @if (round && round.byeTeamId) {
-    <p class="bye-note">
-      {{ 'common.bye' | l10n }}: {{ getTeamName(round.byeTeamId) }}
-    </p>
+  @if (round && round.excludedTeamId) {
+    <div class="excluded-team-note">
+      <span class="excluded-team-label">{{ 'matchupList.excludedTeam' | l10n }}</span>
+      <span class="excluded-team-name">{{ getTeamName(round.excludedTeamId) }}</span>
+    </div>
   }
 </div>

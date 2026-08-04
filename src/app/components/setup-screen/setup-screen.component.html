@@ -61,6 +61,16 @@
       [disabled]="!isSetup"
     />
     <p class="field-hint">{{ 'setup.totalRoundsHint' | l10n }}</p>
+
+    <label class="field-label" for="setup-algorithm">
+      {{ 'settings.matchupAlgorithmLabel' | l10n }}
+    </label>
+    <app-algorithm-selector
+      [selectedId]="state.matchupAlgorithmId"
+      [disabled]="!isSetup"
+      (selectedIdChange)="onAlgorithmChange($event)"
+    />
+    <p class="field-hint">{{ 'settings.matchupAlgorithmHint' | l10n }}</p>
   </div>
 
   @if (isSetup) {

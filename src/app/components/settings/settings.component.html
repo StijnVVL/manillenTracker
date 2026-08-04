@@ -65,6 +65,15 @@
       </span>
     </div>
     <p class="field-hint">{{ 'settings.totalRoundsHint' | l10n }}</p>
+
+    <label class="field-label">
+      {{ 'settings.matchupAlgorithmLabel' | l10n }}
+    </label>
+    <app-algorithm-selector
+      [selectedId]="settingsState.matchupAlgorithmId"
+      (selectedIdChange)="onAlgorithmChange($event)"
+    />
+    <p class="field-hint">{{ 'settings.matchupAlgorithmHint' | l10n }}</p>
   </div>
 
   <div class="card card--spaced">

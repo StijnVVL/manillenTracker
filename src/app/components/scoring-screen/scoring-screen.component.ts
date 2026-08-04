@@ -4,7 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { TournamentService } from '../../services/tournament.service';
 import { L10nService } from '../../services/l10n.service';
 import { L10nPipe } from '../../pipes/l10n.pipe';
-import { getMatchupDiffs, getWinnerId, scoreWarning } from '../../logic/scoring';
+import { getMatchupDiffs, getWinnerId, scoreWarning, buildRoundResults } from '../../logic/scoring';
+import { getAlgorithmById } from '../../logic/matchup-algorithm';
 import { getRoundByNumber, getCurrentRound, getTeamMap, isRoundInFuture, isPageInFuture } from '../../utils/teams';
 import { RoundProgressComponent } from '../round-progress/round-progress.component';
 import { TournamentState, Round, Matchup, Team } from '../../models/tournament.model';
@@ -140,6 +141,24 @@ export class ScoringScreenComponent implements OnInit {
       const scoreB = this.numericScores[matchup.teamBId];
       return scoreA !== undefined && scoreB !== undefined;
     });
+  }
+
+  get excludedTeamId(): string | null {
+    return this.displayRound?.excludedTeamId ?? null;
+  }
+
+  get excludedTeamScore(): number | null {
+    if (!this.displayRound) return null;
+    // If scores are already confirmed, use the stored value
+    if (this.scoresAlreadyConfirmed) {
+      return this.displayRound.excludedTeamScore ?? null;
+    }
+    // Otherwise compute live from current scores when all matchups are filled
+    if (!this.allMatchupsFilled || !this.displayRound.excludedTeamId) return null;
+    const results = buildRoundResults(this.displayRound.matchups, this.numericScores);
+    if (results.length === 0) return null;
+    const algorithm = getAlgorithmById(this.state.matchupAlgorithmId);
+    return algorithm.calculateExcludedScore(results);
   }
 
   get numericScores(): Record<string, number> {

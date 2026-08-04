@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import {
   DEFAULT_LANGUAGE,
+  DEFAULT_MATCHUP_ALGORITHM_ID,
   DEFAULT_ROUND_DURATION_MINUTES,
   DEFAULT_TOTAL_ROUNDS,
   SETTINGS_STORAGE_KEY,
@@ -24,6 +25,7 @@ function createDefaultSettings(): SettingsState {
     roundDurationMinutes: DEFAULT_ROUND_DURATION_MINUTES,
     defaultTotalRounds: DEFAULT_TOTAL_ROUNDS,
     language: DEFAULT_LANGUAGE,
+    matchupAlgorithmId: DEFAULT_MATCHUP_ALGORITHM_ID,
     teams: USE_DUMMY_DATA ? [...DUMMY_TEAMS] : [],
   };
 }
@@ -40,6 +42,7 @@ function loadPersistedSettings(): SettingsState {
       language: (parsed.language === 'en-GB' || parsed.language === 'nl-BE')
         ? parsed.language as SupportedLanguage
         : DEFAULT_LANGUAGE,
+      matchupAlgorithmId: typeof parsed.matchupAlgorithmId === 'string' ? parsed.matchupAlgorithmId : DEFAULT_MATCHUP_ALGORITHM_ID,
       teams: Array.isArray(parsed.teams) ? parsed.teams : (USE_DUMMY_DATA ? [...DUMMY_TEAMS] : []),
     };
   } catch {
@@ -60,6 +63,9 @@ function settingsReducer(state: SettingsState, action: SettingsAction): Settings
 
     case 'SET_LANGUAGE':
       return { ...state, language: action.language };
+
+    case 'SET_MATCHUP_ALGORITHM':
+      return { ...state, matchupAlgorithmId: action.algorithmId };
 
     case 'ADD_SETTINGS_TEAM': {
       const name = action.name.trim();

@@ -8,17 +8,21 @@ import { L10nPipe } from '../../pipes/l10n.pipe';
 import { L10nService } from '../../services/l10n.service';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { TournamentState } from '../../models/tournament.model';
+import { AlgorithmSelectorComponent } from '../algorithm-selector/algorithm-selector.component';
+import { MATCHUP_ALGORITHMS } from '../../logic/matchup-algorithm';
+import type { MatchupAlgorithm } from '../../logic/matchup-algorithm';
 import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-setup-screen',
   standalone: true,
-  imports: [CommonModule, FormsModule, L10nPipe, SvgIconComponent],
+  imports: [CommonModule, FormsModule, L10nPipe, SvgIconComponent, AlgorithmSelectorComponent],
   templateUrl: './setup-screen.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './setup-screen.component.css',
 })
 export class SetupScreenComponent implements OnInit, OnDestroy {
+  readonly algorithms: MatchupAlgorithm[] = MATCHUP_ALGORITHMS;
   state: TournamentState;
 
   durationValue: number;
@@ -81,6 +85,10 @@ export class SetupScreenComponent implements OnInit, OnDestroy {
 
   onTotalRoundsChange(totalRounds: number): void {
     this.tournamentService.dispatch({ type: 'SET_TOTAL_ROUNDS', totalRounds });
+  }
+
+  onAlgorithmChange(algorithmId: string): void {
+    this.tournamentService.dispatch({ type: 'SET_MATCHUP_ALGORITHM_TOURNAMENT', algorithmId });
   }
 
   private validateDuration(value: number | null): string | null {

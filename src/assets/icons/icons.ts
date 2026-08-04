@@ -25,6 +25,10 @@ const UI_ICONS: Record<string, string> = {
   'pencil': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none">
   <path d="M14.166 2.5c.442 0 .866.176 1.179.488l1.667 1.667a1.667 1.667 0 0 1 0 2.357l-9.167 9.167a1.667 1.667 0 0 1-1.178.488H5a.833.833 0 0 1-.833-.834v-1.666c0-.442.175-.866.488-1.179l9.166-9.166A1.667 1.667 0 0 1 14.166 2.5ZM13.333 6.012l-7.5 7.5v1.155h1.155l7.5-7.5-1.155-1.155Z" fill="currentColor"/>
 </svg>`,
+  'no-entrance': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <circle cx="12" cy="12" r="11" fill="currentColor"/>
+  <rect x="6" y="10.25" width="12" height="3.5" rx="1.75" fill="white"/>
+</svg>`
 };
 
 /** All available inline SVG icons, keyed by name. Flags are prefixed with `flags/`. */

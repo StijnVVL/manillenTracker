@@ -1,4 +1,5 @@
 import { Team } from './tournament.model';
+import { DEFAULT_MATCHUP_ALGORITHM_ID } from '../logic/matchup-algorithm';
 
 export type SupportedLanguage = 'en-GB' | 'nl-BE';
 
@@ -17,6 +18,7 @@ export interface SettingsState {
   roundDurationMinutes: number;
   defaultTotalRounds: number;
   language: SupportedLanguage;
+  matchupAlgorithmId: string;
   teams: Team[];
 }
 
@@ -26,12 +28,14 @@ export const MAX_ROUND_DURATION_MINUTES = 120;
 export const MAX_TOTAL_ROUNDS = 10;
 export const DEFAULT_LANGUAGE: SupportedLanguage = 'en-GB';
 export const SETTINGS_STORAGE_KEY = 'manillen-settings';
+export { DEFAULT_MATCHUP_ALGORITHM_ID };
 
 export type SettingsAction =
   | { type: 'SET_DEFAULT_TOURNAMENT_NAME'; name: string }
   | { type: 'SET_ROUND_DURATION'; minutes: number }
   | { type: 'SET_DEFAULT_TOTAL_ROUNDS'; totalRounds: number }
   | { type: 'SET_LANGUAGE'; language: SupportedLanguage }
+  | { type: 'SET_MATCHUP_ALGORITHM'; algorithmId: string }
   | { type: 'ADD_SETTINGS_TEAM'; name: string; player1: string; player2: string; id?: string }
   | { type: 'REMOVE_SETTINGS_TEAM'; teamId: string }
   | { type: 'UPDATE_SETTINGS_TEAM'; teamId: string; name: string; player1: string; player2: string };

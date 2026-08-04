@@ -10,6 +10,8 @@ import { ConfirmDialogService } from '../../services/confirm-dialog.service';
 import { L10nService } from '../../services/l10n.service';
 import { ScoreEditDialogService } from '../../services/score-edit-dialog.service';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
+import { buildRoundResults } from '../../logic/scoring';
+import { getAlgorithmById } from '../../logic/matchup-algorithm';
 
 @Component({
   selector: 'app-round-screen',
@@ -53,6 +55,7 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
       this.roundNumber = +params['roundNumber'];
       this.checkIfFutureRound();
       this.loadRound();
+      this.loadScores();
     });
 
     this.tournamentService.state$.subscribe((state) => {
@@ -294,4 +297,17 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
     const mid = Math.ceil(this.displayRound.matchups.length / 2);
     return this.displayRound.matchups.slice(mid);
   }
+
+  get excludedTeamScore(): number {
+    if (!this.displayRound?.excludedTeamId) return 0;
+    if (this.displayRound.excludedTeamScore !== null && this.displayRound.excludedTeamScore !== undefined) {
+      return this.displayRound.excludedTeamScore;
+    }
+    const results = buildRoundResults(this.displayRound.matchups, this.scores);
+    if (results.length === 0) return 0;
+    const algorithm = getAlgorithmById(this.state.matchupAlgorithmId);
+    return algorithm.calculateExcludedScore(results);
+  }
+
+  get excludedRowRightLabel(): string { return '–'; }
 }

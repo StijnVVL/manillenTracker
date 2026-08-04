@@ -1,0 +1,37 @@
+<div class="algorithm-selector">
+  <div class="dropdown-container" (clickOutside)="closeDropdown()">
+    <button
+      type="button"
+      class="dropdown-trigger"
+      [class.disabled]="disabled"
+      (click)="toggleDropdown()"
+      [attr.aria-expanded]="isOpen"
+      [attr.aria-disabled]="disabled"
+    >
+      <span class="algorithm-name">{{ (currentAlgorithm?.nameKey ?? '') | l10n }}</span>
+      <span class="dropdown-arrow" [class.open]="isOpen">
+        <app-svg-icon name="chevron-down" [width]="16" [height]="16" />
+      </span>
+    </button>
+
+    @if (isOpen) {
+      <div class="dropdown-menu">
+        @for (algo of algorithms; track algo.id) {
+          <button
+            type="button"
+            class="dropdown-item"
+            [class.selected]="algo.id === selectedId"
+            (click)="select(algo)"
+          >
+            <span class="algorithm-name">{{ algo.nameKey | l10n }}</span>
+            @if (algo.id === selectedId) {
+              <span class="check-icon">
+                <app-svg-icon name="check" [width]="16" [height]="16" />
+              </span>
+            }
+          </button>
+        }
+      </div>
+    }
+  </div>
+</div>

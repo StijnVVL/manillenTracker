@@ -74,10 +74,20 @@
       }
     </div>
 
-    @if (displayRound.byeTeamId) {
-      <p class="bye-note">
-        {{ 'scoring.byeNoScore' | l10n:{ teamName: getTeamName(displayRound.byeTeamId) } }}
-      </p>
+    @if (excludedTeamId) {
+      <div class="excluded-team-panel">
+        <span class="excluded-team-label">{{ 'scoring.excludedTeam' | l10n }}</span>
+        <span class="excluded-team-name">{{ getTeamName(excludedTeamId) }}</span>
+        @if (excludedTeamScore !== null) {
+          <span class="excluded-team-score">
+            {{ 'scoring.excludedTeamScore' | l10n }}: {{ excludedTeamScore }}
+          </span>
+        } @else {
+          <span class="excluded-team-score excluded-team-score--pending">
+            {{ 'scoring.excludedTeamScorePending' | l10n }}
+          </span>
+        }
+      </div>
     }
 
     <div class="setup-actions">

@@ -1,3 +1,13 @@
 {
-  
+  "algorithm.fairness.meanof3": "Gemiddelde van 3",
+
+  "settings.matchupAlgorithmLabel": "Koppelingsalgoritme",
+  "settings.matchupAlgorithmHint": "Bepaalt hoe teams per ronde worden gekoppeld en hoe de score van het uitgesloten team wordt berekend.",
+
+  "matchupList.excludedTeam": "Uitgesloten deze ronde",
+
+  "scoring.excludedTeam": "Uitgesloten team",
+  "scoring.excludedTeamScore": "Berekende score",
+  "scoring.excludedTeamScorePending": "Score wordt berekend wanneer alle wedstrijden zijn ingevuld"
 }
+

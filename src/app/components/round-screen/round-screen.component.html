@@ -93,6 +93,22 @@
             </span>
           </div>
         }
+        @if (rightColumnMatchups.length === 0 && displayRound.excludedTeamId) {
+          <div class="matchup-row excluded-row">
+            <span class="col-table"><app-svg-icon name="no-entrance" [width]="16" [height]="16" /></span>
+            <span class="col-team team-name">{{ getTeamName(displayRound.excludedTeamId) }}</span>
+            <span class="col-score-a">{{ excludedTeamScore }}</span>
+            <span class="col-vs col-score-sep">-</span>
+            <span class="col-score-b">0</span>
+            <span class="col-team team-name">{{ excludedRowRightLabel }}</span>
+            <span class="col-score">
+              <button class="btn-status-tag btn-status-tag--success btn-status-tag--muted" disabled type="button">
+                <app-svg-icon name="check" [width]="12" [height]="12" />
+                {{ 'common.score' | l10n }}
+              </button>
+            </span>
+          </div>
+        }
       </div>
     </div>
 
@@ -132,19 +148,22 @@
               </span>
             </div>
           }
-        </div>
-      </div>
-    }
-
-    @if (displayRound.byeTeamId) {
-      <div class="matchup-table-container bye-container">
-        <div class="matchup-table">
-          <div class="matchup-row bye-row">
-            <span class="col-table">{{ 'common.bye' | l10n }}</span>
-            <span class="col-team team-name">{{ getTeamName(displayRound.byeTeamId) }}</span>
-            <span class="col-vs"></span>
-            <span class="col-team"></span>
-          </div>
+          @if (displayRound.excludedTeamId) {
+            <div class="matchup-row excluded-row">
+              <span class="col-table"><app-svg-icon name="no-entrance" [width]="16" [height]="16" /></span>
+              <span class="col-team team-name">{{ getTeamName(displayRound.excludedTeamId) }}</span>
+              <span class="col-score-a">{{ excludedTeamScore }}</span>
+              <span class="col-vs col-score-sep">-</span>
+              <span class="col-score-b">0</span>
+              <span class="col-team team-name">{{ excludedRowRightLabel }}</span>
+              <span class="col-score">
+                <button class="btn-status-tag btn-status-tag--success btn-status-tag--muted" disabled type="button">
+                  <app-svg-icon name="check" [width]="12" [height]="12" />
+                  {{ 'common.score' | l10n }}
+                </button>
+              </span>
+            </div>
+          }
         </div>
       </div>
     }

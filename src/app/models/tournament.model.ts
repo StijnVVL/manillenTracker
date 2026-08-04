@@ -21,7 +21,8 @@ export interface RoundResult {
 export interface Round {
   number: number;
   matchups: Matchup[];
-  byeTeamId: string | null;
+  excludedTeamId: string | null;
+  excludedTeamScore: number | null;
   ladderSnapshot?: string[];
   startedAt: number | null;
   endedAt: number | null;
@@ -39,6 +40,7 @@ export interface TournamentState {
   rounds: Round[];
   roundDurationSeconds: number;
   totalRounds: number;
+  matchupAlgorithmId: string;
   status: TournamentStatus;
   timerStatus: TimerStatus;
   lastLadderSnapshot: string[] | null;
@@ -68,6 +70,7 @@ export type TournamentAction =
   | { type: 'UPDATE_SCORES'; scores: Record<string, number> }
   | { type: 'SUBMIT_SCORES'; scores: Record<string, number> }
   | { type: 'NEXT_ROUND' }
-  | { type: 'RESET_TOURNAMENT'; defaultTotalRounds?: number; teams?: Team[]; roundDurationSeconds?: number; tournamentName?: string }
+  | { type: 'RESET_TOURNAMENT'; defaultTotalRounds?: number; teams?: Team[]; roundDurationSeconds?: number; tournamentName?: string; matchupAlgorithmId?: string }
+  | { type: 'SET_MATCHUP_ALGORITHM_TOURNAMENT'; algorithmId: string }
   | { type: 'STOP_TOURNAMENT' }
   | { type: 'RESTORE_STATE'; state: TournamentState };

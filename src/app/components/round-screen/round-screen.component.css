@@ -11,12 +11,6 @@
   width: 100%;
 }
 
-.matchup-table-container.bye-container {
-  grid-column: 1 / -1;
-  max-width: 800px;
-  margin: 0 auto;
-}
-
 .matchup-table {
   background: var(--bg-card);
   border-radius: 12px;
@@ -108,17 +102,10 @@
   border-radius: 4px;
 }
 
-.bye-row {
-  background: rgba(0, 0, 0, 0.03);
-  color: var(--muted);
-}
-
-.bye-row .col-table {
-  color: var(--muted);
-}
-
-.bye-row .team-name {
-  color: var(--muted);
+.excluded-row .col-table {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
 }
 
 .col-score {

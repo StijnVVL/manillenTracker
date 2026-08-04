@@ -62,13 +62,38 @@
   background: rgba(46, 125, 50, 0.2);
 }
 
-.bye-note {
+.excluded-team-panel {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
   margin-top: 1rem;
-  padding: 0.75rem;
+  padding: 0.75rem 1rem;
   background: #f5f5f5;
   border-radius: 8px;
   color: var(--muted);
+}
+
+.excluded-team-label {
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+
+.excluded-team-name {
+  font-weight: 600;
+}
+
+.excluded-team-score {
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+
+.excluded-team-score--pending {
+  font-weight: 400;
   font-style: italic;
+  color: var(--muted);
 }
 
 .setup-actions {

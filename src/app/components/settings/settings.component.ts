@@ -7,16 +7,20 @@ import { LanguageSelectorComponent } from '../language-selector/language-selecto
 import { TeamListEditorComponent } from '../team-list-editor/team-list-editor.component';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { SettingsState } from '../../models/settings.model';
+import { AlgorithmSelectorComponent } from '../algorithm-selector/algorithm-selector.component';
+import { MATCHUP_ALGORITHMS } from '../../logic/matchup-algorithm';
+import type { MatchupAlgorithm } from '../../logic/matchup-algorithm';
 
 @Component({
   selector: 'app-settings',
   standalone: true,
-  imports: [CommonModule, FormsModule, L10nPipe, LanguageSelectorComponent, TeamListEditorComponent, SvgIconComponent],
+  imports: [CommonModule, FormsModule, L10nPipe, LanguageSelectorComponent, TeamListEditorComponent, SvgIconComponent, AlgorithmSelectorComponent],
   templateUrl: './settings.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './settings.component.css'
 })
 export class SettingsComponent implements OnInit {
+  readonly algorithms: MatchupAlgorithm[] = MATCHUP_ALGORITHMS;
   settingsState: SettingsState;
 
   durationValue: number;
@@ -69,6 +73,10 @@ export class SettingsComponent implements OnInit {
 
   onTeamRemoved(teamId: string): void {
     this.settingsService.dispatch({ type: 'REMOVE_SETTINGS_TEAM', teamId });
+  }
+
+  onAlgorithmChange(algorithmId: string): void {
+    this.settingsService.dispatch({ type: 'SET_MATCHUP_ALGORITHM', algorithmId });
   }
 
   private validateDuration(value: number | null): string | null {

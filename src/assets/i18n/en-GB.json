@@ -7,7 +7,6 @@
   "common.team": "Team",
   "common.table": "Table",
   "common.vs": "VS",
-  "common.bye": "Bye",
   "common.score": "Score",
   "common.winner": "Winner",
   "common.rank": "Rank",
@@ -107,6 +106,8 @@
   "settings.roundDurationError": "Must be a whole number between 1 and 120.",
   "settings.totalRoundsError": "Must be a whole number between 1 and 10.",
   "settings.teamsCard": "Pre-registered Teams",
+  "settings.matchupAlgorithmLabel": "Matchup algorithm",
+  "settings.matchupAlgorithmHint": "Determines how teams are paired each round and how the score of the excluded team is calculated.",
 
   "teams.addTeam": "Add Team",
   "teams.removeTeam": "Remove team",
@@ -138,6 +139,7 @@
 
   "matchupList.title": "This Round's Matchups",
   "matchupList.noMatchups": "No matchups scheduled.",
+  "matchupList.excludedTeam": "Excluded this round",
 
   "ladderBoard.defaultTitle": "Ladder",
   "ladderBoard.emptyState": "No teams on the ladder yet.",
@@ -164,7 +166,9 @@
   "scoring.title": "Enter Scores — Round {roundNumber}",
   "scoring.instructions": "Enter raw card points per team. Table movement is based on the score difference between the winning and losing team.",
   "scoring.finalRoundNote": "This is the final round — the Table 1 winner becomes champion.",
-  "scoring.byeNoScore": "Bye: {teamName} (no score entry needed)",
+  "scoring.excludedTeam": "Excluded team",
+  "scoring.excludedTeamScore": "Calculated score",
+  "scoring.excludedTeamScorePending": "Score calculated when all matches are filled in",
   "scoring.confirmScores": "Confirm Scores",
   "scoring.showRoundWinner": "Show Round Winner",
   "scoring.nextRound": "Next Round",
@@ -182,6 +186,8 @@
   "finished.noChampionNote": "Table 1 in the final round ended in a tie",
   "finished.finalLadder": "Final Ladder",
   "finished.finalStandings": "Final Standings",
+
+  "algorithm.fairness.meanof3": "Mean of 3",
 
   "language.english": "English",
   "language.dutch": "Nederlands"

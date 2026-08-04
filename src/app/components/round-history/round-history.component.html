@@ -21,9 +21,12 @@
                 }
               </div>
             }
-            @if (round.byeTeamId) {
+            @if (round.excludedTeamId) {
               <div style="margin-top: 0.35rem; color: var(--muted)">
-                {{ 'common.bye' | l10n }}: {{ getTeamName(round.byeTeamId) }}
+                {{ 'matchupList.excludedTeam' | l10n }}: {{ getTeamName(round.excludedTeamId) }}
+                @if (round.excludedTeamScore !== null && round.excludedTeamScore !== undefined) {
+                  ({{ round.excludedTeamScore }})
+                }
               </div>
             }
           </div>
