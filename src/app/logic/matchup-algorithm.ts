@@ -1,4 +1,4 @@
-import { Matchup, RoundResult } from '../models/tournament.model';
+import { Matchup, Round, RoundResult, Team } from '../models/tournament.model';
 
 export interface MatchupResult {
   matchups: Matchup[];
@@ -8,55 +8,89 @@ export interface MatchupResult {
 export interface MatchupAlgorithm {
   readonly id: string;
   readonly nameKey: string;
-  buildMatchups(ladder: string[], previouslyExcludedIds: string[]): MatchupResult;
+  buildMatchups(teams: Team[], completedRounds: Round[], previouslyExcludedIds: string[]): MatchupResult;
   calculateExcludedScore(roundResults: RoundResult[]): number;
 }
 
 /**
  * "Mean of 3" algorithm.
  *
+ * Ordering: teams sorted by wins desc → cumulative score desc → name asc (case-insensitive).
+ *
  * Matchup phase (odd number of teams):
- *   - Find the team in the middle of the ladder.
- *   - If that team was already excluded in a previous round, move to the next
- *     lower-ranked team; repeat until an un-excluded team is found.
- *   - Exclude that team. Pair the remaining teams consecutively: (1,2), (3,4), …
+ *   - Take the ordered list; pick the middle team.
+ *   - If that team was already excluded in a previous round, walk downward;
+ *     repeat until an un-excluded team is found.
+ *   - Fallback: use the original middle candidate.
+ *   - Exclude that team. Pair remaining consecutively: (1,2), (3,4), …
  *
  * Score phase (excluded team):
- *   - Sort the playing teams' raw scores.
+ *   - Sort playing teams' raw scores.
  *   - Compute: ceil( (best + worst + mid1 + mid2) / 4 )
- *   - Where mid1 = score at floor((n-1)/2), mid2 = score at ceil((n-1)/2).
  */
 export class MeanOf3Algorithm implements MatchupAlgorithm {
   readonly id = 'mean-of-3';
   readonly nameKey = 'algorithm.fairness.meanof3';
 
-  buildMatchups(ladder: string[], previouslyExcludedIds: string[]): MatchupResult {
-    if (ladder.length === 0) {
+  buildMatchups(teams: Team[], completedRounds: Round[], previouslyExcludedIds: string[]): MatchupResult {
+    if (teams.length === 0) {
       return { matchups: [], excludedTeamId: null };
     }
 
-    let excludedTeamId: string | null = null;
-    let remaining = [...ladder];
+    // --- compute stats per team ---
+    const wins = new Map<string, number>();
+    const cumulativeScore = new Map<string, number>();
+    for (const t of teams) { wins.set(t.id, 0); cumulativeScore.set(t.id, 0); }
 
-    if (ladder.length % 2 === 1) {
-      const middleIndex = Math.floor(ladder.length / 2);
+    for (const round of completedRounds) {
+      for (const m of round.matchups) {
+        if (m.teamAScore === undefined || m.teamBScore === undefined) continue;
+        // wins: score >= opponent score counts as a win
+        if (m.teamAScore >= m.teamBScore) wins.set(m.teamAId, (wins.get(m.teamAId) ?? 0) + 1);
+        if (m.teamBScore >= m.teamAScore) wins.set(m.teamBId, (wins.get(m.teamBId) ?? 0) + 1);
+        cumulativeScore.set(m.teamAId, (cumulativeScore.get(m.teamAId) ?? 0) + m.teamAScore);
+        cumulativeScore.set(m.teamBId, (cumulativeScore.get(m.teamBId) ?? 0) + m.teamBScore);
+      }
+      // excluded team's score (if computed)
+      if (round.excludedTeamId && round.excludedTeamScore !== null && round.excludedTeamScore !== undefined) {
+        cumulativeScore.set(round.excludedTeamId, (cumulativeScore.get(round.excludedTeamId) ?? 0) + round.excludedTeamScore);
+        // excluded team did not face an opponent, no win/loss recorded
+      }
+    }
+
+    // --- sort: wins desc → cumulative score desc → name asc (case-insensitive) ---
+    const nameOf = (id: string) => teams.find(t => t.id === id)?.name ?? '';
+    const ordered = [...teams].sort((a, b) => {
+      const wDiff = (wins.get(b.id) ?? 0) - (wins.get(a.id) ?? 0);
+      if (wDiff !== 0) return wDiff;
+      const sDiff = (cumulativeScore.get(b.id) ?? 0) - (cumulativeScore.get(a.id) ?? 0);
+      if (sDiff !== 0) return sDiff;
+      return nameOf(a.id).localeCompare(nameOf(b.id), undefined, { sensitivity: 'base' });
+    });
+
+    const orderedIds = ordered.map(t => t.id);
+
+    // --- pick excluded team (odd count) ---
+    let excludedTeamId: string | null = null;
+    let remaining = [...orderedIds];
+
+    if (orderedIds.length % 2 === 1) {
+      const middleIndex = Math.floor(orderedIds.length / 2);
       let candidateIndex = middleIndex;
 
-      // Walk downward until we find a team not previously excluded
       while (
-        candidateIndex < ladder.length &&
-        previouslyExcludedIds.includes(ladder[candidateIndex])
+        candidateIndex < orderedIds.length &&
+        previouslyExcludedIds.includes(orderedIds[candidateIndex])
       ) {
         candidateIndex++;
       }
 
-      // Fallback: if every lower-ranked candidate was excluded, use the middle
-      if (candidateIndex >= ladder.length) {
+      if (candidateIndex >= orderedIds.length) {
         candidateIndex = middleIndex;
       }
 
-      excludedTeamId = ladder[candidateIndex];
-      remaining = ladder.filter((_, i) => i !== candidateIndex);
+      excludedTeamId = orderedIds[candidateIndex];
+      remaining = orderedIds.filter((_, i) => i !== candidateIndex);
     }
 
     const matchups: Matchup[] = [];

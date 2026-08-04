@@ -67,7 +67,7 @@
           <span class="col-vs">vs</span>
           <span></span>
           <span class="col-team">{{ 'common.team' | l10n }}</span>
-          <span class="col-score"></span>
+          <span class="col-score"><button class="btn-status-tag" style="visibility:hidden" aria-hidden="true" tabindex="-1" disabled type="button"><app-svg-icon name="check" [width]="12" [height]="12" />{{ 'common.score' | l10n }}</button></span>
         </div>
         @for (matchup of leftColumnMatchups; track matchup.teamAId + matchup.teamBId; let index = $index) {
           <div class="matchup-row">
@@ -122,11 +122,11 @@
             <span class="col-vs">vs</span>
             <span></span>
             <span class="col-team">{{ 'common.team' | l10n }}</span>
-            <span class="col-score"></span>
+            <span class="col-score"><button class="btn-status-tag" style="visibility:hidden" aria-hidden="true" tabindex="-1" disabled type="button"><app-svg-icon name="check" [width]="12" [height]="12" />{{ 'common.score' | l10n }}</button></span>
           </div>
-          @for (matchup of rightColumnMatchups; track matchup.teamAId + matchup.teamBId; let index = $index) {
-            <div class="matchup-row">
-              <span class="col-table">{{ leftColumnMatchups.length + index + 1 }}</span>
+            @for (matchup of rightColumnMatchups; track matchup.teamAId + matchup.teamBId; let index = $index) {
+              <div class="matchup-row">
+                <span class="col-table">{{ leftColumnMatchups.length + index + 1 }}</span>
               <span class="col-team team-name" [title]="getTeamName(matchup.teamAId)">{{ getTeamNameShort(matchup.teamAId) }}</span>
               <span class="col-score-a">{{ hasScore(matchup) ? getScoreA(matchup) : '' }}</span>
               <span class="col-vs col-score-sep" [class.no-score]="!hasScore(matchup)">{{ hasScore(matchup) ? '-' : ('common.vs' | l10n) }}</span>

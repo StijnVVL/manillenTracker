@@ -51,6 +51,10 @@
   text-align: center;
 }
 
+.matchup-table-header .col-table {
+  color: inherit;
+}
+
 .col-vs {
   font-weight: 800;
   color: var(--primary);

@@ -20,10 +20,10 @@ function createTeam(name: string, player1: string, player2: string): Team {
   return { id: crypto.randomUUID(), name: name.trim(), player1: player1.trim(), player2: player2.trim() };
 }
 
-function createRound(number: number, teamIds: string[], algorithmId: string, previouslyExcludedIds: string[], useRandom: boolean): Round {
+function createRound(number: number, teams: Team[], completedRounds: Round[], algorithmId: string, previouslyExcludedIds: string[], useRandom: boolean): Round {
   const algorithm = getAlgorithmById(algorithmId);
-  const orderedIds = useRandom ? shuffle(teamIds) : teamIds;
-  const { matchups, excludedTeamId } = algorithm.buildMatchups(orderedIds, previouslyExcludedIds);
+  const teamsToUse = useRandom ? shuffle([...teams]) : teams;
+  const { matchups, excludedTeamId } = algorithm.buildMatchups(teamsToUse, completedRounds, previouslyExcludedIds);
 
   return {
     number,
@@ -202,7 +202,7 @@ function tournamentReducer(
       } 
 
       const ladder = state.teams.map((t) => t.id);
-      const round = createRound(1, ladder, state.matchupAlgorithmId, [], true);
+      const round = createRound(1, state.teams, [], state.matchupAlgorithmId, [], true);
       return {
         ...state,
         ladder,
@@ -376,7 +376,7 @@ function tournamentReducer(
 
       return {
         ...state,
-        rounds: isFinalRound ? state.rounds : [...state.rounds, createRound(currentRound.number + 1, state.ladder, state.matchupAlgorithmId, previouslyExcludedIds, false)],
+        rounds: isFinalRound ? state.rounds : [...state.rounds, createRound(currentRound.number + 1, state.teams, state.rounds, state.matchupAlgorithmId, previouslyExcludedIds, false)],
         status: isFinalRound ? 'finished' : 'round',
         timerStatus: 'idle',
         lastLadderSnapshot: null,
