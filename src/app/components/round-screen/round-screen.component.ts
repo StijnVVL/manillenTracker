@@ -310,4 +310,15 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
   }
 
   get excludedRowRightLabel(): string { return '–'; }
+
+  getTeamTooltip(teamId: string): string {
+    const snapshot = this.displayRound?.ladderSnapshot;
+    if (!snapshot || snapshot.length === 0) return '';
+    const rank = snapshot.findIndex(e => e.teamId === teamId) + 1;
+    if (rank === 0) return '';
+    const entry = snapshot[rank - 1];
+    const exclusionPart = entry.exclusions > 0 ? ` (of which ${entry.exclusions} exclusion${entry.exclusions > 1 ? 's' : ''})` : '';
+    const scoreList = entry.roundScores.length > 0 ? ` [${entry.roundScores.join(', ')}]` : '';
+    return `Ranked ${rank}: ${entry.wins} win${entry.wins !== 1 ? 's' : ''}${exclusionPart}, cumulative score ${entry.cumulativeScore}${scoreList}`;
+  }
 }

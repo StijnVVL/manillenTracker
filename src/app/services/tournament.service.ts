@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, map, distinctUntilChanged } from 'rxjs';
 import { applyLadderUpdate } from '../logic/ladder';
 import { getAlgorithmById, DEFAULT_MATCHUP_ALGORITHM_ID } from '../logic/matchup-algorithm';
-import { shuffle } from '../logic/pairing';
 import { buildRoundResults } from '../logic/scoring';
 import {
   DEFAULT_ROUND_DURATION_SECONDS,
@@ -22,14 +21,14 @@ function createTeam(name: string, player1: string, player2: string): Team {
 
 function createRound(number: number, teams: Team[], completedRounds: Round[], algorithmId: string, previouslyExcludedIds: string[], useRandom: boolean): Round {
   const algorithm = getAlgorithmById(algorithmId);
-  const teamsToUse = useRandom ? shuffle([...teams]) : teams;
-  const { matchups, excludedTeamId } = algorithm.buildMatchups(teamsToUse, completedRounds, previouslyExcludedIds);
+  const { matchups, excludedTeamId, ladderSnapshot } = algorithm.buildMatchups(teams, completedRounds, previouslyExcludedIds, useRandom);
 
   return {
     number,
     matchups,
     excludedTeamId,
     excludedTeamScore: null,
+    ladderSnapshot,
     startedAt: null,
     endedAt: null,
     dueAt: null,
@@ -108,14 +107,16 @@ function loadPersistedState(): TournamentState | null {
     parsed.tournamentName = parsed.tournamentName ?? '';
     // Migrate matchupAlgorithmId if missing
     parsed.matchupAlgorithmId = parsed.matchupAlgorithmId ?? DEFAULT_MATCHUP_ALGORITHM_ID;
-    // Migrate rounds: byeTeamId -> excludedTeamId
+    // Migrate rounds: byeTeamId -> excludedTeamId; old string[] ladderSnapshot -> empty LadderSnapshotEntry[]
     if (parsed.rounds) {
       parsed.rounds = parsed.rounds.map(r => {
         const anyR = r as any;
+        const snap = anyR['ladderSnapshot'];
         return {
           ...r,
           excludedTeamId: r.excludedTeamId ?? anyR['byeTeamId'] ?? null,
           excludedTeamScore: r.excludedTeamScore ?? null,
+          ladderSnapshot: (Array.isArray(snap) && snap.length > 0 && typeof snap[0] === 'string') ? [] : (snap ?? []),
         };
       });
     }
@@ -340,7 +341,6 @@ function tournamentReducer(
         ...round,
         matchups: updatedMatchups,
         excludedTeamScore,
-        ladderSnapshot: ladder,
       };
       const rounds = [...state.rounds];
       rounds[state.rounds.length - 1] = updatedRound;

@@ -1,14 +1,15 @@
-import { Matchup, Round, RoundResult, Team } from '../models/tournament.model';
+import { Matchup, LadderSnapshotEntry, Round, RoundResult, Team } from '../models/tournament.model';
 
 export interface MatchupResult {
   matchups: Matchup[];
   excludedTeamId: string | null;
+  ladderSnapshot: LadderSnapshotEntry[];
 }
 
 export interface MatchupAlgorithm {
   readonly id: string;
   readonly nameKey: string;
-  buildMatchups(teams: Team[], completedRounds: Round[], previouslyExcludedIds: string[]): MatchupResult;
+  buildMatchups(teams: Team[], completedRounds: Round[], previouslyExcludedIds: string[], useRandom: boolean): MatchupResult;
   calculateExcludedScore(roundResults: RoundResult[]): number;
 }
 
@@ -16,6 +17,7 @@ export interface MatchupAlgorithm {
  * "Mean of 3" algorithm.
  *
  * Ordering: teams sorted by wins desc → cumulative score desc → name asc (case-insensitive).
+ * Round 1 uses a random shuffle instead of sorted order.
  *
  * Matchup phase (odd number of teams):
  *   - Take the ordered list; pick the middle team.
@@ -32,41 +34,64 @@ export class MeanOf3Algorithm implements MatchupAlgorithm {
   readonly id = 'mean-of-3';
   readonly nameKey = 'algorithm.fairness.meanof3';
 
-  buildMatchups(teams: Team[], completedRounds: Round[], previouslyExcludedIds: string[]): MatchupResult {
+  buildMatchups(teams: Team[], completedRounds: Round[], previouslyExcludedIds: string[], useRandom: boolean): MatchupResult {
     if (teams.length === 0) {
-      return { matchups: [], excludedTeamId: null };
+      return { matchups: [], excludedTeamId: null, ladderSnapshot: [] };
     }
 
-    // --- compute stats per team ---
-    const wins = new Map<string, number>();
-    const cumulativeScore = new Map<string, number>();
-    for (const t of teams) { wins.set(t.id, 0); cumulativeScore.set(t.id, 0); }
+    // --- compute stats per team from completed rounds ---
+    const winsMap = new Map<string, number>();
+    const exclusionsMap = new Map<string, number>();
+    const cumulativeScoreMap = new Map<string, number>();
+    const roundScoresMap = new Map<string, number[]>();
+    for (const t of teams) {
+      winsMap.set(t.id, 0);
+      exclusionsMap.set(t.id, 0);
+      cumulativeScoreMap.set(t.id, 0);
+      roundScoresMap.set(t.id, []);
+    }
 
     for (const round of completedRounds) {
       for (const m of round.matchups) {
         if (m.teamAScore === undefined || m.teamBScore === undefined) continue;
-        // wins: score >= opponent score counts as a win
-        if (m.teamAScore >= m.teamBScore) wins.set(m.teamAId, (wins.get(m.teamAId) ?? 0) + 1);
-        if (m.teamBScore >= m.teamAScore) wins.set(m.teamBId, (wins.get(m.teamBId) ?? 0) + 1);
-        cumulativeScore.set(m.teamAId, (cumulativeScore.get(m.teamAId) ?? 0) + m.teamAScore);
-        cumulativeScore.set(m.teamBId, (cumulativeScore.get(m.teamBId) ?? 0) + m.teamBScore);
+        if (m.teamAScore >= m.teamBScore) winsMap.set(m.teamAId, (winsMap.get(m.teamAId) ?? 0) + 1);
+        if (m.teamBScore >= m.teamAScore) winsMap.set(m.teamBId, (winsMap.get(m.teamBId) ?? 0) + 1);
+        cumulativeScoreMap.set(m.teamAId, (cumulativeScoreMap.get(m.teamAId) ?? 0) + m.teamAScore);
+        cumulativeScoreMap.set(m.teamBId, (cumulativeScoreMap.get(m.teamBId) ?? 0) + m.teamBScore);
+        roundScoresMap.get(m.teamAId)!.push(m.teamAScore);
+        roundScoresMap.get(m.teamBId)!.push(m.teamBScore);
       }
-      // excluded team's score (if computed)
       if (round.excludedTeamId && round.excludedTeamScore !== null && round.excludedTeamScore !== undefined) {
-        cumulativeScore.set(round.excludedTeamId, (cumulativeScore.get(round.excludedTeamId) ?? 0) + round.excludedTeamScore);
-        // excluded team did not face an opponent, no win/loss recorded
+        winsMap.set(round.excludedTeamId, (winsMap.get(round.excludedTeamId) ?? 0) + 1);
+        exclusionsMap.set(round.excludedTeamId, (exclusionsMap.get(round.excludedTeamId) ?? 0) + 1);
+        cumulativeScoreMap.set(round.excludedTeamId, (cumulativeScoreMap.get(round.excludedTeamId) ?? 0) + round.excludedTeamScore);
+        roundScoresMap.get(round.excludedTeamId)!.push(round.excludedTeamScore);
       }
     }
 
-    // --- sort: wins desc → cumulative score desc → name asc (case-insensitive) ---
+    // --- sort or shuffle ---
     const nameOf = (id: string) => teams.find(t => t.id === id)?.name ?? '';
-    const ordered = [...teams].sort((a, b) => {
-      const wDiff = (wins.get(b.id) ?? 0) - (wins.get(a.id) ?? 0);
-      if (wDiff !== 0) return wDiff;
-      const sDiff = (cumulativeScore.get(b.id) ?? 0) - (cumulativeScore.get(a.id) ?? 0);
-      if (sDiff !== 0) return sDiff;
-      return nameOf(a.id).localeCompare(nameOf(b.id), undefined, { sensitivity: 'base' });
-    });
+    let ordered: Team[];
+    if (useRandom) {
+      ordered = [...teams].sort(() => Math.random() - 0.5);
+    } else {
+      ordered = [...teams].sort((a, b) => {
+        const wDiff = (winsMap.get(b.id) ?? 0) - (winsMap.get(a.id) ?? 0);
+        if (wDiff !== 0) return wDiff;
+        const sDiff = (cumulativeScoreMap.get(b.id) ?? 0) - (cumulativeScoreMap.get(a.id) ?? 0);
+        if (sDiff !== 0) return sDiff;
+        return nameOf(a.id).localeCompare(nameOf(b.id), undefined, { sensitivity: 'base' });
+      });
+    }
+
+    // --- build ladderSnapshot (the canonical pre-round ranking) ---
+    const ladderSnapshot: LadderSnapshotEntry[] = ordered.map(t => ({
+      teamId: t.id,
+      wins: winsMap.get(t.id) ?? 0,
+      exclusions: exclusionsMap.get(t.id) ?? 0,
+      cumulativeScore: cumulativeScoreMap.get(t.id) ?? 0,
+      roundScores: [...(roundScoresMap.get(t.id) ?? [])],
+    }));
 
     const orderedIds = ordered.map(t => t.id);
 
@@ -98,7 +123,7 @@ export class MeanOf3Algorithm implements MatchupAlgorithm {
       matchups.push({ teamAId: remaining[i], teamBId: remaining[i + 1] });
     }
 
-    return { matchups, excludedTeamId };
+    return { matchups, excludedTeamId, ladderSnapshot };
   }
 
   calculateExcludedScore(roundResults: RoundResult[]): number {

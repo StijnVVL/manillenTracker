@@ -88,8 +88,8 @@ export function computeStandings(state: TournamentState): TeamStanding[] {
     }
 
     if (round.ladderSnapshot) {
-      round.ladderSnapshot.forEach((teamId, index) => {
-        const standing = stats.get(teamId);
+      round.ladderSnapshot.forEach((entry, index) => {
+        const standing = stats.get(entry.teamId);
         if (!standing) return;
         standing.roundRanks.push({ round: round.number, rank: index + 1 });
       });

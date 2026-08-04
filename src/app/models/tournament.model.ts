@@ -18,12 +18,20 @@ export interface RoundResult {
   matchDiff: number;
 }
 
+export interface LadderSnapshotEntry {
+  teamId: string;
+  wins: number;
+  exclusions: number;
+  cumulativeScore: number;
+  roundScores: number[];
+}
+
 export interface Round {
   number: number;
   matchups: Matchup[];
   excludedTeamId: string | null;
   excludedTeamScore: number | null;
-  ladderSnapshot?: string[];
+  ladderSnapshot: LadderSnapshotEntry[];
   startedAt: number | null;
   endedAt: number | null;
   dueAt: number | null;
