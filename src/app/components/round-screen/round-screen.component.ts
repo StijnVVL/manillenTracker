@@ -209,6 +209,16 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
     return '';
   }
 
+  getScoreA(matchup: Matchup): string {
+    const a = this.scores[matchup.teamAId];
+    return a !== undefined ? String(a) : '';
+  }
+
+  getScoreB(matchup: Matchup): string {
+    const b = this.scores[matchup.teamBId];
+    return b !== undefined ? String(b) : '';
+  }
+
   async editMatchScore(matchup: Matchup): Promise<void> {
     const result = await this.scoreEditDialogService.open({
       teamAId: matchup.teamAId,
