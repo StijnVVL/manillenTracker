@@ -309,6 +309,37 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
     return this.state.ladder.indexOf(teamId) + 1;
   }
 
+  getRankHistory(teamId: string): number[] {
+    const history: number[] = [];
+    const currentRound = this.displayRound?.number ?? 0;
+    for (const round of this.state.rounds) {
+      if (round.number >= currentRound) break;
+      const snapshot = round.ladderSnapshot;
+      if (!snapshot || snapshot.length === 0) continue;
+      const idx = snapshot.findIndex(e => e.teamId === teamId);
+      if (idx >= 0) history.push(idx + 1);
+    }
+    return history;
+  }
+
+  getRoundScores(teamId: string): number[] {
+    const scores: number[] = [];
+    const currentRound = this.displayRound?.number ?? 0;
+    for (const round of this.state.rounds) {
+      if (round.number >= currentRound) break;
+      // Check matchups
+      for (const m of round.matchups) {
+        if (m.teamAId === teamId && m.teamAScore != null) { scores.push(m.teamAScore); break; }
+        if (m.teamBId === teamId && m.teamBScore != null) { scores.push(m.teamBScore); break; }
+      }
+      // Check excluded team
+      if (round.excludedTeamId === teamId && round.excludedTeamScore != null) {
+        scores.push(round.excludedTeamScore);
+      }
+    }
+    return scores;
+  }
+
   getTeamName(teamId: string): string {
     return this.teamMap.get(teamId)?.name ?? 'Unknown team';
   }

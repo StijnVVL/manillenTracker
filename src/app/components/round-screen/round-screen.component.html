@@ -197,6 +197,8 @@
 @if (tooltipTeamId) {
   @let stats = getTeamStats(tooltipTeamId);
   @let rank = getLadderRank(tooltipTeamId);
+  @let rankHistory = getRankHistory(tooltipTeamId);
+  @let roundScores = getRoundScores(tooltipTeamId);
   <div class="team-tooltip" [style.left.px]="tooltipX" [style.top.px]="tooltipY">
     <div class="team-tooltip-header">
       <span class="team-tooltip-name">{{ getTeamName(tooltipTeamId) }}</span>
@@ -214,9 +216,14 @@
       <div class="team-tooltip-row">
         <span class="team-tooltip-label">Cumulative Score:</span>
         <span>{{ stats.cumulativeScore }}</span>
-        @if (stats.roundScores.length > 0) {
-          <span class="team-tooltip-muted">[{{ stats.roundScores.join(', ') }}]</span>
-        }
+      </div>
+      <div class="team-tooltip-row">
+        <span class="team-tooltip-label">Round Scores:</span>
+        <span>{{ roundScores.length > 0 ? roundScores.join(', ') : '\u2014' }}</span>
+      </div>
+      <div class="team-tooltip-row">
+        <span class="team-tooltip-label">Rank History:</span>
+        <span>{{ rankHistory.length > 0 ? rankHistory.map(r => '#' + r).join(', ') : '\u2014' }}</span>
       </div>
     } @else {
       <div class="team-tooltip-row team-tooltip-muted">No stats yet</div>
