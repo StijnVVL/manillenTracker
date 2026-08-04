@@ -5,7 +5,7 @@ import { TimerService, formatTime } from '../../services/timer.service';
 import { L10nPipe } from '../../pipes/l10n.pipe';
 import { getRoundByNumber, getLatestRoundDiffs, getCurrentRound, getTeamMap, isRoundInFuture, isPageInFuture } from '../../utils/teams';
 import { CountdownTimerComponent } from '../countdown-timer/countdown-timer.component';
-import { TournamentState, Round, TournamentAction, Team, Matchup } from '../../models/tournament.model';
+import { TournamentState, Round, TournamentAction, Team, Matchup, LadderSnapshotEntry } from '../../models/tournament.model';
 import { ConfirmDialogService } from '../../services/confirm-dialog.service';
 import { L10nService } from '../../services/l10n.service';
 import { ScoreEditDialogService } from '../../services/score-edit-dialog.service';
@@ -37,6 +37,10 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
   isFuturePage: boolean = false;
 
   scores: Record<string, number> = {};
+
+  tooltipTeamId: string | null = null;
+  tooltipX: number = 0;
+  tooltipY: number = 0;
 
   constructor(
     private tournamentService: TournamentService,
@@ -272,6 +276,37 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
     if (confirmed) {
       this.#endRound();
     }
+  }
+
+  showTooltip(event: MouseEvent, teamId: string): void {
+    this.tooltipTeamId = teamId;
+    this.updateTooltipPosition(event);
+  }
+
+  updateTooltipPosition(event: MouseEvent): void {
+    this.tooltipX = event.clientX + 14;
+    this.tooltipY = event.clientY + 14;
+  }
+
+  hideTooltip(): void {
+    this.tooltipTeamId = null;
+  }
+
+  getTeamStats(teamId: string): LadderSnapshotEntry | null {
+    // Use the snapshot of the displayed round (the ranking that produced its matchups)
+    const snap = this.displayRound?.ladderSnapshot?.find(e => e.teamId === teamId);
+    return snap ?? null;
+  }
+
+  getLadderRank(teamId: string): number {
+    // Rank = 1-based index in the displayed round's ladderSnapshot
+    const snapshot = this.displayRound?.ladderSnapshot;
+    if (snapshot) {
+      const idx = snapshot.findIndex(e => e.teamId === teamId);
+      if (idx >= 0) return idx + 1;
+    }
+    // Fall back to live ladder order if no snapshot exists yet
+    return this.state.ladder.indexOf(teamId) + 1;
   }
 
   getTeamName(teamId: string): string {

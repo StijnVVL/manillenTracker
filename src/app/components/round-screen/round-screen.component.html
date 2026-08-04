@@ -72,11 +72,19 @@
         @for (matchup of leftColumnMatchups; track matchup.teamAId + matchup.teamBId; let index = $index) {
           <div class="matchup-row">
             <span class="col-table">{{ index + 1 }}</span>
-            <span class="col-team team-name" [title]="getTeamTooltip(matchup.teamAId)">{{ getTeamNameShort(matchup.teamAId) }}</span>
+            <span class="col-team team-name"
+              (mouseenter)="showTooltip($event, matchup.teamAId)"
+              (mousemove)="updateTooltipPosition($event)"
+              (mouseleave)="hideTooltip()"
+            >{{ getTeamNameShort(matchup.teamAId) }}</span>
             <span class="col-score-a">{{ hasScore(matchup) ? getScoreA(matchup) : '' }}</span>
             <span class="col-vs col-score-sep" [class.no-score]="!hasScore(matchup)">{{ hasScore(matchup) ? '-' : ('common.vs' | l10n) }}</span>
             <span class="col-score-b">{{ hasScore(matchup) ? getScoreB(matchup) : '' }}</span>
-            <span class="col-team team-name" [title]="getTeamTooltip(matchup.teamBId)">{{ getTeamNameShort(matchup.teamBId) }}</span>
+            <span class="col-team team-name"
+              (mouseenter)="showTooltip($event, matchup.teamBId)"
+              (mousemove)="updateTooltipPosition($event)"
+              (mouseleave)="hideTooltip()"
+            >{{ getTeamNameShort(matchup.teamBId) }}</span>
             <span class="col-score">
               <button
                 class="btn-status-tag"
@@ -96,7 +104,11 @@
         @if (rightColumnMatchups.length === 0 && displayRound.excludedTeamId) {
           <div class="matchup-row excluded-row">
             <span class="col-table"><app-svg-icon name="no-entrance" [width]="16" [height]="16" /></span>
-            <span class="col-team team-name" [title]="getTeamTooltip(displayRound.excludedTeamId!)">{{ getTeamName(displayRound.excludedTeamId!) }}</span>
+            <span class="col-team team-name"
+              (mouseenter)="showTooltip($event, displayRound.excludedTeamId!)"
+              (mousemove)="updateTooltipPosition($event)"
+              (mouseleave)="hideTooltip()"
+            >{{ getTeamName(displayRound.excludedTeamId!) }}</span>
             <span class="col-score-a">{{ excludedTeamScore }}</span>
             <span class="col-vs col-score-sep">-</span>
             <span class="col-score-b">0</span>
@@ -127,11 +139,19 @@
             @for (matchup of rightColumnMatchups; track matchup.teamAId + matchup.teamBId; let index = $index) {
               <div class="matchup-row">
                 <span class="col-table">{{ leftColumnMatchups.length + index + 1 }}</span>
-              <span class="col-team team-name" [title]="getTeamTooltip(matchup.teamAId)">{{ getTeamNameShort(matchup.teamAId) }}</span>
+              <span class="col-team team-name"
+                (mouseenter)="showTooltip($event, matchup.teamAId)"
+                (mousemove)="updateTooltipPosition($event)"
+                (mouseleave)="hideTooltip()"
+              >{{ getTeamNameShort(matchup.teamAId) }}</span>
               <span class="col-score-a">{{ hasScore(matchup) ? getScoreA(matchup) : '' }}</span>
               <span class="col-vs col-score-sep" [class.no-score]="!hasScore(matchup)">{{ hasScore(matchup) ? '-' : ('common.vs' | l10n) }}</span>
               <span class="col-score-b">{{ hasScore(matchup) ? getScoreB(matchup) : '' }}</span>
-              <span class="col-team team-name" [title]="getTeamTooltip(matchup.teamBId)">{{ getTeamNameShort(matchup.teamBId) }}</span>
+              <span class="col-team team-name"
+                (mouseenter)="showTooltip($event, matchup.teamBId)"
+                (mousemove)="updateTooltipPosition($event)"
+                (mouseleave)="hideTooltip()"
+              >{{ getTeamNameShort(matchup.teamBId) }}</span>
               <span class="col-score">
                 <button
                   class="btn-status-tag"
@@ -151,7 +171,11 @@
           @if (displayRound.excludedTeamId) {
             <div class="matchup-row excluded-row">
               <span class="col-table"><app-svg-icon name="no-entrance" [width]="16" [height]="16" /></span>
-              <span class="col-team team-name" [title]="getTeamTooltip(displayRound.excludedTeamId!)">{{ getTeamName(displayRound.excludedTeamId!) }}</span>
+              <span class="col-team team-name"
+                (mouseenter)="showTooltip($event, displayRound.excludedTeamId!)"
+                (mousemove)="updateTooltipPosition($event)"
+                (mouseleave)="hideTooltip()"
+              >{{ getTeamName(displayRound.excludedTeamId!) }}</span>
               <span class="col-score-a">{{ excludedTeamScore }}</span>
               <span class="col-vs col-score-sep">-</span>
               <span class="col-score-b">0</span>
@@ -166,6 +190,36 @@
           }
         </div>
       </div>
+    }
+  </div>
+}
+
+@if (tooltipTeamId) {
+  @let stats = getTeamStats(tooltipTeamId);
+  @let rank = getLadderRank(tooltipTeamId);
+  <div class="team-tooltip" [style.left.px]="tooltipX" [style.top.px]="tooltipY">
+    <div class="team-tooltip-header">
+      <span class="team-tooltip-name">{{ getTeamName(tooltipTeamId) }}</span>
+      <span class="team-tooltip-spacer"></span>
+      <span class="team-tooltip-rank">Ranked #{{ rank }}</span>
+    </div>
+    @if (stats) {
+      <div class="team-tooltip-row">
+        <span class="team-tooltip-label">Wins:</span>
+        <span>{{ stats.wins }}</span>
+        @if (stats.exclusions > 0) {
+          <span class="team-tooltip-muted">(of which {{ stats.exclusions }} exclusions)</span>
+        }
+      </div>
+      <div class="team-tooltip-row">
+        <span class="team-tooltip-label">Cumulative Score:</span>
+        <span>{{ stats.cumulativeScore }}</span>
+        @if (stats.roundScores.length > 0) {
+          <span class="team-tooltip-muted">[{{ stats.roundScores.join(', ') }}]</span>
+        }
+      </div>
+    } @else {
+      <div class="team-tooltip-row team-tooltip-muted">No stats yet</div>
     }
   </div>
 }
