@@ -117,6 +117,8 @@
   "exclusionPicker.middle.description": "The team ranked in the middle of the current standings sits out. If that team has already sat out before, the next eligible team downward is chosen instead.",
   "exclusionScorer.meanOf3": "Mean of 3",
   "exclusionScorer.meanOf3.description": "The excluded team receives the average of the best, worst, and two middle scores of the playing teams, rounded up.",
+  "exclusionScorer.bestScore": "Best score",
+  "exclusionScorer.bestScore.description": "The excluded team receives the same score as the best-performing team that played this round.",
 
   "teams.addTeam": "Add Team",
   "teams.removeTeam": "Remove team",
@@ -196,6 +198,8 @@
   "teamResults.previous": "Previous",
   "teamResults.next": "Next",
   "teamResults.back": "Back",
+  "teamResults.ongoingTitle": "Tournament in progress",
+  "teamResults.ongoingMessage": "Final rankings are not available until the tournament is finished.",
   "teamResults.notFound": "Team not found.",
 
   "finished.championLabel": "Champion",

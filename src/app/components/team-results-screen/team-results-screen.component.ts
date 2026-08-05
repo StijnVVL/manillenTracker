@@ -75,6 +75,25 @@ export class TeamResultsScreenComponent implements OnInit {
     };
   }
 
+  get isTournamentOngoing(): boolean {
+    return this.state.status !== 'finished';
+  }
+
+  get currentRound() {
+    const rounds = this.state.rounds;
+    return rounds?.length ? rounds[rounds.length - 1] : null;
+  }
+
+  goToCurrentRound(): void {
+    const round = this.currentRound;
+    if (round) {
+      const subPage = this.state.status === 'round-winner' ? 'round-winner' : 'play';
+      this.router.navigate(['/tournament/round', round.number, subPage]);
+    } else {
+      this.router.navigate(['/tournament']);
+    }
+  }
+
   get totalTeams(): number {
     return this.state.postRoundLadderSnapshot.length;
   }

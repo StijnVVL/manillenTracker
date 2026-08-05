@@ -155,11 +155,29 @@ export class MeanOf3ExclusionScorer implements ExclusionScorer {
 }
 
 // ---------------------------------------------------------------------------
+// BestScoreExclusionScorer
+//
+// The excluded team receives the same score as the best-performing team
+// that played this round.
+// ---------------------------------------------------------------------------
+
+export class BestScoreExclusionScorer implements ExclusionScorer {
+  readonly id = 'best-score';
+  readonly nameKey = 'exclusionScorer.bestScore';
+  readonly descriptionKey = 'exclusionScorer.bestScore.description';
+
+  calculateExcludedScore(roundResults: RoundResult[]): number {
+    if (roundResults.length === 0) return 0;
+    return Math.max(...roundResults.map(r => r.rawScore));
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Registries
 // ---------------------------------------------------------------------------
 
 export const EXCLUSION_PICKERS: ExclusionPicker[] = [new MiddleExclusionPicker()];
-export const EXCLUSION_SCORERS: ExclusionScorer[] = [new MeanOf3ExclusionScorer()];
+export const EXCLUSION_SCORERS: ExclusionScorer[] = [new MeanOf3ExclusionScorer(), new BestScoreExclusionScorer()];
 
 export const DEFAULT_EXCLUSION_PICKER_ID = 'middle';
 export const DEFAULT_EXCLUSION_SCORER_ID = 'mean-of-3';

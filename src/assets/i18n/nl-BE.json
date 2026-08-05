@@ -13,6 +13,8 @@
   "exclusionPicker.middle.description": "Het team dat midden in de huidige rangschikking staat, wordt uitgesloten. Als dat team al eerder is uitgesloten, wordt het eerstvolgende geschikte team lager in de rangschikking gekozen.",
   "exclusionScorer.meanOf3": "Gemiddelde van 3",
   "exclusionScorer.meanOf3.description": "Het uitgesloten team ontvangt het gemiddelde van de beste, slechtste en twee middelste scores van de spelende teams, naar boven afgerond.",
+  "exclusionScorer.bestScore": "Beste score",
+  "exclusionScorer.bestScore.description": "Het uitgesloten team ontvangt dezelfde score als het best presterende team dat deze ronde heeft gespeeld.",
 
   "matchupList.excludedTeam": "Uitgesloten deze ronde",
 
@@ -33,6 +35,8 @@
   "teamResults.previous": "Vorige",
   "teamResults.next": "Volgende",
   "teamResults.back": "Terug",
+  "teamResults.ongoingTitle": "Toernooi bezig",
+  "teamResults.ongoingMessage": "De eindrangschikking is pas beschikbaar als het toernooi is afgelopen.",
   "teamResults.notFound": "Team niet gevonden.",
   "pageTitle.teamResults": "Teamresultaten"
 }

@@ -1,3 +1,12 @@
+@if (isTournamentOngoing) {
+  <div class="card future-round-message">
+    <h2 class="card-title">{{ 'teamResults.ongoingTitle' | l10n }}</h2>
+    <p>{{ 'teamResults.ongoingMessage' | l10n }}</p>
+    <button type="button" class="btn btn-primary" (click)="goToCurrentRound()">
+      {{ 'futureRound.goToCurrent' | l10n }}
+    </button>
+  </div>
+} @else {
 <div class="card result-card">
   @if (entry) {
     <div class="result-container">
@@ -69,3 +78,4 @@
     </div>
   }
 </div>
+}
