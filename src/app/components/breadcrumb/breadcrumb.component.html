@@ -10,7 +10,17 @@
   @if (mode === 'tournament-sub') {
     <a class="breadcrumb-item clickable" routerLink="/tournament">{{ 'breadcrumb.tournament' | l10n }}</a>
     <span class="breadcrumb-separator">›</span>
-    <span class="breadcrumb-item">{{ subPageLabelKey | l10n }}</span>
+    <span class="breadcrumb-item clickable" (click)="toggleNavPopup($event)">{{ subPageLabelKey | l10n }}</span>
+
+    @if (showNavPopup) {
+      <div class="popup-menu" [style.left.px]="popupX" [style.top.px]="popupY">
+        @for (item of navItems; track item.url[0]) {
+          <div class="popup-item" [class.active]="item.active" (click)="selectNavItem(item)">
+            {{ getNavItemLabel(item) }}
+          </div>
+        }
+      </div>
+    }
   }
 
   @if (mode === 'tournament-round') {
@@ -24,13 +34,9 @@
 
     @if (showRoundPopup) {
       <div class="popup-menu" [style.left.px]="popupX" [style.top.px]="popupY">
-        @for (round of rounds; track round) {
-          <div
-            class="popup-item"
-            [class.active]="round === roundNumber"
-            (click)="selectRound(round)"
-          >
-            {{ 'breadcrumb.round' | l10n:{ roundNumber: round } }}
+        @for (item of navItems; track item.url[0]) {
+          <div class="popup-item" [class.active]="item.active" (click)="selectNavItem(item)">
+            {{ getNavItemLabel(item) }}
           </div>
         }
       </div>

@@ -45,6 +45,7 @@
   "menu.setup": "Setup",
   "menu.teams": "Teams",
   "menu.currentRound": "Current Round",
+  "menu.results": "Results",
   "menu.credits": "Credits",
   "menu.stopTournament": "Stop Tournament",
   "menu.settings": "Settings",
@@ -91,6 +92,7 @@
   "setup.tournamentNamePlaceholder": "Enter tournament name",
   "setup.setupTeams": "Setup Teams",
   "setup.roundSettingsCard": "Round Settings",
+  "setup.roundSettingsLockedHint": "Some settings cannot be changed while the tournament is ongoing.",
   "setup.presenceCounter": "{present} / {total} teams present",
 
   "settings.languageSettings": "Language",
@@ -176,8 +178,18 @@
 
   "roundWinner.title": "Round Champion",
   "roundWinner.points": "points",
-  "roundWinner.finish": "Finish Tournament",
+  "roundWinner.toResults": "To Results",
   "roundWinner.backToMatchups": "Back to Matchups",
+
+  "teamResults.position": "Position",
+  "teamResults.wins": "Wins",
+  "teamResults.cumulativeScore": "Total Score",
+  "teamResults.exclusions": "Exclusions",
+  "teamResults.roundScores": "Score per Round",
+  "teamResults.previous": "Previous",
+  "teamResults.next": "Next",
+  "teamResults.back": "Back",
+  "teamResults.notFound": "Team not found.",
 
   "finished.championLabel": "Champion",
   "finished.tournamentComplete": "Tournament Complete",
@@ -190,5 +202,6 @@
   "algorithm.fairness.meanof3": "Mean of 3",
 
   "language.english": "English",
-  "language.dutch": "Nederlands"
+  "language.dutch": "Nederlands",
+  "pageTitle.teamResults": "Team Results"
 }

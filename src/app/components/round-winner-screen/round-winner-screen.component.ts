@@ -125,6 +125,14 @@ export class RoundWinnerScreenComponent implements OnInit {
     this.winners = winnerData.slice(0, 3);
   }
 
+  get isLastRound(): boolean {
+    return this.displayRound?.number === this.state.totalRounds;
+  }
+
+  goToTeamResults(): void {
+    this.router.navigate(['/tournament/results', 'last']);
+  }
+
   nextRound(): void {
     if (!this.isCurrentRound || !this.displayRound) return;
 

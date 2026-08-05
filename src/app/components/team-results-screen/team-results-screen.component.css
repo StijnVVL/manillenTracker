@@ -1,0 +1,130 @@
+.result-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.result-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 3rem 0;
+  width: 100%;
+}
+
+.position-heading {
+  text-align: center;
+  line-height: 1;
+}
+
+.medal-emoji {
+  font-size: 6rem;
+  display: block;
+}
+
+.position-number {
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  font-weight: 700;
+  color: var(--primary-dark);
+  letter-spacing: 0.1em;
+}
+
+.team-name {
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  font-weight: 700;
+  color: var(--primary-dark);
+  text-align: center;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.result-stats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.stat-item {
+  text-align: center;
+  min-width: 6rem;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #888;
+  margin-bottom: 0.25rem;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+
+.round-scores {
+  text-align: center;
+  width: 100%;
+}
+
+.round-scores-label {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #888;
+  margin-bottom: 0.75rem;
+}
+
+.round-scores-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.round-score-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--surface-alt, #f5f5f5);
+  border-radius: 0.5rem;
+  padding: 0.4rem 0.75rem;
+  min-width: 3rem;
+}
+
+.round-score-label {
+  font-size: 0.7rem;
+  color: #888;
+  text-transform: uppercase;
+}
+
+.round-score-value {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--primary-dark);
+}
+
+.nav-buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.no-results {
+  text-align: center;
+  padding: 2rem;
+}
+
+@media (max-width: 480px) {
+  .team-name {
+    font-size: 1.6rem;
+  }
+
+  .stat-value {
+    font-size: 1.5rem;
+  }
+}

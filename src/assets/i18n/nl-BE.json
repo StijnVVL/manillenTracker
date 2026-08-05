@@ -8,6 +8,22 @@
 
   "scoring.excludedTeam": "Uitgesloten team",
   "scoring.excludedTeamScore": "Berekende score",
-  "scoring.excludedTeamScorePending": "Score wordt berekend wanneer alle wedstrijden zijn ingevuld"
+  "scoring.excludedTeamScorePending": "Score wordt berekend wanneer alle wedstrijden zijn ingevuld",
+
+  "roundWinner.teamResults": "Teamresultaten",
+  "roundWinner.toResults": "Naar resultaten",
+
+  "setup.roundSettingsLockedHint": "Sommige instellingen kunnen niet worden gewijzigd terwijl het toernooi bezig is.",
+
+  "teamResults.position": "Positie",
+  "teamResults.wins": "Overwinningen",
+  "teamResults.cumulativeScore": "Totaalscore",
+  "teamResults.exclusions": "Uitsluitingen",
+  "teamResults.roundScores": "Score per ronde",
+  "teamResults.previous": "Vorige",
+  "teamResults.next": "Volgende",
+  "teamResults.back": "Terug",
+  "teamResults.notFound": "Team niet gevonden.",
+  "pageTitle.teamResults": "Teamresultaten"
 }
 

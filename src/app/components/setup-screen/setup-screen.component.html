@@ -17,13 +17,16 @@
       [ngModel]="state.tournamentName"
       (ngModelChange)="onTournamentNameChange($event)"
       [placeholder]="l10n.get('setup.tournamentNamePlaceholder')"
-      [disabled]="!isSetup"
     />
   </div>
 
   <!-- Round Settings -->
   <div class="setup-card">
     <h2 class="setup-card-title">{{ 'setup.roundSettingsCard' | l10n }}</h2>
+
+    @if (!isSetup) {
+      <p class="field-hint field-hint-warning">{{ 'setup.roundSettingsLockedHint' | l10n }}</p>
+    }
 
     <label class="field-label" for="setup-round-duration">
       {{ 'settings.roundDurationLabel' | l10n }}

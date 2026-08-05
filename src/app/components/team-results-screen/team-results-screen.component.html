@@ -1,0 +1,71 @@
+<div class="card result-card">
+  @if (entry) {
+    <div class="result-container">
+      <div class="position-heading">
+        @if (medalEmoji) {
+          <span class="medal-emoji">{{ medalEmoji }}</span>
+        } @else {
+          <span class="position-number">#{{ entry.position }}</span>
+        }
+      </div>
+
+      <div class="team-name">{{ entry.teamName }}</div>
+
+      <div class="result-stats">
+        <div class="stat-item">
+          <div class="stat-label">{{ 'teamResults.position' | l10n }}</div>
+          <div class="stat-value">{{ entry.position }} / {{ totalTeams }}</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">{{ 'teamResults.wins' | l10n }}</div>
+          <div class="stat-value">{{ entry.wins }}</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">{{ 'teamResults.cumulativeScore' | l10n }}</div>
+          <div class="stat-value">{{ entry.cumulativeScore }}</div>
+        </div>
+        @if (entry.exclusions > 0) {
+          <div class="stat-item">
+            <div class="stat-label">{{ 'teamResults.exclusions' | l10n }}</div>
+            <div class="stat-value">{{ entry.exclusions }}</div>
+          </div>
+        }
+      </div>
+
+      @if (entry.roundScores.length > 0) {
+        <div class="round-scores">
+          <div class="round-scores-label">{{ 'teamResults.roundScores' | l10n }}</div>
+          <div class="round-scores-list">
+            @for (score of entry.roundScores; track $index) {
+              <div class="round-score-badge">
+                <span class="round-score-label">R{{ $index + 1 }}</span>
+                <span class="round-score-value">{{ score }}</span>
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+
+    <div class="setup-actions">
+      <div class="nav-buttons">
+        <button type="button" class="btn btn-secondary" (click)="goToPrevious()" [disabled]="position <= 1">
+          &#8592; {{ 'teamResults.previous' | l10n }}
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="goToNext()" [disabled]="position >= totalTeams">
+          {{ 'teamResults.next' | l10n }} &#8594;
+        </button>
+      </div>
+      <button type="button" class="btn btn-secondary" (click)="goBack()">
+        {{ 'teamResults.back' | l10n }}
+      </button>
+    </div>
+  } @else {
+    <div class="no-results">
+      <p>{{ 'teamResults.notFound' | l10n }}</p>
+      <button type="button" class="btn btn-secondary" (click)="goBack()">
+        {{ 'teamResults.back' | l10n }}
+      </button>
+    </div>
+  }
+</div>

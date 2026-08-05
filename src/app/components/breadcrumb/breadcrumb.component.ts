@@ -15,6 +15,14 @@ interface PageOption {
   route: string;
 }
 
+/** A unified nav item used in the shared popup (Setup, Teams, Round N, Results). */
+interface NavItem {
+  labelKey?: string;
+  label?: string;           // used for round items where label is dynamic
+  url: string[];
+  active: boolean;
+}
+
 type BreadcrumbMode = 'home' | 'tournament' | 'tournament-sub' | 'tournament-round' | 'other';
 
 @Component({
@@ -32,6 +40,7 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
   pageType: PageType = 'play';
   showRoundPopup: boolean = false;
   showPagePopup: boolean = false;
+  showNavPopup: boolean = false;
   popupX: number = 0;
   popupY: number = 0;
   rounds: number[] = [];
@@ -68,9 +77,9 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
     if (roundMatch) {
       this.roundNumber = +roundMatch[1];
       this.pageType = roundMatch[2] as PageType;
-      const totalRounds = this.tournamentService.state.totalRounds;
-      this.rounds = Array.from({ length: totalRounds }, (_, i) => i + 1);
     }
+    const totalRounds = this.tournamentService.state.totalRounds;
+    this.rounds = Array.from({ length: totalRounds }, (_, i) => i + 1);
     this.closePopups();
   }
 
@@ -88,9 +97,43 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
     if (url.includes('/setup')) return 'menu.setup';
     if (url.includes('/teams')) return 'menu.teams';
     if (url.includes('/finished')) return 'pageTitle.finished';
+    if (url.includes('/results/')) return 'pageTitle.teamResults';
     if (url.includes('/credits')) return 'pageTitle.credits';
     if (url.includes('/settings')) return 'pageTitle.settings';
     return '';
+  }
+
+  /** Full ordered nav list: Setup, Teams, Round 1..N, Results */
+  get navItems(): NavItem[] {
+    const url = this.currentUrl;
+    const items: NavItem[] = [
+      {
+        labelKey: 'menu.setup',
+        url: ['/tournament/setup'],
+        active: url.includes('/setup'),
+      },
+      {
+        labelKey: 'menu.teams',
+        url: ['/tournament/teams'],
+        active: url.includes('/teams'),
+      },
+    ];
+
+    for (const r of this.rounds) {
+      items.push({
+        label: this.l10n.get('breadcrumb.round', { roundNumber: r }),
+        url: ['/tournament/round', String(r), this.pageType],
+        active: /\/tournament\/round\/\d+\/(play|round-winner)/.test(url) && this.roundNumber === r,
+      });
+    }
+
+    items.push({
+      labelKey: 'menu.results',
+      url: ['/tournament/results/last'],
+      active: url.includes('/results/'),
+    });
+
+    return items;
   }
 
   @HostListener('document:click', ['$event'])
@@ -109,6 +152,7 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
     }
     this.showRoundPopup = !this.showRoundPopup;
     this.showPagePopup = false;
+    this.showNavPopup = false;
   }
 
   togglePagePopup(event: MouseEvent): void {
@@ -119,11 +163,29 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
     }
     this.showPagePopup = !this.showPagePopup;
     this.showRoundPopup = false;
+    this.showNavPopup = false;
+  }
+
+  toggleNavPopup(event: MouseEvent): void {
+    event.stopPropagation();
+    if (!this.showNavPopup) {
+      this.popupX = event.clientX;
+      this.popupY = event.clientY;
+    }
+    this.showNavPopup = !this.showNavPopup;
+    this.showRoundPopup = false;
+    this.showPagePopup = false;
   }
 
   closePopups(): void {
     this.showRoundPopup = false;
     this.showPagePopup = false;
+    this.showNavPopup = false;
+  }
+
+  selectNavItem(item: NavItem): void {
+    this.router.navigate(item.url);
+    this.closePopups();
   }
 
   selectRound(round: number): void {
@@ -139,5 +201,11 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
   getPageLabel(): string {
     const option = this.pageOptions.find(o => o.key === this.pageType);
     return option ? this.l10n.get(option.labelKey) : '';
+  }
+
+  getNavItemLabel(item: NavItem): string {
+    if (item.label) return item.label;
+    if (item.labelKey) return this.l10n.get(item.labelKey);
+    return '';
   }
 }

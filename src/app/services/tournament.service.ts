@@ -224,7 +224,6 @@ function tournamentReducer(
     }
 
     case 'SET_TOURNAMENT_NAME': {
-      if (state.status !== 'setup') return state;
       return { ...state, tournamentName: action.name };
     }
 

@@ -30,14 +30,14 @@
     </div>
 
     <div class="setup-actions">
-      @if (displayRound.number < state.totalRounds && isCurrentRound && state.status !== 'round') {
+      @if (!isLastRound && isCurrentRound && state.status !== 'round') {
         <button type="button" class="btn btn-primary" (click)="nextRound()">
           {{ 'scoring.nextRound' | l10n }}
         </button>
       }
-      @if (displayRound.number === state.totalRounds && isCurrentRound && state.status !== 'round') {
-        <button type="button" class="btn btn-primary" (click)="nextRound()">
-          {{ 'roundWinner.finish' | l10n }}
+      @if (isLastRound && isCurrentRound && state.status !== 'round') {
+        <button type="button" class="btn btn-primary" (click)="goToTeamResults()">
+          {{ 'roundWinner.toResults' | l10n }}
         </button>
       }
       <button type="button" class="btn btn-secondary" (click)="backToMatchups()">

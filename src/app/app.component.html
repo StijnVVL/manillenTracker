@@ -27,6 +27,11 @@
           } @else {
             <span class="menu-item menu-item-sub menu-item-disabled">{{ 'menu.currentRound' | l10n }}</span>
           }
+          @if (isPostSetup) {
+            <a routerLink="/tournament/results/last" routerLinkActive="menu-item-active" class="menu-item menu-item-sub" (click)="closeMenu()">{{ 'menu.results' | l10n }}</a>
+          } @else {
+            <span class="menu-item menu-item-sub menu-item-disabled">{{ 'menu.results' | l10n }}</span>
+          }
         }
         <a routerLink="/credits" routerLinkActive="menu-item-active" class="menu-item" (click)="closeMenu()">{{ 'menu.credits' | l10n }}</a>
       </div>
