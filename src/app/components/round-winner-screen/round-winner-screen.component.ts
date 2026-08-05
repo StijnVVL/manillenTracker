@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TournamentService } from '../../services/tournament.service';
@@ -21,6 +21,7 @@ interface RoundWinner {
   imports: [CommonModule, L10nPipe],
   templateUrl: './round-winner-screen.component.html',
   styleUrl: './round-winner-screen.component.css',
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class RoundWinnerScreenComponent implements OnInit {
   state: TournamentState;
@@ -46,6 +47,7 @@ export class RoundWinnerScreenComponent implements OnInit {
       this.roundNumber = +params['roundNumber'];
       this.checkIfFutureRound();
       this.loadRound();
+      this.calculateRoundWinners();
     });
 
     this.tournamentService.state$.subscribe((state) => {
