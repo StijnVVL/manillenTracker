@@ -294,19 +294,19 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
 
   getTeamStats(teamId: string): LadderSnapshotEntry | null {
     // Use the snapshot of the displayed round (the ranking that produced its matchups)
-    const snap = this.displayRound?.ladderSnapshot?.find(e => e.teamId === teamId);
+    const snap = this.displayRound?.preRoundLadderSnapshot?.find(e => e.teamId === teamId);
     return snap ?? null;
   }
 
   getLadderRank(teamId: string): number {
     // Rank = 1-based index in the displayed round's ladderSnapshot
-    const snapshot = this.displayRound?.ladderSnapshot;
+    const snapshot = this.displayRound?.preRoundLadderSnapshot;
     if (snapshot) {
       const idx = snapshot.findIndex(e => e.teamId === teamId);
       if (idx >= 0) return idx + 1;
     }
-    // Fall back to live ladder order if no snapshot exists yet
-    return this.state.ladder.indexOf(teamId) + 1;
+    // Fall back to post-round snapshot order if no pre-round snapshot exists yet
+    return this.state.postRoundLadderSnapshot.findIndex(e => e.teamId === teamId) + 1;
   }
 
   getRankHistory(teamId: string): number[] {
@@ -314,7 +314,7 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
     const currentRound = this.displayRound?.number ?? 0;
     for (const round of this.state.rounds) {
       if (round.number >= currentRound) break;
-      const snapshot = round.ladderSnapshot;
+      const snapshot = round.preRoundLadderSnapshot;
       if (!snapshot || snapshot.length === 0) continue;
       const idx = snapshot.findIndex(e => e.teamId === teamId);
       if (idx >= 0) history.push(idx + 1);
@@ -378,7 +378,7 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
   get excludedRowRightLabel(): string { return '–'; }
 
   getTeamTooltip(teamId: string): string {
-    const snapshot = this.displayRound?.ladderSnapshot;
+    const snapshot = this.displayRound?.preRoundLadderSnapshot;
     if (!snapshot || snapshot.length === 0) return '';
     const rank = snapshot.findIndex(e => e.teamId === teamId) + 1;
     if (rank === 0) return '';

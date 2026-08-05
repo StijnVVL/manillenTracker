@@ -46,4 +46,8 @@ export class FinishedScreenComponent implements OnInit {
   getTeamName(teamId: string): string {
     return this.teamMap.get(teamId)?.name ?? 'Unknown team';
   }
+
+  get finalLadder(): string[] {
+    return this.state.postRoundLadderSnapshot.map(e => e.teamId);
+  }
 }

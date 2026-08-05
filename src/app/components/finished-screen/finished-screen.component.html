@@ -15,7 +15,7 @@
 </div>
 
 <div class="grid-2" style="margin-top: 1rem">
-  <app-ladder-board [teams]="state.teams" [ladder]="state.ladder" [title]="l10n.get('finished.finalLadder')" />
+  <app-ladder-board [teams]="state.teams" [ladder]="finalLadder" [title]="l10n.get('finished.finalLadder')" />
   <app-team-standings [state]="state" [title]="l10n.get('finished.finalStandings')" />
 </div>
 

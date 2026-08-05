@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, map, distinctUntilChanged } from 'rxjs';
-import { applyLadderUpdate } from '../logic/ladder';
 import { getAlgorithmById, DEFAULT_MATCHUP_ALGORITHM_ID } from '../logic/matchup-algorithm';
 import { buildRoundResults } from '../logic/scoring';
 import {
   DEFAULT_ROUND_DURATION_SECONDS,
   DEFAULT_TOTAL_ROUNDS,
   STORAGE_KEY,
+  type LadderSnapshotEntry,
   type Round,
   type Team,
   type TournamentState,
@@ -19,16 +19,21 @@ function createTeam(name: string, player1: string, player2: string): Team {
   return { id: crypto.randomUUID(), name: name.trim(), player1: player1.trim(), player2: player2.trim() };
 }
 
-function createRound(number: number, teams: Team[], completedRounds: Round[], algorithmId: string, previouslyExcludedIds: string[], useRandom: boolean): Round {
+function buildInitialSnapshot(teams: Team[]): LadderSnapshotEntry[] {
+  const shuffled = [...teams].sort(() => Math.random() - 0.5);
+  return shuffled.map(t => ({ teamId: t.id, wins: 0, exclusions: 0, cumulativeScore: 0, roundScores: [] }));
+}
+
+function createRound(number: number, teams: Team[], preRoundSnapshot: LadderSnapshotEntry[], algorithmId: string): Round {
   const algorithm = getAlgorithmById(algorithmId);
-  const { matchups, excludedTeamId, ladderSnapshot } = algorithm.buildMatchups(teams, completedRounds, previouslyExcludedIds, useRandom);
+  const { matchups, excludedTeamId, preRoundLadderSnapshot } = algorithm.buildMatchups(teams, preRoundSnapshot);
 
   return {
     number,
     matchups,
     excludedTeamId,
     excludedTeamScore: null,
-    ladderSnapshot,
+    preRoundLadderSnapshot,
     startedAt: null,
     endedAt: null,
     dueAt: null,
@@ -50,18 +55,66 @@ function updateCurrentRound(state: TournamentState, round: Round): TournamentSta
   return { ...state, rounds };
 }
 
+function applyRoundDelta(
+  preRoundSnapshot: LadderSnapshotEntry[],
+  round: Round,
+  teams: Team[],
+): LadderSnapshotEntry[] {
+  const statsMap = new Map<string, LadderSnapshotEntry>();
+  for (const entry of preRoundSnapshot) {
+    statsMap.set(entry.teamId, {
+      ...entry,
+      roundScores: [...entry.roundScores],
+    });
+  }
+  // Ensure every team has an entry (handles round 1 empty snapshot)
+  for (const t of teams) {
+    if (!statsMap.has(t.id)) {
+      statsMap.set(t.id, { teamId: t.id, wins: 0, exclusions: 0, cumulativeScore: 0, roundScores: [] });
+    }
+  }
+
+  for (const m of round.matchups) {
+    if (m.teamAScore === undefined || m.teamBScore === undefined) continue;
+    const a = statsMap.get(m.teamAId)!;
+    const b = statsMap.get(m.teamBId)!;
+    if (m.teamAScore >= m.teamBScore) a.wins++;
+    if (m.teamBScore >= m.teamAScore) b.wins++;
+    a.cumulativeScore += m.teamAScore;
+    b.cumulativeScore += m.teamBScore;
+    a.roundScores.push(m.teamAScore);
+    b.roundScores.push(m.teamBScore);
+  }
+
+  if (round.excludedTeamId && round.excludedTeamScore !== null && round.excludedTeamScore !== undefined) {
+    const ex = statsMap.get(round.excludedTeamId)!;
+    ex.wins++;
+    ex.exclusions++;
+    ex.cumulativeScore += round.excludedTeamScore;
+    ex.roundScores.push(round.excludedTeamScore);
+  }
+
+  const nameOf = (id: string) => teams.find(t => t.id === id)?.name ?? '';
+  return [...statsMap.values()].sort((a, b) => {
+    const wDiff = b.wins - a.wins;
+    if (wDiff !== 0) return wDiff;
+    const sDiff = b.cumulativeScore - a.cumulativeScore;
+    if (sDiff !== 0) return sDiff;
+    return nameOf(a.teamId).localeCompare(nameOf(b.teamId), undefined, { sensitivity: 'base' });
+  });
+}
+
 function createEmptyState(): TournamentState {
   return {
     tournamentName: '',
     teams: [],
-    ladder: [],
+    postRoundLadderSnapshot: [],
     rounds: [],
     roundDurationSeconds: DEFAULT_ROUND_DURATION_SECONDS,
     totalRounds: DEFAULT_TOTAL_ROUNDS,
     matchupAlgorithmId: DEFAULT_MATCHUP_ALGORITHM_ID,
     status: 'none',
     timerStatus: 'idle',
-    lastLadderSnapshot: null,
     teamPresence: {},
   };
 }
@@ -77,14 +130,13 @@ function createInitialState(
   return {
     tournamentName,
     teams: teams.map(t => ({ ...t })),
-    ladder: [],
+    postRoundLadderSnapshot: [],
     rounds: [],
     roundDurationSeconds,
     totalRounds: defaultTotalRounds,
     matchupAlgorithmId,
     status: 'setup',
     timerStatus: 'idle',
-    lastLadderSnapshot: null,
     teamPresence,
   };
 }
@@ -94,7 +146,8 @@ function loadPersistedState(): TournamentState | null {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as TournamentState;
-    if (!parsed.teams || !Array.isArray(parsed.ladder)) return null;
+    const anyParsed = parsed as any;
+    if (!parsed.teams || (!Array.isArray(parsed.postRoundLadderSnapshot) && !Array.isArray(anyParsed['ladder']))) return null;
     // Migrate existing teams to include player names if missing
     parsed.teams = parsed.teams.map(team => ({
       ...team,
@@ -107,16 +160,20 @@ function loadPersistedState(): TournamentState | null {
     parsed.tournamentName = parsed.tournamentName ?? '';
     // Migrate matchupAlgorithmId if missing
     parsed.matchupAlgorithmId = parsed.matchupAlgorithmId ?? DEFAULT_MATCHUP_ALGORITHM_ID;
-    // Migrate rounds: byeTeamId -> excludedTeamId; old string[] ladderSnapshot -> empty LadderSnapshotEntry[]
+    // Migrate postRoundLadderSnapshot (old field was 'ladder': string[])
+    if (!Array.isArray(parsed.postRoundLadderSnapshot)) {
+      parsed.postRoundLadderSnapshot = [];
+    }
+    // Migrate rounds: old ladderSnapshot field -> preRoundLadderSnapshot; old string[] -> empty
     if (parsed.rounds) {
       parsed.rounds = parsed.rounds.map(r => {
         const anyR = r as any;
-        const snap = anyR['ladderSnapshot'];
+        const snap = anyR['preRoundLadderSnapshot'] ?? anyR['ladderSnapshot'];
         return {
           ...r,
-          excludedTeamId: r.excludedTeamId ?? anyR['byeTeamId'] ?? null,
+          excludedTeamId: r.excludedTeamId ?? null,
           excludedTeamScore: r.excludedTeamScore ?? null,
-          ladderSnapshot: (Array.isArray(snap) && snap.length > 0 && typeof snap[0] === 'string') ? [] : (snap ?? []),
+          preRoundLadderSnapshot: (Array.isArray(snap) && snap.length > 0 && typeof snap[0] === 'string') ? [] : (snap ?? []),
         };
       });
     }
@@ -202,15 +259,14 @@ function tournamentReducer(
         return state;
       } 
 
-      const ladder = state.teams.map((t) => t.id);
-      const round = createRound(1, state.teams, [], state.matchupAlgorithmId, [], true);
+      const initialSnapshot = buildInitialSnapshot(state.teams);
+      const round = createRound(1, state.teams, initialSnapshot, state.matchupAlgorithmId);
       return {
         ...state,
-        ladder,
+        postRoundLadderSnapshot: initialSnapshot,
         rounds: [round],
         status: 'round',
         timerStatus: 'idle',
-        lastLadderSnapshot: null,
       };
     }
 
@@ -323,7 +379,7 @@ function tournamentReducer(
         teamBScore: action.scores[matchup.teamBId]
       }));
 
-      // Build results for ladder calculation
+      // Build results for excluded score calculation
       const results = buildRoundResults(updatedMatchups, action.scores);
 
       // Compute excluded team score if applicable
@@ -334,9 +390,6 @@ function tournamentReducer(
         results.push({ teamId: round.excludedTeamId, rawScore: excludedTeamScore, matchDiff: 0 });
       }
 
-      const snapshot = [...state.ladder];
-      const { ladder } = applyLadderUpdate(state.ladder, results);
-
       const updatedRound: Round = {
         ...round,
         matchups: updatedMatchups,
@@ -345,11 +398,12 @@ function tournamentReducer(
       const rounds = [...state.rounds];
       rounds[state.rounds.length - 1] = updatedRound;
 
+      const postRoundLadderSnapshot = applyRoundDelta(round.preRoundLadderSnapshot, updatedRound, state.teams);
+
       return {
         ...state,
         rounds,
-        ladder,
-        lastLadderSnapshot: snapshot,
+        postRoundLadderSnapshot,
         status: 'round-winner'
       };
     }
@@ -359,7 +413,6 @@ function tournamentReducer(
         ...state,
         status: 'round',
         timerStatus: 'idle',
-        lastLadderSnapshot: null,
       };
     }
 
@@ -370,25 +423,19 @@ function tournamentReducer(
         return state;
       }
 
-      const previouslyExcludedIds = state.rounds
-        .map(r => r.excludedTeamId)
-        .filter((id): id is string => id !== null);
-
       return {
         ...state,
-        rounds: isFinalRound ? state.rounds : [...state.rounds, createRound(currentRound.number + 1, state.teams, state.rounds, state.matchupAlgorithmId, previouslyExcludedIds, false)],
+        rounds: isFinalRound ? state.rounds : [...state.rounds, createRound(currentRound.number + 1, state.teams, state.postRoundLadderSnapshot, state.matchupAlgorithmId)],
         status: isFinalRound ? 'finished' : 'round',
         timerStatus: 'idle',
-        lastLadderSnapshot: null,
       };
     }
 
-    case 'STOP_TOURNAMENT': {
+    case 'STOP_TOURNAMENT':
       if (typeof localStorage !== 'undefined') {
         localStorage.removeItem(STORAGE_KEY);
       }
       return createEmptyState();
-    }
 
     case 'RESET_TOURNAMENT': {
       if (typeof localStorage !== 'undefined') {

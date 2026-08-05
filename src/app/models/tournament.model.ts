@@ -31,7 +31,7 @@ export interface Round {
   matchups: Matchup[];
   excludedTeamId: string | null;
   excludedTeamScore: number | null;
-  ladderSnapshot: LadderSnapshotEntry[];
+  preRoundLadderSnapshot: LadderSnapshotEntry[];
   startedAt: number | null;
   endedAt: number | null;
   dueAt: number | null;
@@ -44,14 +44,13 @@ export type TimerStatus = 'idle' | 'running' | 'paused' | 'ended';
 export interface TournamentState {
   tournamentName: string;
   teams: Team[];
-  ladder: string[];
+  postRoundLadderSnapshot: LadderSnapshotEntry[];
   rounds: Round[];
   roundDurationSeconds: number;
   totalRounds: number;
   matchupAlgorithmId: string;
   status: TournamentStatus;
   timerStatus: TimerStatus;
-  lastLadderSnapshot: string[] | null;
   teamPresence: Record<string, boolean>;
 }
 

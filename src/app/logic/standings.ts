@@ -87,8 +87,8 @@ export function computeStandings(state: TournamentState): TeamStanding[] {
       }
     }
 
-    if (round.ladderSnapshot) {
-      round.ladderSnapshot.forEach((entry, index) => {
+    if (round.preRoundLadderSnapshot) {
+      round.preRoundLadderSnapshot.forEach((entry, index) => {
         const standing = stats.get(entry.teamId);
         if (!standing) return;
         standing.roundRanks.push({ round: round.number, rank: index + 1 });
@@ -96,10 +96,10 @@ export function computeStandings(state: TournamentState): TeamStanding[] {
     }
   }
 
-  return state.ladder.map((teamId, index) => {
-    const standing = stats.get(teamId);
+  return state.postRoundLadderSnapshot.map((entry, index) => {
+    const standing = stats.get(entry.teamId);
     return {
-      teamId,
+      teamId: entry.teamId,
       wins: standing?.wins ?? 0,
       losses: standing?.losses ?? 0,
       ties: standing?.ties ?? 0,
