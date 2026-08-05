@@ -48,7 +48,8 @@ export interface TournamentState {
   rounds: Round[];
   roundDurationSeconds: number;
   totalRounds: number;
-  matchupAlgorithmId: string;
+  exclusionPickerId: string;
+  exclusionScorerId: string;
   status: TournamentStatus;
   timerStatus: TimerStatus;
   teamPresence: Record<string, boolean>;
@@ -77,7 +78,8 @@ export type TournamentAction =
   | { type: 'UPDATE_SCORES'; scores: Record<string, number> }
   | { type: 'SUBMIT_SCORES'; scores: Record<string, number> }
   | { type: 'NEXT_ROUND' }
-  | { type: 'RESET_TOURNAMENT'; defaultTotalRounds?: number; teams?: Team[]; roundDurationSeconds?: number; tournamentName?: string; matchupAlgorithmId?: string }
-  | { type: 'SET_MATCHUP_ALGORITHM_TOURNAMENT'; algorithmId: string }
+  | { type: 'RESET_TOURNAMENT'; defaultTotalRounds?: number; teams?: Team[]; roundDurationSeconds?: number; tournamentName?: string; exclusionPickerId?: string; exclusionScorerId?: string }
+  | { type: 'SET_EXCLUSION_PICKER_TOURNAMENT'; exclusionPickerId: string }
+  | { type: 'SET_EXCLUSION_SCORER_TOURNAMENT'; exclusionScorerId: string }
   | { type: 'STOP_TOURNAMENT' }
   | { type: 'RESTORE_STATE'; state: TournamentState };

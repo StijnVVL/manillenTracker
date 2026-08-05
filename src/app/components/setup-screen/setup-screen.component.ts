@@ -9,8 +9,8 @@ import { L10nService } from '../../services/l10n.service';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { TournamentState } from '../../models/tournament.model';
 import { AlgorithmSelectorComponent } from '../algorithm-selector/algorithm-selector.component';
-import { MATCHUP_ALGORITHMS } from '../../logic/matchup-algorithm';
-import type { MatchupAlgorithm } from '../../logic/matchup-algorithm';
+import { EXCLUSION_PICKERS, EXCLUSION_SCORERS } from '../../logic/matchup-algorithm';
+import type { ExclusionPicker, ExclusionScorer } from '../../logic/matchup-algorithm';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -22,7 +22,8 @@ import { Subscription } from 'rxjs';
   styleUrl: './setup-screen.component.css',
 })
 export class SetupScreenComponent implements OnInit, OnDestroy {
-  readonly algorithms: MatchupAlgorithm[] = MATCHUP_ALGORITHMS;
+  readonly exclusionPickers: ExclusionPicker[] = EXCLUSION_PICKERS;
+  readonly exclusionScorers: ExclusionScorer[] = EXCLUSION_SCORERS;
   state: TournamentState;
 
   durationValue: number;
@@ -87,8 +88,20 @@ export class SetupScreenComponent implements OnInit, OnDestroy {
     this.tournamentService.dispatch({ type: 'SET_TOTAL_ROUNDS', totalRounds });
   }
 
-  onAlgorithmChange(algorithmId: string): void {
-    this.tournamentService.dispatch({ type: 'SET_MATCHUP_ALGORITHM_TOURNAMENT', algorithmId });
+  get currentPickerOption() {
+    return this.exclusionPickers.find(p => p.id === this.state.exclusionPickerId);
+  }
+
+  get currentScorerOption() {
+    return this.exclusionScorers.find(s => s.id === this.state.exclusionScorerId);
+  }
+
+  onExclusionPickerChange(exclusionPickerId: string): void {
+    this.tournamentService.dispatch({ type: 'SET_EXCLUSION_PICKER_TOURNAMENT', exclusionPickerId });
+  }
+
+  onExclusionScorerChange(exclusionScorerId: string): void {
+    this.tournamentService.dispatch({ type: 'SET_EXCLUSION_SCORER_TOURNAMENT', exclusionScorerId });
   }
 
   private validateDuration(value: number | null): string | null {

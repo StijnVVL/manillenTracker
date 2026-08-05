@@ -151,11 +151,32 @@ button {
   max-width: 120px;
 }
 
+.field-group {
+  margin-top: 1.25rem;
+}
+
+.field-group:first-child {
+  margin-top: 0;
+}
+
 .field-label {
   display: block;
+  margin-top: 1.25rem;
   margin-bottom: 0.35rem;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: inherit;
+}
+
+.field-label:first-child {
+  margin-top: 0;
+}
+
+.field-hint {
+  margin: 0.3rem 0 0 0;
+  font-size: 0.8rem;
   color: var(--muted);
+  line-height: 1.4;
 }
 
 .grid-2 {

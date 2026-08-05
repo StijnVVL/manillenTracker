@@ -108,8 +108,15 @@
   "settings.roundDurationError": "Must be a whole number between 1 and 120.",
   "settings.totalRoundsError": "Must be a whole number between 1 and 10.",
   "settings.teamsCard": "Pre-registered Teams",
-  "settings.matchupAlgorithmLabel": "Matchup algorithm",
-  "settings.matchupAlgorithmHint": "Determines how teams are paired each round and how the score of the excluded team is calculated.",
+  "settings.exclusionPickerLabel": "Bye — Exclusion method",
+  "settings.exclusionPickerStaticHint": "Only relevant when the number of teams is odd. Determines which team does not play that round.",
+  "settings.exclusionScorerLabel": "Bye — Score method",
+  "settings.exclusionScorerStaticHint": "Only relevant when the number of teams is odd. Determines how the score is calculated for the team that sits out.",
+
+  "exclusionPicker.middle": "Middle of the ladder",
+  "exclusionPicker.middle.description": "The team ranked in the middle of the current standings sits out. If that team has already sat out before, the next eligible team downward is chosen instead.",
+  "exclusionScorer.meanOf3": "Mean of 3",
+  "exclusionScorer.meanOf3.description": "The excluded team receives the average of the best, worst, and two middle scores of the playing teams, rounded up.",
 
   "teams.addTeam": "Add Team",
   "teams.removeTeam": "Remove team",

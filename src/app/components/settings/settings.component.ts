@@ -8,8 +8,8 @@ import { TeamListEditorComponent } from '../team-list-editor/team-list-editor.co
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { SettingsState } from '../../models/settings.model';
 import { AlgorithmSelectorComponent } from '../algorithm-selector/algorithm-selector.component';
-import { MATCHUP_ALGORITHMS } from '../../logic/matchup-algorithm';
-import type { MatchupAlgorithm } from '../../logic/matchup-algorithm';
+import { EXCLUSION_PICKERS, EXCLUSION_SCORERS } from '../../logic/matchup-algorithm';
+import type { ExclusionPicker, ExclusionScorer } from '../../logic/matchup-algorithm';
 
 @Component({
   selector: 'app-settings',
@@ -20,7 +20,8 @@ import type { MatchupAlgorithm } from '../../logic/matchup-algorithm';
   styleUrl: './settings.component.css'
 })
 export class SettingsComponent implements OnInit {
-  readonly algorithms: MatchupAlgorithm[] = MATCHUP_ALGORITHMS;
+  readonly exclusionPickers: ExclusionPicker[] = EXCLUSION_PICKERS;
+  readonly exclusionScorers: ExclusionScorer[] = EXCLUSION_SCORERS;
   settingsState: SettingsState;
 
   durationValue: number;
@@ -75,8 +76,20 @@ export class SettingsComponent implements OnInit {
     this.settingsService.dispatch({ type: 'REMOVE_SETTINGS_TEAM', teamId });
   }
 
-  onAlgorithmChange(algorithmId: string): void {
-    this.settingsService.dispatch({ type: 'SET_MATCHUP_ALGORITHM', algorithmId });
+  get currentPickerOption() {
+    return this.exclusionPickers.find(p => p.id === this.settingsState.exclusionPickerId);
+  }
+
+  get currentScorerOption() {
+    return this.exclusionScorers.find(s => s.id === this.settingsState.exclusionScorerId);
+  }
+
+  onExclusionPickerChange(exclusionPickerId: string): void {
+    this.settingsService.dispatch({ type: 'SET_EXCLUSION_PICKER', exclusionPickerId });
+  }
+
+  onExclusionScorerChange(exclusionScorerId: string): void {
+    this.settingsService.dispatch({ type: 'SET_EXCLUSION_SCORER', exclusionScorerId });
   }
 
   private validateDuration(value: number | null): string | null {

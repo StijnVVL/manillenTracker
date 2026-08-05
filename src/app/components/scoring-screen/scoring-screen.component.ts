@@ -5,7 +5,7 @@ import { TournamentService } from '../../services/tournament.service';
 import { L10nService } from '../../services/l10n.service';
 import { L10nPipe } from '../../pipes/l10n.pipe';
 import { getMatchupDiffs, getWinnerId, scoreWarning, buildRoundResults } from '../../logic/scoring';
-import { getAlgorithmById } from '../../logic/matchup-algorithm';
+import { getExclusionScorerById } from '../../logic/matchup-algorithm';
 import { getRoundByNumber, getCurrentRound, getTeamMap, isRoundInFuture, isPageInFuture } from '../../utils/teams';
 import { RoundProgressComponent } from '../round-progress/round-progress.component';
 import { TournamentState, Round, Matchup, Team } from '../../models/tournament.model';
@@ -157,8 +157,8 @@ export class ScoringScreenComponent implements OnInit {
     if (!this.allMatchupsFilled || !this.displayRound.excludedTeamId) return null;
     const results = buildRoundResults(this.displayRound.matchups, this.numericScores);
     if (results.length === 0) return null;
-    const algorithm = getAlgorithmById(this.state.matchupAlgorithmId);
-    return algorithm.calculateExcludedScore(results);
+    const scorer = getExclusionScorerById(this.state.exclusionScorerId);
+    return scorer.calculateExcludedScore(results);
   }
 
   get numericScores(): Record<string, number> {

@@ -4,6 +4,16 @@
   "settings.matchupAlgorithmLabel": "Koppelingsalgoritme",
   "settings.matchupAlgorithmHint": "Bepaalt hoe teams per ronde worden gekoppeld en hoe de score van het uitgesloten team wordt berekend.",
 
+  "settings.exclusionPickerLabel": "Vrijstelling — Uitsluitingsmethode",
+  "settings.exclusionPickerStaticHint": "Alleen van toepassing bij een oneven aantal teams. Bepaalt welk team die ronde niet speelt.",
+  "settings.exclusionScorerLabel": "Vrijstelling — Scoremethode",
+  "settings.exclusionScorerStaticHint": "Alleen van toepassing bij een oneven aantal teams. Bepaalt hoe de score wordt berekend voor het team dat niet speelt.",
+
+  "exclusionPicker.middle": "Midden van de rangschikking",
+  "exclusionPicker.middle.description": "Het team dat midden in de huidige rangschikking staat, wordt uitgesloten. Als dat team al eerder is uitgesloten, wordt het eerstvolgende geschikte team lager in de rangschikking gekozen.",
+  "exclusionScorer.meanOf3": "Gemiddelde van 3",
+  "exclusionScorer.meanOf3.description": "Het uitgesloten team ontvangt het gemiddelde van de beste, slechtste en twee middelste scores van de spelende teams, naar boven afgerond.",
+
   "matchupList.excludedTeam": "Uitgesloten deze ronde",
 
   "scoring.excludedTeam": "Uitgesloten team",

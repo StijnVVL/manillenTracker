@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, map, distinctUntilChanged } from 'rxjs';
-import { getAlgorithmById, DEFAULT_MATCHUP_ALGORITHM_ID } from '../logic/matchup-algorithm';
+import { getExclusionPickerById, getExclusionScorerById, DEFAULT_EXCLUSION_PICKER_ID, DEFAULT_EXCLUSION_SCORER_ID } from '../logic/matchup-algorithm';
 import { buildRoundResults } from '../logic/scoring';
 import {
   DEFAULT_ROUND_DURATION_SECONDS,
@@ -24,9 +24,9 @@ function buildInitialSnapshot(teams: Team[]): LadderSnapshotEntry[] {
   return shuffled.map(t => ({ teamId: t.id, wins: 0, exclusions: 0, cumulativeScore: 0, roundScores: [] }));
 }
 
-function createRound(number: number, teams: Team[], preRoundSnapshot: LadderSnapshotEntry[], algorithmId: string): Round {
-  const algorithm = getAlgorithmById(algorithmId);
-  const { matchups, excludedTeamId, preRoundLadderSnapshot } = algorithm.buildMatchups(teams, preRoundSnapshot);
+function createRound(number: number, teams: Team[], preRoundSnapshot: LadderSnapshotEntry[], exclusionPickerId: string): Round {
+  const picker = getExclusionPickerById(exclusionPickerId);
+  const { matchups, excludedTeamId, preRoundLadderSnapshot } = picker.buildMatchups(teams, preRoundSnapshot);
 
   return {
     number,
@@ -112,7 +112,8 @@ function createEmptyState(): TournamentState {
     rounds: [],
     roundDurationSeconds: DEFAULT_ROUND_DURATION_SECONDS,
     totalRounds: DEFAULT_TOTAL_ROUNDS,
-    matchupAlgorithmId: DEFAULT_MATCHUP_ALGORITHM_ID,
+    exclusionPickerId: DEFAULT_EXCLUSION_PICKER_ID,
+    exclusionScorerId: DEFAULT_EXCLUSION_SCORER_ID,
     status: 'none',
     timerStatus: 'idle',
     teamPresence: {},
@@ -125,7 +126,8 @@ function createInitialState(
   roundDurationSeconds = DEFAULT_ROUND_DURATION_SECONDS,
   tournamentName = '',
   teamPresence: Record<string, boolean> = {},
-  matchupAlgorithmId = DEFAULT_MATCHUP_ALGORITHM_ID,
+  exclusionPickerId = DEFAULT_EXCLUSION_PICKER_ID,
+  exclusionScorerId = DEFAULT_EXCLUSION_SCORER_ID,
 ): TournamentState {
   return {
     tournamentName,
@@ -134,7 +136,8 @@ function createInitialState(
     rounds: [],
     roundDurationSeconds,
     totalRounds: defaultTotalRounds,
-    matchupAlgorithmId,
+    exclusionPickerId,
+    exclusionScorerId,
     status: 'setup',
     timerStatus: 'idle',
     teamPresence,
@@ -158,8 +161,10 @@ function loadPersistedState(): TournamentState | null {
     parsed.teamPresence = parsed.teamPresence ?? {};
     // Migrate tournamentName if missing
     parsed.tournamentName = parsed.tournamentName ?? '';
-    // Migrate matchupAlgorithmId if missing
-    parsed.matchupAlgorithmId = parsed.matchupAlgorithmId ?? DEFAULT_MATCHUP_ALGORITHM_ID;
+    // Migrate exclusionPickerId / exclusionScorerId (previously matchupAlgorithmId)
+    const anyParsed2 = parsed as any;
+    parsed.exclusionPickerId = parsed.exclusionPickerId ?? anyParsed2['matchupAlgorithmId'] ?? DEFAULT_EXCLUSION_PICKER_ID;
+    parsed.exclusionScorerId = parsed.exclusionScorerId ?? DEFAULT_EXCLUSION_SCORER_ID;
     // Migrate postRoundLadderSnapshot (old field was 'ladder': string[])
     if (!Array.isArray(parsed.postRoundLadderSnapshot)) {
       parsed.postRoundLadderSnapshot = [];
@@ -218,9 +223,14 @@ function tournamentReducer(
         ),
       };
 
-    case 'SET_MATCHUP_ALGORITHM_TOURNAMENT': {
+    case 'SET_EXCLUSION_PICKER_TOURNAMENT': {
       if (state.status !== 'setup') return state;
-      return { ...state, matchupAlgorithmId: action.algorithmId };
+      return { ...state, exclusionPickerId: action.exclusionPickerId };
+    }
+
+    case 'SET_EXCLUSION_SCORER_TOURNAMENT': {
+      if (state.status !== 'setup') return state;
+      return { ...state, exclusionScorerId: action.exclusionScorerId };
     }
 
     case 'SET_TOURNAMENT_NAME': {
@@ -259,7 +269,7 @@ function tournamentReducer(
       } 
 
       const initialSnapshot = buildInitialSnapshot(state.teams);
-      const round = createRound(1, state.teams, initialSnapshot, state.matchupAlgorithmId);
+      const round = createRound(1, state.teams, initialSnapshot, state.exclusionPickerId);
       return {
         ...state,
         postRoundLadderSnapshot: initialSnapshot,
@@ -384,8 +394,8 @@ function tournamentReducer(
       // Compute excluded team score if applicable
       let excludedTeamScore: number | null = null;
       if (round.excludedTeamId) {
-        const algorithm = getAlgorithmById(state.matchupAlgorithmId);
-        excludedTeamScore = algorithm.calculateExcludedScore(results);
+        const scorer = getExclusionScorerById(state.exclusionScorerId);
+        excludedTeamScore = scorer.calculateExcludedScore(results);
         results.push({ teamId: round.excludedTeamId, rawScore: excludedTeamScore, matchDiff: 0 });
       }
 
@@ -424,7 +434,7 @@ function tournamentReducer(
 
       return {
         ...state,
-        rounds: isFinalRound ? state.rounds : [...state.rounds, createRound(currentRound.number + 1, state.teams, state.postRoundLadderSnapshot, state.matchupAlgorithmId)],
+        rounds: isFinalRound ? state.rounds : [...state.rounds, createRound(currentRound.number + 1, state.teams, state.postRoundLadderSnapshot, state.exclusionPickerId)],
         status: isFinalRound ? 'finished' : 'round',
         timerStatus: 'idle',
       };
@@ -441,7 +451,7 @@ function tournamentReducer(
         localStorage.removeItem(STORAGE_KEY);
       }
       const initialPresence = USE_DUMMY_DATA ? DUMMY_TEAM_PRESENCE : {};
-      return createInitialState(action.defaultTotalRounds, action.teams, action.roundDurationSeconds, action.tournamentName, initialPresence, action.matchupAlgorithmId);
+      return createInitialState(action.defaultTotalRounds, action.teams, action.roundDurationSeconds, action.tournamentName, initialPresence, action.exclusionPickerId, action.exclusionScorerId);
     }
 
     case 'RESTORE_STATE':
@@ -494,7 +504,8 @@ export class TournamentService {
         teams: s.teams,
         roundDurationSeconds: s.roundDurationMinutes * 60,
         tournamentName: s.defaultTournamentName,
-        matchupAlgorithmId: s.matchupAlgorithmId,
+        exclusionPickerId: s.exclusionPickerId,
+        exclusionScorerId: s.exclusionScorerId,
       };
     }
     const newState = tournamentReducer(this.stateSubject.value, processedAction);

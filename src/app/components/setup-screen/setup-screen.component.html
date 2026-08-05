@@ -65,15 +65,29 @@
     />
     <p class="field-hint">{{ 'setup.totalRoundsHint' | l10n }}</p>
 
-    <label class="field-label" for="setup-algorithm">
-      {{ 'settings.matchupAlgorithmLabel' | l10n }}
+    <label class="field-label" for="setup-exclusion-picker">
+      {{ 'settings.exclusionPickerLabel' | l10n }}
     </label>
     <app-algorithm-selector
-      [selectedId]="state.matchupAlgorithmId"
+      [options]="exclusionPickers"
+      [selectedId]="state.exclusionPickerId"
       [disabled]="!isSetup"
-      (selectedIdChange)="onAlgorithmChange($event)"
+      (selectedIdChange)="onExclusionPickerChange($event)"
     />
-    <p class="field-hint">{{ 'settings.matchupAlgorithmHint' | l10n }}</p>
+    <p class="field-hint">{{ 'settings.exclusionPickerStaticHint' | l10n }}</p>
+    <p class="field-hint">{{ (currentPickerOption?.descriptionKey ?? '') | l10n }}</p>
+
+    <label class="field-label" for="setup-exclusion-scorer">
+      {{ 'settings.exclusionScorerLabel' | l10n }}
+    </label>
+    <app-algorithm-selector
+      [options]="exclusionScorers"
+      [selectedId]="state.exclusionScorerId"
+      [disabled]="!isSetup"
+      (selectedIdChange)="onExclusionScorerChange($event)"
+    />
+    <p class="field-hint">{{ 'settings.exclusionScorerStaticHint' | l10n }}</p>
+    <p class="field-hint">{{ (currentScorerOption?.descriptionKey ?? '') | l10n }}</p>
   </div>
 
   @if (isSetup) {

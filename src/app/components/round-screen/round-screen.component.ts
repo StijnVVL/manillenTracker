@@ -11,7 +11,7 @@ import { L10nService } from '../../services/l10n.service';
 import { ScoreEditDialogService } from '../../services/score-edit-dialog.service';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { buildRoundResults } from '../../logic/scoring';
-import { getAlgorithmById } from '../../logic/matchup-algorithm';
+import { getExclusionScorerById } from '../../logic/matchup-algorithm';
 
 @Component({
   selector: 'app-round-screen',
@@ -371,8 +371,8 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
     }
     const results = buildRoundResults(this.displayRound.matchups, this.scores);
     if (results.length === 0) return 0;
-    const algorithm = getAlgorithmById(this.state.matchupAlgorithmId);
-    return algorithm.calculateExcludedScore(results);
+    const scorer = getExclusionScorerById(this.state.exclusionScorerId);
+    return scorer.calculateExcludedScore(results);
   }
 
   get excludedRowRightLabel(): string { return '–'; }

@@ -7,12 +7,6 @@
   margin-top: 1.5rem;
 }
 
-.field-hint {
-  margin: 0.5rem 0 0 0;
-  font-size: 0.9rem;
-  color: var(--muted);
-}
-
 .input-row {
   display: flex;
   align-items: center;

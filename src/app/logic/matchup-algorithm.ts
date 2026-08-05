@@ -1,46 +1,62 @@
 import { Matchup, LadderSnapshotEntry, RoundResult, Team } from '../models/tournament.model';
 
+// ---------------------------------------------------------------------------
+// Shared result type
+// ---------------------------------------------------------------------------
+
 export interface MatchupResult {
   matchups: Matchup[];
   excludedTeamId: string | null;
   preRoundLadderSnapshot: LadderSnapshotEntry[];
 }
 
-export interface MatchupAlgorithm {
+// ---------------------------------------------------------------------------
+// ExclusionPicker — decides WHICH team sits out and builds the matchup pairs
+// ---------------------------------------------------------------------------
+
+export interface ExclusionPicker {
   readonly id: string;
   readonly nameKey: string;
+  readonly descriptionKey: string;
   buildMatchups(teams: Team[], preRoundSnapshot: LadderSnapshotEntry[]): MatchupResult;
+}
+
+// ---------------------------------------------------------------------------
+// ExclusionScorer — decides WHAT SCORE the excluded team receives
+// ---------------------------------------------------------------------------
+
+export interface ExclusionScorer {
+  readonly id: string;
+  readonly nameKey: string;
+  readonly descriptionKey: string;
   calculateExcludedScore(roundResults: RoundResult[]): number;
 }
 
-/**
- * "Mean of 3" algorithm.
- *
- * Ordering: teams sorted by wins desc → cumulative score desc → name asc (case-insensitive).
- * The initial random ordering for round 1 is established externally via the tournament snapshot
- * passed in as preRoundSnapshot; the algorithm itself always sorts deterministically.
- *
- * Matchup phase (odd number of teams):
- *   - Take the ordered list; pick the middle team.
- *   - If that team was already excluded in a previous round, walk downward;
- *     repeat until an un-excluded team is found.
- *   - Fallback: use the original middle candidate.
- *   - Exclude that team. Pair remaining consecutively: (1,2), (3,4), …
- *
- * Score phase (excluded team):
- *   - Sort playing teams' raw scores.
- *   - Compute: ceil( (best + worst + mid1 + mid2) / 4 )
- */
-export class MeanOf3Algorithm implements MatchupAlgorithm {
-  readonly id = 'mean-of-3';
-  readonly nameKey = 'algorithm.fairness.meanof3';
+// ---------------------------------------------------------------------------
+// MiddleExclusionPicker
+//
+// Ordering: teams sorted by wins desc → cumulative score desc → name asc.
+// The initial random ordering for round 1 is established externally via the
+// tournament snapshot; the algorithm itself always sorts deterministically.
+//
+// Pick phase (odd number of teams):
+//   - Take the ordered list; pick the middle team.
+//   - If that team was already excluded in a previous round, walk downward;
+//     repeat until an un-excluded team is found.
+//   - Fallback: use the original middle candidate.
+//   - Exclude that team. Pair remaining consecutively: (1,2), (3,4), …
+// ---------------------------------------------------------------------------
+
+export class MiddleExclusionPicker implements ExclusionPicker {
+  readonly id = 'middle';
+  readonly nameKey = 'exclusionPicker.middle';
+  readonly descriptionKey = 'exclusionPicker.middle.description';
 
   buildMatchups(teams: Team[], preRoundSnapshot: LadderSnapshotEntry[]): MatchupResult {
     if (teams.length === 0) {
       return { matchups: [], excludedTeamId: null, preRoundLadderSnapshot: [] };
     }
 
-    // --- read stats from the pre-round snapshot ---
     const winsMap = new Map<string, number>();
     const exclusionsMap = new Map<string, number>();
     const cumulativeScoreMap = new Map<string, number>();
@@ -58,12 +74,10 @@ export class MeanOf3Algorithm implements MatchupAlgorithm {
       roundScoresMap.set(entry.teamId, [...entry.roundScores]);
     }
 
-    // teams excluded at least once in prior rounds
     const previouslyExcludedIds = preRoundSnapshot
       .filter(e => e.exclusions > 0)
       .map(e => e.teamId);
 
-    // --- sort by stats (order for round 1 is pre-established by the random tournament snapshot) ---
     const nameOf = (id: string) => teams.find(t => t.id === id)?.name ?? '';
     const ordered = [...teams].sort((a, b) => {
       const wDiff = (winsMap.get(b.id) ?? 0) - (winsMap.get(a.id) ?? 0);
@@ -73,7 +87,6 @@ export class MeanOf3Algorithm implements MatchupAlgorithm {
       return nameOf(a.id).localeCompare(nameOf(b.id), undefined, { sensitivity: 'base' });
     });
 
-    // --- build preRoundLadderSnapshot (the canonical pre-round ranking) ---
     const preRoundLadderSnapshot: LadderSnapshotEntry[] = ordered.map(t => ({
       teamId: t.id,
       wins: winsMap.get(t.id) ?? 0,
@@ -84,7 +97,6 @@ export class MeanOf3Algorithm implements MatchupAlgorithm {
 
     const orderedIds = ordered.map(t => t.id);
 
-    // --- pick excluded team (odd count) ---
     let excludedTeamId: string | null = null;
     let remaining = [...orderedIds];
 
@@ -114,6 +126,18 @@ export class MeanOf3Algorithm implements MatchupAlgorithm {
 
     return { matchups, excludedTeamId, preRoundLadderSnapshot };
   }
+}
+
+// ---------------------------------------------------------------------------
+// MeanOf3ExclusionScorer
+//
+// Score formula: ceil( (best + worst + mid1 + mid2) / 4 )
+// ---------------------------------------------------------------------------
+
+export class MeanOf3ExclusionScorer implements ExclusionScorer {
+  readonly id = 'mean-of-3';
+  readonly nameKey = 'exclusionScorer.meanOf3';
+  readonly descriptionKey = 'exclusionScorer.meanOf3.description';
 
   calculateExcludedScore(roundResults: RoundResult[]): number {
     if (roundResults.length === 0) return 0;
@@ -130,10 +154,27 @@ export class MeanOf3Algorithm implements MatchupAlgorithm {
   }
 }
 
-export const MATCHUP_ALGORITHMS: MatchupAlgorithm[] = [new MeanOf3Algorithm()];
+// ---------------------------------------------------------------------------
+// Registries
+// ---------------------------------------------------------------------------
 
-export const DEFAULT_MATCHUP_ALGORITHM_ID = 'mean-of-3';
+export const EXCLUSION_PICKERS: ExclusionPicker[] = [new MiddleExclusionPicker()];
+export const EXCLUSION_SCORERS: ExclusionScorer[] = [new MeanOf3ExclusionScorer()];
 
-export function getAlgorithmById(id: string): MatchupAlgorithm {
-  return MATCHUP_ALGORITHMS.find(a => a.id === id) ?? MATCHUP_ALGORITHMS[0];
+export const DEFAULT_EXCLUSION_PICKER_ID = 'middle';
+export const DEFAULT_EXCLUSION_SCORER_ID = 'mean-of-3';
+
+export function getExclusionPickerById(id: string): ExclusionPicker {
+  return EXCLUSION_PICKERS.find(p => p.id === id) ?? EXCLUSION_PICKERS[0];
 }
+
+export function getExclusionScorerById(id: string): ExclusionScorer {
+  return EXCLUSION_SCORERS.find(s => s.id === id) ?? EXCLUSION_SCORERS[0];
+}
+
+// ---------------------------------------------------------------------------
+// Legacy alias — kept temporarily so callers that still import
+// DEFAULT_MATCHUP_ALGORITHM_ID compile until they are migrated.
+// ---------------------------------------------------------------------------
+/** @deprecated Use DEFAULT_EXCLUSION_PICKER_ID or DEFAULT_EXCLUSION_SCORER_ID */
+export const DEFAULT_MATCHUP_ALGORITHM_ID = DEFAULT_EXCLUSION_PICKER_ID;
