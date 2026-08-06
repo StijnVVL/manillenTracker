@@ -51,9 +51,6 @@
       <button type="button" class="btn btn-primary" (click)="confirmScores()" [disabled]="scoresConfirmed || !allScoresFilled">
         {{ 'roundScreen.confirmScores' | l10n }}
       </button>
-      <button type="button" class="btn btn-primary" (click)="goToRoundWinner()" [disabled]="!scoresConfirmed">
-        {{ 'roundScreen.toRoundWinner' | l10n }}
-      </button>
     }
   </div>
 
@@ -89,9 +86,9 @@
               <button
                 class="btn-status-tag"
                 [class.btn-status-tag--success]="hasScore(matchup) && !isIdle"
-                [class.btn-status-tag--warning]="!hasScore(matchup) && !isIdle"
-                [class.btn-status-tag--muted]="isIdle"
-                [disabled]="isIdle"
+                [class.btn-status-tag--warning]="!hasScore(matchup) && !isIdle && !scoresConfirmed"
+                [class.btn-status-tag--muted]="isIdle || scoresConfirmed"
+                [disabled]="isIdle || scoresConfirmed"
                 type="button"
                 (click)="editMatchScore(matchup)"
               >
@@ -156,9 +153,9 @@
                 <button
                   class="btn-status-tag"
                   [class.btn-status-tag--success]="hasScore(matchup) && !isIdle"
-                  [class.btn-status-tag--warning]="!hasScore(matchup) && !isIdle"
-                  [class.btn-status-tag--muted]="isIdle"
-                  [disabled]="isIdle"
+                  [class.btn-status-tag--warning]="!hasScore(matchup) && !isIdle && !scoresConfirmed"
+                  [class.btn-status-tag--muted]="isIdle || scoresConfirmed"
+                  [disabled]="isIdle || scoresConfirmed"
                   type="button"
                   (click)="editMatchScore(matchup)"
                 >
@@ -193,6 +190,15 @@
     }
   </div>
 }
+
+<div class="page-nav round-page-nav">
+  @if (roundNumber > 1) {
+    <button type="button" class="btn btn-secondary" (click)="goToPrevRound()">&#8592; {{ 'nav.prevRound' | l10n:{roundNumber: roundNumber - 1} }}</button>
+  } @else {
+    <span></span>
+  }
+  <button type="button" class="btn btn-primary" (click)="goToRoundWinner()">{{ 'roundScreen.toRoundWinner' | l10n:{ roundNumber: roundNumber } }} &#8594;</button>
+</div>
 
 @if (tooltipTeamId) {
   @let stats = getTeamStats(tooltipTeamId);

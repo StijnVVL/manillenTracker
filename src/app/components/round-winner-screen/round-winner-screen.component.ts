@@ -150,8 +150,35 @@ export class RoundWinnerScreenComponent implements OnInit {
   }
 
   backToMatchups(): void {
-    if (this.displayRound) {
-      this.router.navigate(['/tournament/round', this.displayRound.number, 'play']);
+    this.router.navigate(['/tournament/round', this.roundNumber, 'play']);
+  }
+
+  goToNext(): void {
+    if (this.isLastRound) {
+      this.goToTeamResults();
+      return;
     }
+
+    if (this.state.status === 'round-winner') {
+      this.confirmDialogService.confirm({
+        title: this.l10n.get('dialog.nextRound.title'),
+        message: this.l10n.get('dialog.nextRound.message'),
+        confirmText: this.l10n.get('dialog.nextRound.confirm')
+      }).then((confirmed) => {
+        if (confirmed) {
+          this.tournamentService.dispatch({ type: 'NEXT_ROUND' });
+          const newRound = this.tournamentService.state.rounds[this.tournamentService.state.rounds.length - 1];
+          this.router.navigate(['/tournament/round', newRound.number, 'play']);
+        }
+      });
+    } else {
+      this.router.navigate(['/tournament/round', this.roundNumber + 1, 'play']);
+    }
+  }
+
+  get nextNavLabel(): string {
+    return this.isLastRound
+      ? this.l10n.get('nav.results')
+      : this.l10n.get('nav.nextRound', { roundNumber: this.roundNumber + 1 });
   }
 }

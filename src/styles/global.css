@@ -111,6 +111,11 @@ button {
 .btn-secondary {
   background: #e8f1ea;
   color: var(--primary-dark);
+  border: 1.5px solid #7aab8a;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: #d4e8da;
 }
 
 .btn-danger {
@@ -251,10 +256,8 @@ button {
   flex-wrap: wrap;
   gap: 0.75rem;
   margin-top: 1rem;
-  max-width: 1600px;
   margin-left: auto;
   margin-right: auto;
-  padding: 0 1.5rem;
 }
 
 .ladder-list,
@@ -348,6 +351,14 @@ button {
   flex-wrap: wrap;
   gap: 0.75rem;
   margin-top: 1.25rem;
+}
+
+.page-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
 }
 
 .score-card {

@@ -28,21 +28,10 @@
         </div>
       }
     </div>
-
-    <div class="setup-actions">
-      @if (!isLastRound && isCurrentRound && state.status !== 'round') {
-        <button type="button" class="btn btn-primary" (click)="nextRound()">
-          {{ 'scoring.nextRound' | l10n }}
-        </button>
-      }
-      @if (isLastRound && isCurrentRound && state.status !== 'round') {
-        <button type="button" class="btn btn-primary" (click)="goToTeamResults()">
-          {{ 'roundWinner.toResults' | l10n }}
-        </button>
-      }
-      <button type="button" class="btn btn-secondary" (click)="backToMatchups()">
-        {{ 'roundWinner.backToMatchups' | l10n }}
-      </button>
-    </div>
   </div>
 }
+
+<div class="page-nav round-winner-page-nav">
+  <button type="button" class="btn btn-secondary" (click)="backToMatchups()">&#8592; {{ 'roundWinner.backToMatchups' | l10n:{ roundNumber: roundNumber } }}</button>
+  <button type="button" class="btn btn-primary" (click)="goToNext()">{{ nextNavLabel }} &#8594;</button>
+</div>

@@ -13,34 +13,51 @@ import { L10nService } from '../../services/l10n.service';
   imports: [L10nPipe, RouterLink],
   template: `
     @if (state.status === 'none') {
-      <div class="no-tournament">
-        <button class="btn btn-primary" (click)="startNewTournament()">
-          {{ 'home.setupNewTournament' | l10n }}
-        </button>
+      <div class="tournament-no-ongoing">
+        <p class="no-tournament-message">{{ 'tournament.noTournamentMessage' | l10n }}</p>
+        <div class="ongoing-links">
+          <a class="ongoing-link-card" (click)="startNewTournament()">
+            <span class="link-card-title">{{ 'home.setupNewTournament' | l10n }}</span>
+            <span class="link-card-desc">{{ 'tournament.startNewTournamentDesc' | l10n }}</span>
+          </a>
+        </div>
       </div>
     } @else {
       <div class="tournament-ongoing">
         <p class="ongoing-message">{{ 'tournament.ongoingMessage' | l10n }}</p>
         <div class="ongoing-links">
+          <a routerLink="/tournament/setup" class="ongoing-link-card">
+            <span class="link-card-title">{{ 'menu.setup' | l10n }}</span>
+            <span class="link-card-desc">{{ 'tournament.setupDesc' | l10n }}</span>
+          </a>
           <a routerLink="/tournament/teams" class="ongoing-link-card">
             <span class="link-card-title">{{ 'menu.teams' | l10n }}</span>
             <span class="link-card-desc">{{ 'tournament.viewTeamsDesc' | l10n }}</span>
           </a>
-          <a class="ongoing-link-card" (click)="redirectToCurrentState()">
+          <a class="ongoing-link-card" [class.ongoing-link-card-disabled]="!isPostSetup" (click)="redirectToCurrentState()">
             <span class="link-card-title">{{ 'menu.currentRound' | l10n }}</span>
             <span class="link-card-desc">{{ 'tournament.currentRoundDesc' | l10n }}</span>
+          </a>
+          <a routerLink="/tournament/results/last" class="ongoing-link-card" [class.ongoing-link-card-disabled]="!isPostSetup">
+            <span class="link-card-title">{{ 'menu.results' | l10n }}</span>
+            <span class="link-card-desc">{{ 'tournament.resultsDesc' | l10n }}</span>
           </a>
         </div>
       </div>
     }
   `,
   styles: [`
-    .no-tournament {
+    .tournament-no-ongoing {
+      max-width: 560px;
+      margin: 3rem auto;
+      padding: 0 1.5rem;
       display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100%;
-      padding: 2rem;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .no-tournament-message {
+      margin: 0;
+      line-height: 1.6;
     }
     .tournament-ongoing {
       max-width: 560px;
@@ -75,6 +92,10 @@ import { L10nService } from '../../services/l10n.service';
     .ongoing-link-card:hover {
       background: var(--primary-dark, #14502b);
     }
+    .ongoing-link-card-disabled {
+      opacity: 0.45;
+      pointer-events: none;
+    }
     .link-card-title {
       font-weight: 600;
       font-size: 1rem;
@@ -103,6 +124,11 @@ export class TournamentComponent implements OnInit, OnDestroy {
       this.state = state;
       this.cdr.markForCheck();
     });
+  }
+
+  get isPostSetup(): boolean {
+    const s = this.state.status;
+    return s === 'round' || s === 'scoring' || s === 'round-winner' || s === 'finished';
   }
 
   startNewTournament(): void {

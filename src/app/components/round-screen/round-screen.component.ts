@@ -101,6 +101,10 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
     }
   }
 
+  goToPrevRound(): void {
+    this.router.navigate(['/tournament/round', this.roundNumber - 1, 'round-winner']);
+  }
+
   loadRound(): void {
     this.displayRound = getRoundByNumber(this.state, this.roundNumber);
   }

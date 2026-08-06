@@ -33,10 +33,10 @@
             <span class="menu-item menu-item-sub menu-item-disabled">{{ 'menu.results' | l10n }}</span>
           }
         }
-        <a routerLink="/credits" routerLinkActive="menu-item-active" class="menu-item" (click)="closeMenu()">{{ 'menu.credits' | l10n }}</a>
-      </div>
-      <div class="menu-bottom">
-        <a routerLink="/settings" routerLinkActive="menu-item-active" class="menu-item" (click)="closeMenu()">{{ 'menu.settings' | l10n }}</a>
+        </div>
+        <div class="menu-bottom">
+          <a routerLink="/settings" routerLinkActive="menu-item-active" class="menu-item" (click)="closeMenu()">{{ 'menu.settings' | l10n }}</a>
+          <a routerLink="/credits" routerLinkActive="menu-item-active" class="menu-item" (click)="closeMenu()">{{ 'menu.credits' | l10n }}</a>
         <button class="menu-item" [class.menu-item-danger]="hasTournament" [class.menu-item-disabled]="!hasTournament" [disabled]="!hasTournament" (click)="stopTournament()">{{ 'menu.stopTournament' | l10n }}</button>
       </div>
     </nav>

@@ -64,8 +64,3 @@
   color: var(--warning, #b45309);
   font-weight: 500;
 }
-
-.setup-actions {
-  display: flex;
-  gap: 0.75rem;
-}

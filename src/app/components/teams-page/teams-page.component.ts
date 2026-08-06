@@ -1,16 +1,17 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { TournamentService } from '../../services/tournament.service';
 import { L10nService } from '../../services/l10n.service';
 import { TeamListEditorComponent } from '../team-list-editor/team-list-editor.component';
 import { TournamentState } from '../../models/tournament.model';
 import { TeamDialogResult } from '../../services/add-team-dialog.service';
 import { Subscription } from 'rxjs';
+import { L10nPipe } from '../../pipes/l10n.pipe';
 
 @Component({
   selector: 'app-teams-page',
   standalone: true,
-  imports: [TeamListEditorComponent],
+  imports: [TeamListEditorComponent, RouterLink, L10nPipe],
   templateUrl: './teams-page.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './teams-page.component.css'

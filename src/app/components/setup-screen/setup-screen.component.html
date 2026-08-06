@@ -91,13 +91,14 @@
   </div>
 
   @if (isSetup) {
-    <div class="setup-actions">
+    <div class="page-nav">
+      <span></span>
       <button
         type="button"
         class="btn btn-primary"
         (click)="goToTeams()"
       >
-        {{ 'setup.setupTeams' | l10n }}
+        {{ 'setup.setupTeams' | l10n }} &#8594;
       </button>
     </div>
   }
