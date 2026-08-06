@@ -6,6 +6,7 @@ import {
   DEFAULT_EXCLUSION_SCORER_ID,
   DEFAULT_ROUND_DURATION_MINUTES,
   DEFAULT_TOTAL_ROUNDS,
+  DEFAULT_TOURNAMENT_NAME,
   SETTINGS_STORAGE_KEY,
   sanitizeRoundDurationMinutes,
   sanitizeTotalRounds,
@@ -22,7 +23,7 @@ function createTeam(name: string, player1: string, player2: string): Team {
 
 function createDefaultSettings(): SettingsState {
   return {
-    defaultTournamentName: '',
+    defaultTournamentName: DEFAULT_TOURNAMENT_NAME,
     roundDurationMinutes: DEFAULT_ROUND_DURATION_MINUTES,
     defaultTotalRounds: DEFAULT_TOTAL_ROUNDS,
     language: DEFAULT_LANGUAGE,
