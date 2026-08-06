@@ -16,7 +16,7 @@
   @if (isSetup) {
     <div class="page-nav teams-page-nav">
       <button type="button" class="btn btn-secondary" routerLink="/tournament/setup">&#8592; {{ 'nav.setup' | l10n }}</button>
-      <button type="button" class="btn btn-primary" [disabled]="hasTeamWithTags" (click)="startTournament()">{{ 'nav.startTournament' | l10n }} &#8594;</button>
+      <button type="button" class="btn" [class.btn-primary]="!hasTeamWithTags" [class.btn-secondary]="hasTeamWithTags" [disabled]="hasTeamWithTags" (click)="startTournament()">{{ 'nav.startTournament' | l10n }} &#8594;</button>
     </div>
   }
 </div>

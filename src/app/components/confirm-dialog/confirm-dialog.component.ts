@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, HostListener } from '@angular/core';
-
+import { FormsModule } from '@angular/forms';
 import { ConfirmDialogService, ConfirmDialogData } from '../../services/confirm-dialog.service';
 import { L10nService } from '../../services/l10n.service';
 import { Subscription } from 'rxjs';
@@ -7,7 +7,7 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-confirm-dialog',
   standalone: true,
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './confirm-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './confirm-dialog.component.css'
@@ -15,6 +15,7 @@ import { Subscription } from 'rxjs';
 export class ConfirmDialogComponent implements OnInit, OnDestroy {
   isOpen = false;
   data: ConfirmDialogData | null = null;
+  checkboxChecked = false;
   private subscription: Subscription | null = null;
 
   constructor(
@@ -25,6 +26,7 @@ export class ConfirmDialogComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subscription = this.confirmDialogService.dialog$.subscribe((data) => {
       this.data = data;
+      this.checkboxChecked = false;
       this.isOpen = true;
     });
   }
@@ -39,6 +41,7 @@ export class ConfirmDialogComponent implements OnInit, OnDestroy {
   }
 
   onConfirm(): void {
+    this.confirmDialogService.setLastCheckboxChecked(this.checkboxChecked);
     this.isOpen = false;
     this.confirmDialogService.respond(true);
   }

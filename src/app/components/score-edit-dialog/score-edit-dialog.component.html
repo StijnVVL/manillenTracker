@@ -6,29 +6,52 @@
       <div class="dialog-content">
         <div class="score-input-group">
           <label class="field-label" for="score-team-a">{{ teamAName }}</label>
-          <input
-            id="score-team-a"
-            class="input input-number"
-            type="number"
-            min="0"
-            max="61"
-            [(ngModel)]="scoreA"
-            (keydown)="onKeydown($event)"
-          />
+          <div class="input-row">
+            <input
+              id="score-team-a"
+              class="input input-number"
+              [class.input-error]="scoreAError"
+              type="number"
+              min="0"
+              maxlength="4"
+              [(ngModel)]="scoreA"
+              (input)="onScoreInput($event, 'A')"
+              (keydown)="onKeydown($event)"
+            />
+            @if (scoreAError) {
+              <span class="field-error">
+                <app-svg-icon name="alert-triangle" [width]="16" [height]="16"/>
+                {{ 'dialog.editScore.scoreError' | l10n:{ max: capMaxScore } }}
+              </span>
+            }
+          </div>
         </div>
         <div class="score-input-group">
           <label class="field-label" for="score-team-b">{{ teamBName }}</label>
-          <input
-            id="score-team-b"
-            class="input input-number"
-            type="number"
-            min="0"
-            max="61"
-            [(ngModel)]="scoreB"
-            (keydown)="onKeydown($event)"
-          />
+          <div class="input-row">
+            <input
+              id="score-team-b"
+              class="input input-number"
+              [class.input-error]="scoreBError"
+              type="number"
+              min="0"
+              maxlength="4"
+              [(ngModel)]="scoreB"
+              (input)="onScoreInput($event, 'B')"
+              (keydown)="onKeydown($event)"
+            />
+            @if (scoreBError) {
+              <span class="field-error">
+                <app-svg-icon name="alert-triangle" [width]="16" [height]="16"/>
+                {{ 'dialog.editScore.scoreError' | l10n:{ max: capMaxScore } }}
+              </span>
+            }
+          </div>
         </div>
       </div>
+      @if (showScoreWarning) {
+        <p class="score-warn">{{ 'dialog.editScore.scoreWarn' | l10n:{ threshold: capWarnThreshold } }}</p>
+      }
       <div class="dialog-actions">
         <button class="btn btn-secondary" (click)="onCancel()">{{ 'common.cancel' | l10n }}</button>
         <button class="btn btn-primary" (click)="onSave()" [disabled]="!canSave">{{ 'dialog.editScore.save' | l10n }}</button>

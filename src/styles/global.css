@@ -156,6 +156,17 @@ button {
   max-width: 120px;
 }
 
+/* Hide native spinner arrows */
+.input-number::-webkit-outer-spin-button,
+.input-number::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.input-number[type=number] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
 .field-group {
   margin-top: 1.25rem;
 }
@@ -200,9 +211,7 @@ button {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  max-width: 1600px;
-  margin: 0 auto 1.5rem;
-  padding: 0 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .countdown-round {
@@ -252,12 +261,9 @@ button {
 
 .timer-controls {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   flex-wrap: wrap;
   gap: 0.75rem;
-  margin-top: 1rem;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .ladder-list,

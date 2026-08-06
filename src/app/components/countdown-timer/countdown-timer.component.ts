@@ -9,7 +9,7 @@ import { L10nService } from '../../services/l10n.service';
   imports: [],
   templateUrl: './countdown-timer.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
-  styles: [],
+  styles: [':host { display: block; width: 100%; }'],
 })
 export class CountdownTimerComponent {
   @Input() remainingSeconds: number | null = null;

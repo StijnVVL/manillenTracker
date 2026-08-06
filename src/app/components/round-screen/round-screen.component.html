@@ -22,37 +22,6 @@
     [isWarning]="isWarning"
     [isEnded]="isRoundEnded"
   />
-  <div class="timer-controls">
-    @if (isIdle && isCurrentRound) {
-      <button type="button" class="btn btn-primary" (click)="startRound()">
-        {{ 'roundScreen.startRound' | l10n }}
-      </button>
-    }
-    @if (isRunning && isCurrentRound) {
-      <button type="button" class="btn btn-primary" (click)="pauseRound()">
-        {{ 'roundScreen.pauseRound' | l10n }}
-      </button>
-    }
-    @if (isPaused && isCurrentRound) {
-      <button type="button" class="btn btn-primary" (click)="resumeRound()">
-        {{ 'roundScreen.resumeRound' | l10n }}
-      </button>
-    }
-    @if (!isIdle && !isRoundEnded && isCurrentRound) {
-      <button
-        type="button"
-        class="btn btn-danger-filled"
-        (click)="endRound()"
-      >
-        {{ 'roundScreen.endRound' | l10n }}
-      </button>
-    }
-    @if (isRoundEnded && isCurrentRound) {
-      <button type="button" class="btn btn-primary" (click)="confirmScores()" [disabled]="scoresConfirmed || !allScoresFilled">
-        {{ 'roundScreen.confirmScores' | l10n }}
-      </button>
-    }
-  </div>
 
   <div class="matchup-tables-grid">
     <div class="matchup-table-container">
@@ -197,7 +166,32 @@
   } @else {
     <span></span>
   }
-  <button type="button" class="btn btn-primary" (click)="goToRoundWinner()">{{ 'roundScreen.toRoundWinner' | l10n:{ roundNumber: roundNumber } }} &#8594;</button>
+  <div class="timer-controls">
+    @if (isIdle && isCurrentRound) {
+      <button type="button" class="btn btn-primary" (click)="startRound()">
+        {{ 'roundScreen.startRound' | l10n }}
+      </button>
+    }
+    @if (isRunning && isCurrentRound) {
+      <button type="button" class="btn btn-primary" (click)="pauseRound()">
+        {{ 'roundScreen.pauseRound' | l10n }}
+      </button>
+    }
+    @if (isPaused && isCurrentRound) {
+      <button type="button" class="btn btn-primary" (click)="resumeRound()">
+        {{ 'roundScreen.resumeRound' | l10n }}
+      </button>
+    }
+    @if (!isIdle && !isRoundEnded && isCurrentRound) {
+      <button type="button" class="btn btn-danger-filled" (click)="endRound()">
+        {{ 'roundScreen.endRound' | l10n }}
+      </button>
+    }
+    @if (isRoundEnded && isCurrentRound) {
+      <!-- scores confirmed via Round Winner dialog -->
+    }
+  </div>
+  <button type="button" class="btn" [class.btn-primary]="isReadyForRoundWinner" [class.btn-secondary]="!isReadyForRoundWinner" (click)="goToRoundWinner()">{{ 'roundScreen.toRoundWinner' | l10n:{ roundNumber: roundNumber } }} &#8594;</button>
 </div>
 
 @if (tooltipTeamId) {

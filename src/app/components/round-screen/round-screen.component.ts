@@ -176,12 +176,59 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
     this.tournamentService.dispatch({ type: 'PAUSE_ROUND' } as TournamentAction);
   }
 
-  goToRoundWinner(): void {
+  async goToRoundWinner(): Promise<void> {
+    if (this.isCurrentRound) {
+      if (this.isIdle) {
+        const confirmed = await this.confirmDialogService.confirm({
+          title: this.l10n.get('dialog.goToRoundWinner.notStartedTitle'),
+          message: this.l10n.get('dialog.goToRoundWinner.notStartedMessage'),
+          confirmText: this.l10n.get('dialog.goToRoundWinner.confirm'),
+          confirmClass: 'btn-primary',
+          cancelText: this.l10n.get('common.cancel')
+        });
+        if (!confirmed) return;
+      } else if (!this.isRoundEnded) {
+        const confirmed = await this.confirmDialogService.confirm({
+          title: this.l10n.get('dialog.goToRoundWinner.ongoingTitle'),
+          message: this.l10n.get('dialog.goToRoundWinner.ongoingMessage'),
+          confirmText: this.l10n.get('dialog.goToRoundWinner.confirm'),
+          confirmClass: 'btn-primary',
+          cancelText: this.l10n.get('common.cancel')
+        });
+        if (!confirmed) return;
+      } else if (!this.allScoresFilled) {
+        const confirmed = await this.confirmDialogService.confirm({
+          title: this.l10n.get('dialog.goToRoundWinner.missingScoresTitle'),
+          message: this.l10n.get('dialog.goToRoundWinner.missingScoresMessage'),
+          confirmText: this.l10n.get('dialog.goToRoundWinner.confirm'),
+          confirmClass: 'btn-primary',
+          cancelText: this.l10n.get('common.cancel')
+        });
+        if (!confirmed) return;
+      } else if (!this.scoresConfirmed) {
+        const confirmed = await this.confirmDialogService.confirm({
+          title: this.l10n.get('dialog.goToRoundWinner.confirmScoresTitle'),
+          message: this.l10n.get('dialog.goToRoundWinner.confirmScoresMessage'),
+          confirmText: this.l10n.get('dialog.goToRoundWinner.confirmScoresAction'),
+          confirmTextUnchecked: this.l10n.get('dialog.goToRoundWinner.confirmScoresActionUnchecked'),
+          cancelText: this.l10n.get('common.cancel'),
+          checkboxLabel: this.l10n.get('dialog.goToRoundWinner.confirmScoresCheckbox')
+        });
+        if (!confirmed) return;
+        if (this.confirmDialogService.lastCheckboxChecked) {
+          this.tournamentService.dispatch({ type: 'SUBMIT_SCORES', scores: this.scores });
+        }
+      }
+    }
     this.router.navigate(['/tournament/round', this.roundNumber, 'round-winner']);
   }
 
   get scoresConfirmed(): boolean {
     return this.state.status === 'round-winner' || this.state.status === 'finished';
+  }
+
+  get isReadyForRoundWinner(): boolean {
+    return !this.isCurrentRound || (this.isRoundEnded && this.allScoresFilled);
   }
 
   confirmScores(): void {

@@ -81,8 +81,23 @@
   "dialog.endRound.message": "Are you sure you want to end the round early?",
   "dialog.endRound.confirm": "End Round",
 
+  "dialog.goToRoundWinner.notStartedTitle": "Round Not Started",
+  "dialog.goToRoundWinner.notStartedMessage": "The round has not started yet. Are you sure you want to go to the Round Winner screen?",
+  "dialog.goToRoundWinner.ongoingTitle": "Round Still Ongoing",
+  "dialog.goToRoundWinner.ongoingMessage": "The round is still in progress. Are you sure you want to go to the Round Winner screen?",
+  "dialog.goToRoundWinner.missingScoresTitle": "Scores Incomplete",
+  "dialog.goToRoundWinner.missingScoresMessage": "Not all match scores have been entered yet. Are you sure you want to continue?",
+  "dialog.goToRoundWinner.confirmScoresTitle": "Confirm Scores",
+  "dialog.goToRoundWinner.confirmScoresMessage": "All scores have been entered. You can now confirm the scores before proceeding to allow a new round to start.",
+  "dialog.goToRoundWinner.confirmScoresCheckbox": "I confirm that the entered scores are correct. I understand that scores cannot be changed once confirmed, as a new round will start.",
+  "dialog.goToRoundWinner.confirmScoresAction": "Confirm & Continue",
+  "dialog.goToRoundWinner.confirmScoresActionUnchecked": "Don't Confirm & Continue",
+  "dialog.goToRoundWinner.confirm": "Go Anyway",
+
   "dialog.editScore.title": "Edit Match Score",
   "dialog.editScore.save": "Save",
+  "dialog.editScore.scoreWarn": "One or more scores is {threshold} or higher — please double-check the entered values.",
+  "dialog.editScore.scoreError": "Must be less than {max}.",
 
   "dialog.nextRound.title": "Next Round",
   "dialog.nextRound.message": "Are you sure you want to proceed to the next round? Scores will be finalized.",

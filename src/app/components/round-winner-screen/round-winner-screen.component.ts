@@ -6,7 +6,6 @@ import { L10nService } from '../../services/l10n.service';
 import { L10nPipe } from '../../pipes/l10n.pipe';
 import { TournamentState, Round, Matchup } from '../../models/tournament.model';
 import { getRoundByNumber, getCurrentRound, getTeamMap, isRoundInFuture, isPageInFuture } from '../../utils/teams';
-import { ConfirmDialogService } from '../../services/confirm-dialog.service';
 
 interface RoundWinner {
   teamId: string;
@@ -35,7 +34,6 @@ export class RoundWinnerScreenComponent implements OnInit {
   constructor(
     private tournamentService: TournamentService,
     public l10n: L10nService,
-    private confirmDialogService: ConfirmDialogService,
     private route: ActivatedRoute,
     private router: Router
   ) {
@@ -135,18 +133,9 @@ export class RoundWinnerScreenComponent implements OnInit {
 
   nextRound(): void {
     if (!this.isCurrentRound || !this.displayRound) return;
-
-    this.confirmDialogService.confirm({
-      title: this.l10n.get('dialog.nextRound.title'),
-      message: this.l10n.get('dialog.nextRound.message'),
-      confirmText: this.l10n.get('dialog.nextRound.confirm')
-    }).then((confirmed) => {
-      if (confirmed) {
-        this.tournamentService.dispatch({ type: 'NEXT_ROUND' });
-        const newRound = this.tournamentService.state.rounds[this.tournamentService.state.rounds.length - 1];
-        this.router.navigate(['/tournament/round', newRound.number, 'play']);
-      }
-    });
+    this.tournamentService.dispatch({ type: 'NEXT_ROUND' });
+    const newRound = this.tournamentService.state.rounds[this.tournamentService.state.rounds.length - 1];
+    this.router.navigate(['/tournament/round', newRound.number, 'play']);
   }
 
   backToMatchups(): void {
@@ -160,17 +149,9 @@ export class RoundWinnerScreenComponent implements OnInit {
     }
 
     if (this.state.status === 'round-winner') {
-      this.confirmDialogService.confirm({
-        title: this.l10n.get('dialog.nextRound.title'),
-        message: this.l10n.get('dialog.nextRound.message'),
-        confirmText: this.l10n.get('dialog.nextRound.confirm')
-      }).then((confirmed) => {
-        if (confirmed) {
-          this.tournamentService.dispatch({ type: 'NEXT_ROUND' });
-          const newRound = this.tournamentService.state.rounds[this.tournamentService.state.rounds.length - 1];
-          this.router.navigate(['/tournament/round', newRound.number, 'play']);
-        }
-      });
+      this.tournamentService.dispatch({ type: 'NEXT_ROUND' });
+      const newRound = this.tournamentService.state.rounds[this.tournamentService.state.rounds.length - 1];
+      this.router.navigate(['/tournament/round', newRound.number, 'play']);
     } else {
       this.router.navigate(['/tournament/round', this.roundNumber + 1, 'play']);
     }

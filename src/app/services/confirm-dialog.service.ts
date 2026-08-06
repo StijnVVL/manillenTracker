@@ -5,7 +5,10 @@ export interface ConfirmDialogData {
   title: string;
   message: string;
   confirmText?: string;
+  confirmTextUnchecked?: string;
+  confirmClass?: string;
   cancelText?: string;
+  checkboxLabel?: string;
 }
 
 @Injectable({
@@ -16,6 +19,11 @@ export class ConfirmDialogService {
   private responseSubject = new Subject<boolean>();
 
   dialog$ = this.dialogSubject.asObservable();
+  lastCheckboxChecked = false;
+
+  setLastCheckboxChecked(val: boolean): void {
+    this.lastCheckboxChecked = val;
+  }
 
   confirm(data: ConfirmDialogData): Promise<boolean> {
     this.dialogSubject.next(data);
