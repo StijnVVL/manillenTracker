@@ -124,7 +124,13 @@ export class RoundWinnerScreenComponent implements OnInit {
   }
 
   get isLastRound(): boolean {
-    return this.displayRound?.number === this.state.totalRounds;
+    return this.roundNumber >= this.state.totalRounds;
+  }
+
+  get isReadyForNext(): boolean {
+    if (this.isLastRound) return true;
+    if (this.isCurrentRound) return this.state.status === 'round-winner';
+    return this.roundNumber < (this.currentRound?.number ?? 0);
   }
 
   goToTeamResults(): void {

@@ -33,5 +33,7 @@
 
 <div class="page-nav round-winner-page-nav">
   <button type="button" class="btn btn-secondary" (click)="backToMatchups()">&#8592; {{ 'roundWinner.backToMatchups' | l10n:{ roundNumber: roundNumber } }}</button>
-  <button type="button" class="btn btn-primary" (click)="goToNext()">{{ nextNavLabel }} &#8594;</button>
+  @if (!isLastRound) {
+    <button type="button" class="btn" [class.btn-primary]="isReadyForNext" [class.btn-secondary]="!isReadyForNext" (click)="goToNext()">{{ nextNavLabel }} &#8594;</button>
+  }
 </div>

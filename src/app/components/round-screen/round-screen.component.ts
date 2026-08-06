@@ -228,6 +228,7 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
   }
 
   get isReadyForRoundWinner(): boolean {
+    if (this.isFutureRound || this.isFuturePage) return false;
     return !this.isCurrentRound || (this.isRoundEnded && this.allScoresFilled);
   }
 
