@@ -5,6 +5,7 @@ import { TimerService, formatTime } from '../../services/timer.service';
 import { L10nPipe } from '../../pipes/l10n.pipe';
 import { getRoundByNumber, getLatestRoundDiffs, getCurrentRound, getTeamMap, isRoundInFuture, isPageInFuture } from '../../utils/teams';
 import { CountdownTimerComponent } from '../countdown-timer/countdown-timer.component';
+import { SponsorCarouselComponent } from '../sponsor-carousel/sponsor-carousel.component';
 import { TournamentState, Round, TournamentAction, Team, Matchup, LadderSnapshotEntry } from '../../models/tournament.model';
 import { ConfirmDialogService } from '../../services/confirm-dialog.service';
 import { L10nService } from '../../services/l10n.service';
@@ -18,6 +19,7 @@ import { getExclusionScorerById } from '../../logic/matchup-algorithm';
   standalone: true,
   imports: [
     CountdownTimerComponent,
+    SponsorCarouselComponent,
     L10nPipe,
     SvgIconComponent
   ],

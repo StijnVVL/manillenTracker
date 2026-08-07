@@ -40,6 +40,17 @@
   white-space: nowrap;
 }
 
+.field-checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.field-checkbox-row .field-label {
+  margin: 0;
+}
+
 .input-row {
   display: flex;
   align-items: center;

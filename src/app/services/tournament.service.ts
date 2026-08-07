@@ -107,6 +107,7 @@ function applyRoundDelta(
 function createEmptyState(): TournamentState {
   return {
     tournamentName: '',
+    showSponsors: true,
     teams: [],
     postRoundLadderSnapshot: [],
     rounds: [],
@@ -128,9 +129,11 @@ function createInitialState(
   teamPresence: Record<string, boolean> = {},
   exclusionPickerId = DEFAULT_EXCLUSION_PICKER_ID,
   exclusionScorerId = DEFAULT_EXCLUSION_SCORER_ID,
+  showSponsors = true,
 ): TournamentState {
   return {
     tournamentName,
+    showSponsors,
     teams: teams.map(t => ({ ...t })),
     postRoundLadderSnapshot: [],
     rounds: [],
@@ -161,6 +164,8 @@ function loadPersistedState(): TournamentState | null {
     parsed.teamPresence = parsed.teamPresence ?? {};
     // Migrate tournamentName if missing
     parsed.tournamentName = parsed.tournamentName ?? '';
+    // Migrate showSponsors if missing
+    parsed.showSponsors = parsed.showSponsors ?? true;
     // Migrate exclusionPickerId / exclusionScorerId (previously matchupAlgorithmId)
     const anyParsed2 = parsed as any;
     parsed.exclusionPickerId = parsed.exclusionPickerId ?? anyParsed2['matchupAlgorithmId'] ?? DEFAULT_EXCLUSION_PICKER_ID;
@@ -235,6 +240,10 @@ function tournamentReducer(
 
     case 'SET_TOURNAMENT_NAME': {
       return { ...state, tournamentName: action.name };
+    }
+
+    case 'SET_SHOW_SPONSORS': {
+      return { ...state, showSponsors: action.showSponsors };
     }
 
     case 'SET_SETUP_ROUND_DURATION': {

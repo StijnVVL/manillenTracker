@@ -18,6 +18,18 @@
       (ngModelChange)="onTournamentNameChange($event)"
       [placeholder]="l10n.get('setup.tournamentNamePlaceholder')"
     />
+
+    <div class="field-checkbox-row">
+      <input
+        id="setup-show-sponsors"
+        type="checkbox"
+        [ngModel]="state.showSponsors"
+        (ngModelChange)="onShowSponsorsChange($event)"
+      />
+      <label class="field-label" for="setup-show-sponsors">
+        {{ 'setup.showSponsorsLabel' | l10n }}
+      </label>
+    </div>
   </div>
 
   <!-- Round Settings -->

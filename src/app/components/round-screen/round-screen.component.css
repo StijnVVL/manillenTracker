@@ -5,6 +5,20 @@
   margin: 1.5rem auto 0;
 }
 
+.round-timer-row {
+  position: relative;
+}
+
+.round-sponsor-carousel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: clamp(10rem, 24vw, 18rem);
+  height: clamp(5rem, 12vw, 9rem);
+  pointer-events: none;
+}
+
 .round-page-nav {
   display: grid;
   grid-template-columns: 1fr auto 1fr;

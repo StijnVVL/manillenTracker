@@ -2,7 +2,14 @@
   "name": "manillen-tracker",
   "version": "0.0.0",
   "scripts": {
+    "generate:sponsor-images": "node scripts/generate-sponsor-images-manifest.mjs",
+    "preng": "npm run generate:sponsor-images",
+    "prebuild": "npm run generate:sponsor-images",
+    "prewatch": "npm run generate:sponsor-images",
+    "prestart": "npm run generate:sponsor-images",
+    "pretest": "npm run generate:sponsor-images",
     "ng": "ng serve",
+    "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"

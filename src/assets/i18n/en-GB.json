@@ -110,6 +110,7 @@
   "setup.tournamentOptionsCard": "Tournament Options",
   "setup.tournamentNameLabel": "Tournament name",
   "setup.tournamentNamePlaceholder": "Enter tournament name",
+  "setup.showSponsorsLabel": "Show sponsor images during rounds",
   "setup.setupTeams": "Teams",
   "setup.roundSettingsCard": "Round Settings",
   "setup.roundSettingsLockedHint": "Some settings cannot be changed while the tournament is ongoing.",

@@ -5,12 +5,31 @@
 
 import { Team } from '../models/tournament.model';
 
-export const DUMMY_TEAMS: Team[] = [
-  { id: '00000000-0000-0000-0000-000000000000', name: 'The Aces',     player1: 'Alice',   player2: 'Bob' },
-  { id: '00000000-0000-0000-0000-000000000001', name: 'Royal Flush',  player1: 'Charlie', player2: 'Diana' },
-  { id: '00000000-0000-0000-0000-000000000002', name: 'The Jokers',   player1: 'Eve',     player2: 'Frank' },
-  { id: '00000000-0000-0000-0000-000000000003', name: 'Club Masters', player1: 'Grace',   player2: 'Hank' },
+const DUMMY_TEAM_NAMES: string[] = [
+  'The Aces', 'Royal Flush', 'The Jokers', 'Club Masters', 'Diamond Kings',
+  'Spade Squad', 'Heart Breakers', 'Full House', 'Trump Card', 'The Shufflers',
+  'Card Sharks', 'Lucky Sevens', 'The Dealers', 'Straight Flush', 'Wild Cards',
+  'The Bidders', 'Trick Takers', 'The Manillers', 'Green Table', 'Ace High',
 ];
+
+const DUMMY_PLAYER_NAMES: string[] = [
+  'Alice', 'Bob', 'Charlie', 'Diana', 'Eve', 'Frank', 'Grace', 'Hank',
+  'Ivy', 'Jack', 'Karen', 'Leo', 'Mia', 'Noah', 'Olivia', 'Paul',
+  'Quinn', 'Ruth', 'Sam', 'Tara', 'Uma', 'Victor', 'Wendy', 'Xander',
+  'Yara', 'Zack', 'Amber', 'Brian', 'Cara', 'Derek', 'Ella', 'Finn',
+  'Gina', 'Harry', 'Iris', 'Jake', 'Kira', 'Liam', 'Nora', 'Oscar',
+];
+
+function padId(index: number): string {
+  return index.toString().padStart(12, '0');
+}
+
+export const DUMMY_TEAMS: Team[] = Array.from({ length: 20 }, (_, i) => ({
+  id: `00000000-0000-0000-0000-${padId(i)}`,
+  name: DUMMY_TEAM_NAMES[i % DUMMY_TEAM_NAMES.length],
+  player1: DUMMY_PLAYER_NAMES[(i * 2) % DUMMY_PLAYER_NAMES.length],
+  player2: DUMMY_PLAYER_NAMES[(i * 2 + 1) % DUMMY_PLAYER_NAMES.length],
+}));
 
 // All teams present
 export const DUMMY_TEAM_PRESENCE: Record<string, boolean> = Object.fromEntries(

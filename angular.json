@@ -39,6 +39,11 @@
               {
                 "glob": "icons.svg",
                 "input": "src/assets"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/assets/img",
+                "output": "assets/img"
               }
             ],
             "styles": ["src/styles/global.css"],
@@ -94,6 +99,11 @@
               {
                 "glob": "icons.svg",
                 "input": "src/assets"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/assets/img",
+                "output": "assets/img"
               }
             ],
             "styles": ["src/styles/global.css"],

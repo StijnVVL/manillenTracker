@@ -43,6 +43,7 @@ export type TimerStatus = 'idle' | 'running' | 'paused' | 'ended';
 
 export interface TournamentState {
   tournamentName: string;
+  showSponsors: boolean;
   teams: Team[];
   postRoundLadderSnapshot: LadderSnapshotEntry[];
   rounds: Round[];
@@ -64,6 +65,7 @@ export type TournamentAction =
   | { type: 'REMOVE_TEAM'; teamId: string }
   | { type: 'UPDATE_TEAM'; teamId: string; name: string; player1: string; player2: string }
   | { type: 'SET_TOURNAMENT_NAME'; name: string }
+  | { type: 'SET_SHOW_SPONSORS'; showSponsors: boolean }
   | { type: 'SET_TOTAL_ROUNDS'; totalRounds: number }
   | { type: 'SET_SETUP_ROUND_DURATION'; roundDurationSeconds: number }
   | { type: 'SET_TEAM_PRESENT'; teamId: string }
