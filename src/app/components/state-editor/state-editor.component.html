@@ -4,15 +4,7 @@
   </div>
 
   <div class="editor-wrap">
-    <textarea
-      class="editor-textarea"
-      [(ngModel)]="jsonText"
-      (ngModelChange)="onTextChange()"
-      spellcheck="false"
-      autocomplete="off"
-      autocorrect="off"
-      autocapitalize="off"
-    ></textarea>
+    <div class="editor-host" #editorHost></div>
 
     @if (parseError) {
       <div class="parse-error">{{ parseError }}</div>
