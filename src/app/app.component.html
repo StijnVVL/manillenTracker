@@ -14,7 +14,7 @@
               <a class="header-info-item header-timer-text"
                  [routerLink]="['/tournament/round', currentRoundNumber, 'play']"
               >
-                {{ headerTimerLabel }}<span [style.color]="headerTimerColor">{{ headerTimerClock }}</span>
+                {{ headerTimerLabel }}<span class="header-round-number">{{ currentRoundNumber }}</span><span [style.color]="headerTimerColor">&#8195;{{ headerTimerClock }}</span>
               </a>
             } @else {
               <span class="header-info-item">{{ tournamentName }}</span>

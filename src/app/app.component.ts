@@ -45,6 +45,12 @@ export class AppComponent implements OnInit, OnDestroy {
   private wasTimerActiveOrEnded = false;
 
   ngOnInit(): void {
+    // Compute immediately so header shows correct time on first render
+    const round0 = this.tournamentService.state.rounds?.at(-1);
+    if (round0?.dueAt) {
+      this.headerRemainingSeconds = Math.max(0, (round0.dueAt - Date.now()) / 1000);
+    }
+
     // Update remaining seconds every second
     this.headerIntervalId = setInterval(() => {
       const round = this.tournamentService.state.rounds?.at(-1);
@@ -68,7 +74,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   get headerTimerLabel(): string {
-    return `ROUND ${this.currentRoundNumber ?? 0} - `;
+    return 'ROUND ';
   }
 
   get headerTimerClock(): string {
