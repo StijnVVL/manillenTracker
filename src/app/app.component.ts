@@ -60,13 +60,16 @@ export class AppComponent implements OnInit, OnDestroy {
     }, 1000);
   }
 
-  get isOnRoundPlayPage(): boolean {
-    return this.router.url.includes('/play');
+  get isOnCurrentRoundPlayPage(): boolean {
+    const roundNum = this.currentRoundNumber;
+    if (roundNum === null) return false;
+    return this.router.url === `/tournament/round/${roundNum}/play`;
   }
 
   get isTimerActiveOrEnded(): boolean {
     const s = this.tournamentService.state.timerStatus;
-    return (s === 'running' || s === 'ended') && !this.isOnRoundPlayPage;
+    const status = this.tournamentService.state.status;
+    return (s === 'running' || s === 'ended') && status !== 'round-winner' && !this.isOnCurrentRoundPlayPage;
   }
 
   get shouldShowHeaderTimer(): boolean {
