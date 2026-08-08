@@ -10,14 +10,15 @@
 
         @if (hasTournament && tournamentName) {
           <div class="header-info-wrap">
-            <span class="header-info-item" [class.header-info-hidden]="shouldShowHeaderTimer && showTimerInHeader">
-              {{ tournamentName }}
-            </span>
-            <a class="header-info-item header-timer-text" [class.header-info-hidden]="!(shouldShowHeaderTimer && showTimerInHeader)"
-               [routerLink]="['/tournament/round', currentRoundNumber, 'play']"
-            >
-              {{ headerTimerLabel }}<span [style.color]="headerTimerColor">{{ headerTimerClock }}</span>
-            </a>
+            @if (shouldShowHeaderTimer) {
+              <a class="header-info-item header-timer-text"
+                 [routerLink]="['/tournament/round', currentRoundNumber, 'play']"
+              >
+                {{ headerTimerLabel }}<span [style.color]="headerTimerColor">{{ headerTimerClock }}</span>
+              </a>
+            } @else {
+              <span class="header-info-item">{{ tournamentName }}</span>
+            }
           </div>
         }
     </header>

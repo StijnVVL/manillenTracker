@@ -5,6 +5,7 @@ import { buildRoundResults } from '../logic/scoring';
 import {
   DEFAULT_ROUND_DURATION_SECONDS,
   DEFAULT_TOTAL_ROUNDS,
+  DEFAULT_SPONSOR_INTERVAL_SECONDS,
   STORAGE_KEY,
   type LadderSnapshotEntry,
   type Round,
@@ -108,6 +109,7 @@ function createEmptyState(): TournamentState {
   return {
     tournamentName: '',
     showSponsors: true,
+    sponsorIntervalSeconds: DEFAULT_SPONSOR_INTERVAL_SECONDS,
     teams: [],
     postRoundLadderSnapshot: [],
     rounds: [],
@@ -130,10 +132,12 @@ function createInitialState(
   exclusionPickerId = DEFAULT_EXCLUSION_PICKER_ID,
   exclusionScorerId = DEFAULT_EXCLUSION_SCORER_ID,
   showSponsors = true,
+  sponsorIntervalSeconds = DEFAULT_SPONSOR_INTERVAL_SECONDS,
 ): TournamentState {
   return {
     tournamentName,
     showSponsors,
+    sponsorIntervalSeconds,
     teams: teams.map(t => ({ ...t })),
     postRoundLadderSnapshot: [],
     rounds: [],
@@ -166,6 +170,8 @@ function loadPersistedState(): TournamentState | null {
     parsed.tournamentName = parsed.tournamentName ?? '';
     // Migrate showSponsors if missing
     parsed.showSponsors = parsed.showSponsors ?? true;
+    // Migrate sponsorIntervalSeconds if missing
+    parsed.sponsorIntervalSeconds = parsed.sponsorIntervalSeconds ?? DEFAULT_SPONSOR_INTERVAL_SECONDS;
     // Migrate exclusionPickerId / exclusionScorerId (previously matchupAlgorithmId)
     const anyParsed2 = parsed as any;
     parsed.exclusionPickerId = parsed.exclusionPickerId ?? anyParsed2['matchupAlgorithmId'] ?? DEFAULT_EXCLUSION_PICKER_ID;
@@ -244,6 +250,10 @@ function tournamentReducer(
 
     case 'SET_SHOW_SPONSORS': {
       return { ...state, showSponsors: action.showSponsors };
+    }
+
+    case 'SET_SPONSOR_INTERVAL': {
+      return { ...state, sponsorIntervalSeconds: action.sponsorIntervalSeconds };
     }
 
     case 'SET_SETUP_ROUND_DURATION': {

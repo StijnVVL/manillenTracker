@@ -54,10 +54,12 @@ export interface TournamentState {
   status: TournamentStatus;
   timerStatus: TimerStatus;
   teamPresence: Record<string, boolean>;
+  sponsorIntervalSeconds: number;
 }
 
 export const DEFAULT_ROUND_DURATION_SECONDS = 25 * 60;
 export const DEFAULT_TOTAL_ROUNDS = 5;
+export const DEFAULT_SPONSOR_INTERVAL_SECONDS = 10;
 export const STORAGE_KEY = 'manillen-tournament';
 
 export type TournamentAction =
@@ -66,6 +68,7 @@ export type TournamentAction =
   | { type: 'UPDATE_TEAM'; teamId: string; name: string; player1: string; player2: string }
   | { type: 'SET_TOURNAMENT_NAME'; name: string }
   | { type: 'SET_SHOW_SPONSORS'; showSponsors: boolean }
+  | { type: 'SET_SPONSOR_INTERVAL'; sponsorIntervalSeconds: number }
   | { type: 'SET_TOTAL_ROUNDS'; totalRounds: number }
   | { type: 'SET_SETUP_ROUND_DURATION'; roundDurationSeconds: number }
   | { type: 'SET_TEAM_PRESENT'; teamId: string }

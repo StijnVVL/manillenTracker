@@ -3,8 +3,8 @@ import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/
 import {
   SPONSOR_IMAGE_BASE_PATH,
   SPONSOR_MANIFEST_PATH,
-  SPONSOR_CAROUSEL_INTERVAL_SECONDS,
 } from '../../data/sponsor-images';
+import { TournamentService } from '../../services/tournament.service';
 
 @Component({
   selector: 'app-sponsor-carousel',
@@ -20,14 +20,18 @@ export class SponsorCarouselComponent implements OnInit, OnDestroy {
 
   private intervalId: ReturnType<typeof setInterval> | null = null;
 
+  constructor(private tournamentService: TournamentService) {}
+
   async ngOnInit(): Promise<void> {
     const filenames = await this.loadManifest();
     this.images = filenames.map(name => `${SPONSOR_IMAGE_BASE_PATH}${name}`);
 
+    const intervalSeconds = this.tournamentService.state.sponsorIntervalSeconds;
+
     if (this.images.length > 1) {
       this.intervalId = setInterval(() => {
         this.currentIndex = (this.currentIndex + 1) % this.images.length;
-      }, SPONSOR_CAROUSEL_INTERVAL_SECONDS * 1000);
+      }, intervalSeconds * 1000);
     }
   }
 

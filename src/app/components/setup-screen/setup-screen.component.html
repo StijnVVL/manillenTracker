@@ -30,6 +30,23 @@
         {{ 'setup.showSponsorsLabel' | l10n }}
       </label>
     </div>
+
+    @if (state.showSponsors) {
+      <label class="field-label" for="setup-sponsor-interval">
+        {{ 'setup.sponsorIntervalLabel' | l10n }}
+      </label>
+      <div class="input-row">
+        <input
+          id="setup-sponsor-interval"
+          class="input-number"
+          type="number"
+          [ngModel]="state.sponsorIntervalSeconds"
+          (ngModelChange)="onSponsorIntervalChange($event)"
+          min="1"
+          max="300"
+        />
+      </div>
+    }
   </div>
 
   <!-- Round Settings -->

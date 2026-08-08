@@ -32,9 +32,7 @@ export class AppComponent implements OnInit, OnDestroy {
   menuOpen = false;
 
   headerRemainingSeconds = 0;
-  showTimerInHeader = false;
   private headerIntervalId: ReturnType<typeof setInterval> | null = null;
-  private headerToggleIntervalId: ReturnType<typeof setInterval> | null = null;
 
   constructor(
     private tournamentService: TournamentService,
@@ -54,15 +52,6 @@ export class AppComponent implements OnInit, OnDestroy {
         this.headerRemainingSeconds = Math.max(0, (round.dueAt - Date.now()) / 1000);
       }
     }, 1000);
-
-    // Toggle between name and timer every 5 seconds, only while timer is active
-    this.headerToggleIntervalId = setInterval(() => {
-      if (this.isTimerActiveOrEnded) {
-        this.showTimerInHeader = !this.showTimerInHeader;
-      } else {
-        this.showTimerInHeader = false;
-      }
-    }, 5000);
   }
 
   get isOnRoundPlayPage(): boolean {
@@ -126,7 +115,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     if (this.headerIntervalId !== null) clearInterval(this.headerIntervalId);
-    if (this.headerToggleIntervalId !== null) clearInterval(this.headerToggleIntervalId);
   }
 
   toggleMenu(): void {

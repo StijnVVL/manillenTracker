@@ -78,6 +78,13 @@ export class SetupScreenComponent implements OnInit, OnDestroy {
     this.tournamentService.dispatch({ type: 'SET_SHOW_SPONSORS', showSponsors });
   }
 
+  onSponsorIntervalChange(value: number): void {
+    const seconds = Number(value);
+    if (!isNaN(seconds) && seconds >= 1 && seconds <= 300) {
+      this.tournamentService.dispatch({ type: 'SET_SPONSOR_INTERVAL', sponsorIntervalSeconds: seconds });
+    }
+  }
+
   onDurationChange(value: number | null): void {
     this.durationError = this.validateDuration(value);
     if (!this.durationError) {
