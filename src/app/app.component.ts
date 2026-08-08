@@ -1,7 +1,8 @@
-import { Component, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 
 import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { TournamentService } from './services/tournament.service';
+import { TimerService, formatTime, getTimerColor } from './services/timer.service';
 import { ConfirmDialogService } from './services/confirm-dialog.service';
 import { L10nService } from './services/l10n.service';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
@@ -27,15 +28,72 @@ import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.componen
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './app.component.css',
 })
-export class AppComponent implements OnDestroy {
+export class AppComponent implements OnInit, OnDestroy {
   menuOpen = false;
+
+  headerRemainingSeconds = 0;
+  showTimerInHeader = false;
+  private headerIntervalId: ReturnType<typeof setInterval> | null = null;
+  private headerToggleIntervalId: ReturnType<typeof setInterval> | null = null;
 
   constructor(
     private tournamentService: TournamentService,
+    private timerService: TimerService,
     private confirmDialogService: ConfirmDialogService,
     private router: Router,
     private l10n: L10nService
   ) {}
+
+  private wasTimerActiveOrEnded = false;
+
+  ngOnInit(): void {
+    // Update remaining seconds every second
+    this.headerIntervalId = setInterval(() => {
+      const round = this.tournamentService.state.rounds?.at(-1);
+      if (round?.dueAt) {
+        this.headerRemainingSeconds = Math.max(0, (round.dueAt - Date.now()) / 1000);
+      }
+    }, 1000);
+
+    // Toggle between name and timer every 5 seconds, only while timer is active
+    this.headerToggleIntervalId = setInterval(() => {
+      if (this.isTimerActiveOrEnded) {
+        this.showTimerInHeader = !this.showTimerInHeader;
+      } else {
+        this.showTimerInHeader = false;
+      }
+    }, 5000);
+  }
+
+  get isOnRoundPlayPage(): boolean {
+    return this.router.url.includes('/play');
+  }
+
+  get isTimerActiveOrEnded(): boolean {
+    const s = this.tournamentService.state.timerStatus;
+    return (s === 'running' || s === 'ended') && !this.isOnRoundPlayPage;
+  }
+
+  get shouldShowHeaderTimer(): boolean {
+    return this.isTimerActiveOrEnded;
+  }
+
+  get headerTimerLabel(): string {
+    return `ROUND ${this.currentRoundNumber ?? 0} - `;
+  }
+
+  get headerTimerClock(): string {
+    if (this.tournamentService.state.timerStatus === 'ended') {
+      return this.l10n.get('roundScreen.roundFinished');
+    }
+    return formatTime(this.headerRemainingSeconds);
+  }
+
+  get headerTimerColor(): string {
+    const isEnded = this.tournamentService.state.timerStatus === 'ended';
+    const duration = this.tournamentService.state.roundDurationSeconds ?? null;
+    return getTimerColor(this.headerRemainingSeconds, duration, isEnded);
+  }
 
   get hasTournament(): boolean {
     return this.tournamentService.state.status !== 'none';
@@ -66,7 +124,10 @@ export class AppComponent implements OnDestroy {
     return s === 'round' || s === 'scoring' || s === 'round-winner' || s === 'finished';
   }
 
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void {
+    if (this.headerIntervalId !== null) clearInterval(this.headerIntervalId);
+    if (this.headerToggleIntervalId !== null) clearInterval(this.headerToggleIntervalId);
+  }
 
   toggleMenu(): void {
     this.menuOpen = !this.menuOpen;

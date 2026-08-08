@@ -74,19 +74,20 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
       this.loadScores();
     });
 
-    // Restore timer display and interval when navigating back to a running/paused round
+    // Restore timer display and interval when navigating back to a running/paused/ended round
     const round = getCurrentRound(this.state);
     if (round?.dueAt) {
       if (this.state.timerStatus === 'running') {
         this.remainingSeconds = (round.dueAt - Date.now()) / 1000;
         if (this.remainingSeconds > 0) {
-          this.timerService.start(round.dueAt, (timeCurrent) => this.onTick(timeCurrent));
+          this.timerService.setTickCallback((timeCurrent) => this.onTick(timeCurrent));
         } else {
           this.remainingSeconds = 0;
-          this.#endRound();
         }
       } else if (this.state.timerStatus === 'paused' && round.pausedAt) {
         this.remainingSeconds = (round.dueAt - round.pausedAt) / 1000;
+      } else if (this.state.timerStatus === 'ended') {
+        this.remainingSeconds = 0;
       }
     }
   }
@@ -116,7 +117,7 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.timerService.ngOnDestroy();
+    this.timerService.clearTickCallback();
   }
 
   get isRunning(): boolean {
@@ -158,10 +159,8 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
 
   onTick(timeCurrent: number): void {
     this.remainingSeconds = (this.currentRound?.dueAt! - timeCurrent) / 1000;
-
     if (this.remainingSeconds <= 0) {
       this.remainingSeconds = 0;
-      this.#endRound();
     }
   }
 
