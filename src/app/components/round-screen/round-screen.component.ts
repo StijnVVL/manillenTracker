@@ -151,10 +151,10 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
     var nowDate = new Date();
     var nowTimeMs = nowDate.getTime()
     var dueTimeMs = nowTimeMs + this.state.roundDurationSeconds * 1000;
-   
+
     this.remainingSeconds = (dueTimeMs - nowTimeMs) / 1000;
+    this.timerService.setTickCallback((timeCurrent) => this.onTick(timeCurrent));
     this.tournamentService.dispatch({ type: 'START_ROUND', dueTime: dueTimeMs } as TournamentAction);
-    this.timerService.start(dueTimeMs, (timeCurrent) => this.onTick(timeCurrent));
   }
 
   onTick(timeCurrent: number): void {
@@ -168,8 +168,8 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
     if (!this.currentRound?.dueAt){
       return;
     }
+    this.timerService.setTickCallback((currentTime) => this.onTick(currentTime));
     this.tournamentService.dispatch({ type: 'RESUME_ROUND' } as TournamentAction);
-    this.timerService.start(this.currentRound.dueAt, (currentTime) => this.onTick(currentTime));    
   }
 
   pauseRound(): void {

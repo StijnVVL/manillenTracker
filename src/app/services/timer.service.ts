@@ -1,4 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { TournamentService } from './tournament.service';
 import { type TournamentAction } from '../models/tournament.model';
 
@@ -8,11 +9,27 @@ import { type TournamentAction } from '../models/tournament.model';
 export class TimerService implements OnDestroy {
   private intervalId: ReturnType<typeof setInterval> | null = null;
   private tickCallback: ((timeCurrent: number) => void) | null = null;
+  private stateSub: Subscription;
 
-  constructor(private tournamentService: TournamentService) {}
+  constructor(private tournamentService: TournamentService) {
+    // Self-bootstrap: whenever state says 'running' and we have no interval, start one.
+    // This covers direct URL navigation, page refresh, and RESTORE_STATE.
+    this.stateSub = this.tournamentService.state$.subscribe(state => {
+      if (state.timerStatus === 'running' && this.intervalId === null) {
+        const dueAt = state.rounds?.at(-1)?.dueAt;
+        if (dueAt) {
+          this.startInterval(dueAt);
+        }
+      } else if (state.timerStatus !== 'running' && this.intervalId !== null) {
+        // Round paused, ended, or stopped — kill the interval
+        this.stopTimer();
+      }
+    });
+  }
 
   ngOnDestroy(): void {
     this.stopTimer();
+    this.stateSub.unsubscribe();
   }
 
   private stopTimer(): void {
@@ -20,6 +37,22 @@ export class TimerService implements OnDestroy {
       clearInterval(this.intervalId);
       this.intervalId = null;
     }
+  }
+
+  private startInterval(timeDue: number): void {
+    this.stopTimer();
+    this.intervalId = setInterval(() => {
+      const timeCurrent = Date.now();
+
+      if (timeDue - timeCurrent <= 0) {
+        this.stopTimer();
+        if (this.tournamentService.state.timerStatus === 'running') {
+          this.tournamentService.dispatch({ type: 'END_ROUND', endTime: timeCurrent } as TournamentAction);
+        }
+      }
+
+      this.tickCallback?.(timeCurrent);
+    }, 50);
   }
 
   /**
@@ -36,31 +69,6 @@ export class TimerService implements OnDestroy {
    */
   clearTickCallback(): void {
     this.tickCallback = null;
-  }
-
-  /**
-   * Start the background countdown. Dispatches END_ROUND when expired.
-   * An optional initial visual callback can be provided (same as calling setTickCallback after start).
-   */
-  start(timeDue: number, onTick?: (timeCurrent: number) => void): void {
-    this.stopTimer();
-    if (onTick) {
-      this.tickCallback = onTick;
-    }
-
-    this.intervalId = setInterval(() => {
-      const timeCurrent = Date.now();
-
-      if (timeDue - timeCurrent <= 0) {
-        this.stopTimer();
-        // Dispatch END_ROUND from the service so it fires even when the component is not mounted
-        if (this.tournamentService.state.timerStatus === 'running') {
-          this.tournamentService.dispatch({ type: 'END_ROUND', endTime: timeCurrent } as TournamentAction);
-        }
-      }
-
-      this.tickCallback?.(timeCurrent);
-    }, 50);
   }
 
   /**

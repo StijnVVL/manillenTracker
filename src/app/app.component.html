@@ -41,6 +41,7 @@
           } @else {
             <span class="menu-item menu-item-sub menu-item-disabled">{{ 'menu.results' | l10n }}</span>
           }
+          <a routerLink="/tournament/state" routerLinkActive="menu-item-active" class="menu-item menu-item-sub" (click)="closeMenu()">{{ 'menu.state' | l10n }}</a>
         }
         </div>
         <div class="menu-bottom">

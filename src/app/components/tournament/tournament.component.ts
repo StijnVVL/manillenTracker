@@ -42,6 +42,10 @@ import { L10nService } from '../../services/l10n.service';
             <span class="link-card-title">{{ 'menu.results' | l10n }}</span>
             <span class="link-card-desc">{{ 'tournament.resultsDesc' | l10n }}</span>
           </a>
+          <a routerLink="/tournament/state" class="ongoing-link-card">
+            <span class="link-card-title">{{ 'menu.state' | l10n }}</span>
+            <span class="link-card-desc">{{ 'tournament.stateDesc' | l10n }}</span>
+          </a>
         </div>
       </div>
     }

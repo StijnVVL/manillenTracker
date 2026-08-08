@@ -8,6 +8,7 @@ import { RoundScreenComponent } from './components/round-screen/round-screen.com
 import { RoundWinnerScreenComponent } from './components/round-winner-screen/round-winner-screen.component';
 import { SetupScreenComponent } from './components/setup-screen/setup-screen.component';
 import { TeamResultsScreenComponent } from './components/team-results-screen/team-results-screen.component';
+import { StateEditorComponent } from './components/state-editor/state-editor.component';
 import { tournamentGuard } from './guards/tournament.guard';
 
 export const routes: Routes = [
@@ -15,6 +16,7 @@ export const routes: Routes = [
   { path: 'tournament', component: TournamentComponent },
   { path: 'tournament/setup', component: SetupScreenComponent, canActivate: [tournamentGuard], data: { titleKey: 'pageTitle.setup' } },
   { path: 'tournament/teams', component: TeamsPageComponent, canActivate: [tournamentGuard], data: { titleKey: 'pageTitle.teams' } },
+  { path: 'tournament/state', component: StateEditorComponent, data: { titleKey: 'pageTitle.state' } },
   { path: 'tournament/round/:roundNumber/play', component: RoundScreenComponent, canActivate: [tournamentGuard], data: { titleKey: 'pageTitle.roundTimer' } },
   { path: 'tournament/round/:roundNumber/scoring', redirectTo: 'tournament/round/:roundNumber/play', pathMatch: 'full' },
   { path: 'tournament/round/:roundNumber/round-winner', component: RoundWinnerScreenComponent, canActivate: [tournamentGuard], data: { titleKey: 'pageTitle.roundWinner' } },

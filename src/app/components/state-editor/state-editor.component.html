@@ -1,0 +1,28 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1 class="page-title">{{ 'stateEditor.title' | l10n }}</h1>
+  </div>
+
+  <div class="editor-wrap">
+    <textarea
+      class="editor-textarea"
+      [(ngModel)]="jsonText"
+      (ngModelChange)="onTextChange()"
+      spellcheck="false"
+      autocomplete="off"
+      autocorrect="off"
+      autocapitalize="off"
+    ></textarea>
+
+    @if (parseError) {
+      <div class="parse-error">{{ parseError }}</div>
+    }
+  </div>
+
+  <div class="page-nav">
+    <a class="btn btn-secondary" routerLink="/tournament">{{ '< ' + ('breadcrumb.tournament' | l10n) }}</a>
+    <button class="btn btn-danger-filled" [disabled]="!isValid" (click)="save()">
+      {{ 'stateEditor.save' | l10n }}
+    </button>
+  </div>
+</div>

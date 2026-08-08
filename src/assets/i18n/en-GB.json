@@ -34,9 +34,19 @@
   "tournament.viewTeamsDesc": "View and manage the registered teams.",
   "tournament.currentRoundDesc": "Go to the current round in progress.",
   "tournament.resultsDesc": "View the standings and results so far.",
+  "tournament.stateDesc": "Inspect and directly edit the raw tournament state as JSON.",
   "pageTitle.teams": "Manage Teams",
   "pageTitle.credits": "Credits",
   "pageTitle.settings": "Settings",
+  "pageTitle.state": "State Editor",
+
+  "menu.state": "State",
+
+  "stateEditor.title": "Tournament State Editor",
+  "stateEditor.save": "Save State",
+  "stateEditor.confirmTitle": "Apply State?",
+  "stateEditor.confirmMessage": "This will overwrite the current tournament state with the edited JSON. This cannot be undone.",
+  "stateEditor.confirmSave": "Apply",
 
   "futureRound.title": "Round {roundNumber} Not Started Yet",
   "futureRound.message": "This round hasn't started yet. You can view it once the tournament progresses to this round.",

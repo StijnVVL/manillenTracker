@@ -1,0 +1,64 @@
+.page-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 1.25rem;
+  max-width: 900px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.page-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--primary-dark);
+  margin: 0;
+}
+
+/* Editor: overlapping textarea on top of the highlight layer */
+.editor-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.editor-textarea {
+  display: block;
+  width: 100%;
+  min-height: 500px;
+  padding: 0.75rem 1rem;
+  font-family: 'Consolas', 'Menlo', 'Monaco', monospace;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  box-sizing: border-box;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg-card);
+  color: var(--text);
+  resize: vertical;
+  outline: none;
+  tab-size: 2;
+}
+
+.editor-textarea:focus {
+  border-color: var(--primary);
+}
+
+.parse-error {
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  background: #fff3f3;
+  color: #c62828;
+  font-size: 0.82rem;
+  font-family: 'Consolas', 'Menlo', monospace;
+  border: 1px solid #ef9a9a;
+}
+
+.page-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 0.5rem;
+}
