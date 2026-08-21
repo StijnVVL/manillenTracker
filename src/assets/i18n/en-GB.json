@@ -40,6 +40,8 @@
   "pageTitle.settings": "Settings",
   "pageTitle.state": "State Editor",
 
+  "pageTitle.rules": "Tournament Rules",
+
   "menu.state": "State",
 
   "stateEditor.title": "Tournament State Editor",
@@ -59,6 +61,7 @@
   "menu.home": "Home",
   "menu.setup": "Setup",
   "menu.teams": "Teams",
+  "menu.rules": "Rules",
   "menu.currentRound": "Current Round",
   "menu.results": "Results",
   "menu.credits": "Credits",
@@ -80,6 +83,9 @@
   "dialog.addTeam.player1Label": "Player 1",
   "dialog.addTeam.player2Label": "Player 2",
   "dialog.addTeam.playerPlaceholder": "Player name (required to start)",
+
+  "dialog.addTeam.duplicateName": "A team with this name already exists.",
+  "dialog.addTeam.similarName": "This name is very similar to an existing team.",
 
   "dialog.editTeam.title": "Edit Team",
 
@@ -179,6 +185,21 @@
     "credits.appDescription": "A tournament tracking application for Manillen card games.",
     "credits.developmentTitle": "Development",
     "credits.builtWith": "Built with Angular",
+
+  "rules.section1.title": "General Rules",
+  "rules.section1.text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur sit amet euismod nisl.",
+  "rules.section1.bullet1": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+  "rules.section1.bullet2": "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+  "rules.section1.bullet3": "Ut enim ad minim veniam, quis nostrud exercitation.",
+  "rules.section2.title": "Scoring",
+  "rules.section2.text": "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum.",
+  "rules.section2.bullet1": "Excepteur sint occaecat cupidatat non proident.",
+  "rules.section2.bullet2": "Sunt in culpa qui officia deserunt mollit anim id est laborum.",
+  "rules.section2.bullet3": "Nemo enim ipsam voluptatem quia voluptas sit aspernatur.",
+  "rules.section3.title": "Fair Play",
+  "rules.section3.text": "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet.",
+  "rules.section3.bullet1": "Quis autem vel eum iure reprehenderit qui in ea voluptate.",
+  "rules.section3.bullet2": "At vero eos et accusamus et iusto odio dignissimos ducimus.",
 
   "matchupList.title": "This Round's Matchups",
   "matchupList.noMatchups": "No matchups scheduled.",

@@ -38,6 +38,27 @@
   "teamResults.ongoingTitle": "Toernooi bezig",
   "teamResults.ongoingMessage": "De eindrangschikking is pas beschikbaar als het toernooi is afgelopen.",
   "teamResults.notFound": "Team niet gevonden.",
-  "pageTitle.teamResults": "Teamresultaten"
+  "pageTitle.teamResults": "Teamresultaten",
+
+  "menu.rules": "Reglement",
+  "pageTitle.rules": "Toernooireglement",
+
+  "dialog.addTeam.duplicateName": "Er bestaat al een team met deze naam.",
+  "dialog.addTeam.similarName": "Deze naam lijkt sterk op een bestaand team.",
+
+  "rules.section1.title": "Algemene regels",
+  "rules.section1.text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur sit amet euismod nisl.",
+  "rules.section1.bullet1": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+  "rules.section1.bullet2": "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+  "rules.section1.bullet3": "Ut enim ad minim veniam, quis nostrud exercitation.",
+  "rules.section2.title": "Puntentelling",
+  "rules.section2.text": "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum.",
+  "rules.section2.bullet1": "Excepteur sint occaecat cupidatat non proident.",
+  "rules.section2.bullet2": "Sunt in culpa qui officia deserunt mollit anim id est laborum.",
+  "rules.section2.bullet3": "Nemo enim ipsam voluptatem quia voluptas sit aspernatur.",
+  "rules.section3.title": "Fair play",
+  "rules.section3.text": "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet.",
+  "rules.section3.bullet1": "Quis autem vel eum iure reprehenderit qui in ea voluptate.",
+  "rules.section3.bullet2": "At vero eos et accusamus et iusto odio dignissimos ducimus."
 }
 

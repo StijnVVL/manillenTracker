@@ -151,6 +151,16 @@ function createInitialState(
   };
 }
 
+function backupPersistedState(): void {
+  if (typeof localStorage === 'undefined') return;
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) return;
+  const now = new Date();
+  const pad = (n: number) => String(n).padStart(2, '0');
+  const stamp = `${pad(now.getDate())}.${pad(now.getMonth() + 1)}.${now.getFullYear()}-${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+  localStorage.setItem(`${STORAGE_KEY}.${stamp}`, raw);
+}
+
 function loadPersistedState(): TournamentState | null {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -461,6 +471,7 @@ function tournamentReducer(
 
     case 'STOP_TOURNAMENT':
       if (typeof localStorage !== 'undefined') {
+        backupPersistedState();
         localStorage.removeItem(STORAGE_KEY);
       }
       return createEmptyState();

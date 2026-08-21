@@ -112,3 +112,17 @@
   cursor: pointer;
   font-size: 0.95rem;
 }
+
+.field-message {
+  margin: 0.4rem 0 0 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.field-message--error {
+  color: var(--danger, #d32f2f);
+}
+
+.field-message--warning {
+  color: var(--warning, #e08e0b);
+}

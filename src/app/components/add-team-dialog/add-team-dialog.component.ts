@@ -5,6 +5,7 @@ import { AddTeamDialogService, TeamDialogData } from '../../services/add-team-di
 import { L10nService } from '../../services/l10n.service';
 import { L10nPipe } from '../../pipes/l10n.pipe';
 import { Subscription } from 'rxjs';
+import { normalizeTeamName, levenshteinDistance } from '../../utils/teams';
 
 @Component({
   selector: 'app-add-team-dialog',
@@ -22,6 +23,7 @@ export class AddTeamDialogComponent implements OnInit, OnDestroy {
   player2 = '';
   showPresenceCheckbox = false;
   markAsPresent = true;
+  private existingNames: string[] = [];
   private subscription: Subscription | null = null;
 
   constructor(
@@ -34,6 +36,7 @@ export class AddTeamDialogComponent implements OnInit, OnDestroy {
       this.mode = data.mode;
       this.showPresenceCheckbox = data.showPresenceCheckbox ?? false;
       this.markAsPresent = true;
+      this.existingNames = data.existingNames ?? [];
       if (data.mode === 'edit' && data.team) {
         this.teamName = data.team.name;
         this.player1 = data.team.player1;
@@ -71,15 +74,39 @@ export class AddTeamDialogComponent implements OnInit, OnDestroy {
     return this.mode === 'edit' ? 'common.save' : 'common.add';
   }
 
+  /** Smallest Levenshtein distance between the normalized name and any existing team name. */
+  get minNameDistance(): number {
+    const normalized = normalizeTeamName(this.teamName);
+    if (!normalized || this.existingNames.length === 0) return Infinity;
+    let min = Infinity;
+    for (const existing of this.existingNames) {
+      const distance = levenshteinDistance(normalized, normalizeTeamName(existing));
+      if (distance < min) min = distance;
+      if (min === 0) break;
+    }
+    return min;
+  }
+
+  /** Exact duplicate (distance 0) — blocks submission. */
+  get isDuplicateName(): boolean {
+    return this.minNameDistance === 0;
+  }
+
+  /** Close but not exact (distance 1-5) — warns but allows submission. */
+  get isSimilarName(): boolean {
+    const d = this.minNameDistance;
+    return d >= 1 && d <= 5;
+  }
+
   get isValid(): boolean {
-    return this.teamName.trim().length > 0;
+    return normalizeTeamName(this.teamName).length > 0 && !this.isDuplicateName;
   }
 
   onSubmit(): void {
     if (this.isValid) {
       this.isOpen = false;
       this.addTeamDialogService.respond({
-        name: this.teamName.trim(),
+        name: normalizeTeamName(this.teamName),
         player1: this.player1.trim(),
         player2: this.player2.trim(),
         markAsPresent: this.showPresenceCheckbox ? this.markAsPresent : undefined,

@@ -86,6 +86,7 @@
 
 .col-actions {
   display: flex;
+  align-items: center;
   gap: 0.25rem;
   justify-content: flex-end;
 }

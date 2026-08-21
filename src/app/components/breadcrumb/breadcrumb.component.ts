@@ -96,6 +96,7 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
     const url = this.currentUrl;
     if (url.includes('/setup')) return 'menu.setup';
     if (url.includes('/teams')) return 'menu.teams';
+    if (url.includes('/rules')) return 'menu.rules';
     if (url.includes('/state')) return 'menu.state';
     if (url.includes('/finished')) return 'pageTitle.finished';
     if (url.includes('/results/')) return 'pageTitle.teamResults';
@@ -117,6 +118,11 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
         labelKey: 'menu.teams',
         url: ['/tournament/teams'],
         active: url.includes('/teams'),
+      },
+      {
+        labelKey: 'menu.rules',
+        url: ['/tournament/rules'],
+        active: url.includes('/rules'),
       },
     ];
 

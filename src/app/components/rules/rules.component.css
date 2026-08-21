@@ -1,0 +1,38 @@
+.rules-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.rules-section {
+  background: var(--bg-card);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  box-shadow: var(--shadow);
+}
+
+.rules-section h2 {
+  color: var(--primary);
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+}
+
+.rules-section p {
+  margin: 0 0 0.75rem 0;
+  color: var(--muted);
+}
+
+.rules-bullets {
+  margin: 0;
+  padding-left: 1.25rem;
+  color: var(--muted);
+}
+
+.rules-bullets li {
+  margin-bottom: 0.35rem;
+}
+
+.rules-bullets li:last-child {
+  margin-bottom: 0;
+}

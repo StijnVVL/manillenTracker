@@ -32,6 +32,7 @@
         @if (hasTournament) {
           <a routerLink="/tournament/setup" routerLinkActive="menu-item-active" class="menu-item menu-item-sub" (click)="closeMenu()">{{ 'menu.setup' | l10n }}</a>
           <a routerLink="/tournament/teams" routerLinkActive="menu-item-active" class="menu-item menu-item-sub" (click)="closeMenu()">{{ 'menu.teams' | l10n }}</a>
+          <a routerLink="/tournament/rules" routerLinkActive="menu-item-active" class="menu-item menu-item-sub" (click)="closeMenu()">{{ 'menu.rules' | l10n }}</a>
           @if (isPostSetup && currentRoundNumber !== null) {
             <a [routerLink]="['/tournament/round', currentRoundNumber, currentRoundSubRoute]" routerLinkActive="menu-item-active" class="menu-item menu-item-sub" (click)="closeMenu()">{{ 'menu.currentRound' | l10n }}</a>
           } @else {

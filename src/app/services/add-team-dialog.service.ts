@@ -6,6 +6,8 @@ export interface TeamDialogData {
   mode: 'add' | 'edit';
   team?: Team;
   showPresenceCheckbox?: boolean;
+  /** Names of other existing teams, used for uniqueness validation. */
+  existingNames?: string[];
 }
 
 export interface TeamDialogResult {
@@ -24,8 +26,8 @@ export class AddTeamDialogService {
 
   dialog$ = this.dialogSubject.asObservable();
 
-  openAdd(showPresenceCheckbox = false): Promise<TeamDialogResult | null> {
-    this.dialogSubject.next({ mode: 'add', showPresenceCheckbox });
+  openAdd(showPresenceCheckbox = false, existingNames: string[] = []): Promise<TeamDialogResult | null> {
+    this.dialogSubject.next({ mode: 'add', showPresenceCheckbox, existingNames });
     return new Promise<TeamDialogResult | null>((resolve) => {
       const subscription = this.responseSubject.subscribe((result) => {
         subscription.unsubscribe();
@@ -34,8 +36,8 @@ export class AddTeamDialogService {
     });
   }
 
-  openEdit(team: Team): Promise<TeamDialogResult | null> {
-    this.dialogSubject.next({ mode: 'edit', team });
+  openEdit(team: Team, existingNames: string[] = []): Promise<TeamDialogResult | null> {
+    this.dialogSubject.next({ mode: 'edit', team, existingNames });
     return new Promise<TeamDialogResult | null>((resolve) => {
       const subscription = this.responseSubject.subscribe((result) => {
         subscription.unsubscribe();

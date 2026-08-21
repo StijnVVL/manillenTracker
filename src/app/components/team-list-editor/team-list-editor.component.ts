@@ -79,12 +79,14 @@ export class TeamListEditorComponent {
   }
 
   async openAddTeamDialog(): Promise<void> {
-    const result = await this.addTeamDialogService.openAdd(this.teamPresence !== null);
+    const existingNames = this.teams.map(t => t.name);
+    const result = await this.addTeamDialogService.openAdd(this.teamPresence !== null, existingNames);
     if (result) this.teamAdded.emit(result);
   }
 
   async openEditTeamDialog(team: Team): Promise<void> {
-    const result = await this.addTeamDialogService.openEdit(team);
+    const existingNames = this.teams.filter(t => t.id !== team.id).map(t => t.name);
+    const result = await this.addTeamDialogService.openEdit(team, existingNames);
     if (result) this.teamEdited.emit({ teamId: team.id, ...result });
   }
 

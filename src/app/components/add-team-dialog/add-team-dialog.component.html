@@ -14,6 +14,11 @@
             (keydown)="onKeydown($event)"
             [placeholder]="l10n.get('dialog.addTeam.placeholder')"
           />
+          @if (isDuplicateName) {
+            <p class="field-message field-message--error">{{ 'dialog.addTeam.duplicateName' | l10n }}</p>
+          } @else if (isSimilarName) {
+            <p class="field-message field-message--warning">{{ 'dialog.addTeam.similarName' | l10n }}</p>
+          }
         </div>
         <div class="form-group">
           <label class="field-label" for="player1-input">{{ 'dialog.addTeam.player1Label' | l10n }}</label>
