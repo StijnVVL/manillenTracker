@@ -1,4 +1,4 @@
-.algorithm-selector {
+.select-dropdown {
   margin-bottom: 0.5rem;
 }
 
@@ -40,7 +40,7 @@
   cursor: default;
 }
 
-.algorithm-name {
+.option-name {
   flex: 1;
 }
 

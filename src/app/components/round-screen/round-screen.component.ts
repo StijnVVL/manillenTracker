@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TournamentService } from '../../services/tournament.service';
 import { TimerService, formatTime } from '../../services/timer.service';
 import { L10nPipe } from '../../pipes/l10n.pipe';
@@ -21,7 +21,8 @@ import { getExclusionScorerById } from '../../logic/matchup-algorithm';
     CountdownTimerComponent,
     SponsorCarouselComponent,
     L10nPipe,
-    SvgIconComponent
+    SvgIconComponent,
+    RouterLink
   ],
   templateUrl: './round-screen.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,

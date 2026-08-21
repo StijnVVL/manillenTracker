@@ -2,11 +2,12 @@ import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
 import { formatTime, getTimerColor } from '../../services/timer.service';
 import { L10nService } from '../../services/l10n.service';
+import { L10nPipe } from '../../pipes/l10n.pipe';
 
 @Component({
   selector: 'app-countdown-timer',
   standalone: true,
-  imports: [],
+  imports: [L10nPipe],
   templateUrl: './countdown-timer.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styles: [':host { display: block; width: 100%; }'],

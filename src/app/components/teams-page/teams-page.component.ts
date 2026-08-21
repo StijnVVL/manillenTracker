@@ -45,7 +45,7 @@ export class TeamsPageComponent implements OnInit, OnDestroy {
   get hasTeamWithTags(): boolean {
     return this.state.teams.length < 2 || this.state.teams.some(t => {
       const missingInfo = !t.name?.trim() || !t.player1?.trim() || !t.player2?.trim();
-      const absent = !this.state.teamPresence[t.id];
+      const absent = !t.present;
       return missingInfo || absent;
     });
   }

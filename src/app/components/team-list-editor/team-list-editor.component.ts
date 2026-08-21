@@ -17,8 +17,8 @@ import { Team } from '../../models/tournament.model';
 })
 export class TeamListEditorComponent {
   @Input() teams: Team[] = [];
-  /** When non-null, presence check-in buttons are shown. */
-  @Input() teamPresence: Record<string, boolean> | null = null;
+  /** When true, presence check-in buttons and counter are shown (tournament state only). */
+  @Input() showPresence = false;
   /** When true, all mutating actions (add, edit, remove, presence) are hidden. */
   @Input() readonly = false;
   /** When true, missing-info tags use orange (warning) styling instead of red (danger). */
@@ -27,8 +27,8 @@ export class TeamListEditorComponent {
   @Input() showCounters = true;
 
   get presentCount(): number {
-    if (!this.teamPresence) return 0;
-    return Object.values(this.teamPresence).filter(Boolean).length;
+    if (!this.showPresence) return 0;
+    return this.teams.filter(t => t.present).length;
   }
 
   get fullInfoCount(): number {
@@ -36,7 +36,7 @@ export class TeamListEditorComponent {
   }
 
   get presenceIsFull(): boolean {
-    return this.teamPresence !== null && this.presentCount === this.teams.length;
+    return this.showPresence && this.presentCount === this.teams.length;
   }
 
   get infoIsFull(): boolean {
@@ -61,7 +61,7 @@ export class TeamListEditorComponent {
   ) {}
 
   isPresent(team: Team): boolean {
-    return this.teamPresence !== null && !!this.teamPresence[team.id];
+    return this.showPresence && !!team.present;
   }
 
   isMissingInfo(team: Team): boolean {
@@ -80,7 +80,7 @@ export class TeamListEditorComponent {
 
   async openAddTeamDialog(): Promise<void> {
     const existingNames = this.teams.map(t => t.name);
-    const result = await this.addTeamDialogService.openAdd(this.teamPresence !== null, existingNames);
+    const result = await this.addTeamDialogService.openAdd(this.showPresence, existingNames);
     if (result) this.teamAdded.emit(result);
   }
 

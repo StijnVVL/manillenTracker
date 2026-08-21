@@ -2,31 +2,30 @@ import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from 
 import { L10nPipe } from '../../pipes/l10n.pipe';
 import { ClickOutsideDirective } from '../../directives/click-outside.directive';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
-import { EXCLUSION_PICKERS } from '../../logic/matchup-algorithm';
 
-export interface AlgorithmOption {
+export interface SelectDropdownOption {
   readonly id: string;
   readonly nameKey: string;
-  readonly descriptionKey: string;
+  readonly descriptionKey?: string;
 }
 
 @Component({
-  selector: 'app-algorithm-selector',
+  selector: 'app-select-dropdown',
   standalone: true,
   imports: [L10nPipe, ClickOutsideDirective, SvgIconComponent],
-  templateUrl: './algorithm-selector.component.html',
+  templateUrl: './select-dropdown.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
-  styleUrl: './algorithm-selector.component.css',
+  styleUrl: './select-dropdown.component.css',
 })
-export class AlgorithmSelectorComponent {
-  @Input() options: AlgorithmOption[] = EXCLUSION_PICKERS;
-  @Input() selectedId: string = EXCLUSION_PICKERS[0].id;
+export class SelectDropdownComponent {
+  @Input() options: SelectDropdownOption[] = [];
+  @Input() selectedId: string = '';
   @Input() disabled: boolean = false;
   @Output() selectedIdChange = new EventEmitter<string>();
 
   isOpen = false;
 
-  get currentOption(): AlgorithmOption | undefined {
+  get currentOption(): SelectDropdownOption | undefined {
     return this.options.find(o => o.id === this.selectedId);
   }
 
@@ -38,7 +37,7 @@ export class AlgorithmSelectorComponent {
     this.isOpen = false;
   }
 
-  select(option: AlgorithmOption): void {
+  select(option: SelectDropdownOption): void {
     this.selectedIdChange.emit(option.id);
     this.isOpen = false;
   }

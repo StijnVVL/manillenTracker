@@ -1,7 +1,7 @@
 <div class="teams-container">
   <app-team-list-editor
     [teams]="state.teams"
-    [teamPresence]="state.teamPresence"
+    [showPresence]="true"
     [readonly]="!isSetup"
     [showCounters]="isSetup"
     [showStartButton]="false"
@@ -13,10 +13,12 @@
     (teamAbsent)="onTeamAbsent($event)"
     (startTournament)="startTournament()"
   />
-  @if (isSetup) {
-    <div class="page-nav teams-page-nav">
-      <button type="button" class="btn btn-secondary" routerLink="/tournament/setup">&#8592; {{ 'nav.setup' | l10n }}</button>
+  <div class="page-nav teams-page-nav">
+    <button type="button" class="btn btn-secondary" routerLink="/tournament/setup">&#8592; {{ 'nav.setup' | l10n }}</button>
+    @if (isSetup) {
       <button type="button" class="btn" [class.btn-primary]="!hasTeamWithTags" [class.btn-secondary]="hasTeamWithTags" [disabled]="hasTeamWithTags" (click)="startTournament()">{{ 'nav.startTournament' | l10n }} &#8594;</button>
-    </div>
-  }
+    } @else {
+      <button type="button" class="btn btn-primary" routerLink="/tournament/rules">{{ 'nav.rules' | l10n }} &#8594;</button>
+    }
+  </div>
 </div>

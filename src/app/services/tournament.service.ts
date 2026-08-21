@@ -6,6 +6,8 @@ import {
   DEFAULT_ROUND_DURATION_SECONDS,
   DEFAULT_TOTAL_ROUNDS,
   DEFAULT_SPONSOR_INTERVAL_SECONDS,
+  DEFAULT_POINTS_60_0,
+  sanitizePoints60_0,
   STORAGE_KEY,
   type LadderSnapshotEntry,
   type Round,
@@ -14,7 +16,6 @@ import {
   type TournamentAction,
 } from '../models/tournament.model';
 import { SettingsService } from './settings.service';
-import { DUMMY_TEAM_PRESENCE, USE_DUMMY_DATA } from '../data/dummy-teams';
 
 function createTeam(name: string, player1: string, player2: string): Team {
   return { id: crypto.randomUUID(), name: name.trim(), player1: player1.trim(), player2: player2.trim() };
@@ -119,7 +120,7 @@ function createEmptyState(): TournamentState {
     exclusionScorerId: DEFAULT_EXCLUSION_SCORER_ID,
     status: 'none',
     timerStatus: 'idle',
-    teamPresence: {},
+    points60_0: DEFAULT_POINTS_60_0,
   };
 }
 
@@ -128,11 +129,11 @@ function createInitialState(
   teams: Team[] = [],
   roundDurationSeconds = DEFAULT_ROUND_DURATION_SECONDS,
   tournamentName = '',
-  teamPresence: Record<string, boolean> = {},
   exclusionPickerId = DEFAULT_EXCLUSION_PICKER_ID,
   exclusionScorerId = DEFAULT_EXCLUSION_SCORER_ID,
   showSponsors = true,
   sponsorIntervalSeconds = DEFAULT_SPONSOR_INTERVAL_SECONDS,
+  points60_0 = DEFAULT_POINTS_60_0,
 ): TournamentState {
   return {
     tournamentName,
@@ -147,7 +148,7 @@ function createInitialState(
     exclusionScorerId,
     status: 'setup',
     timerStatus: 'idle',
-    teamPresence,
+    points60_0,
   };
 }
 
@@ -168,14 +169,16 @@ function loadPersistedState(): TournamentState | null {
     const parsed = JSON.parse(raw) as TournamentState;
     const anyParsed = parsed as any;
     if (!parsed.teams || (!Array.isArray(parsed.postRoundLadderSnapshot) && !Array.isArray(anyParsed['ladder']))) return null;
-    // Migrate existing teams to include player names if missing
+    // Migrate existing teams to include player names if missing,
+    // and merge legacy teamPresence record into per-team present flags.
+    const legacyPresence = (anyParsed['teamPresence'] ?? {}) as Record<string, boolean>;
     parsed.teams = parsed.teams.map(team => ({
       ...team,
       player1: team.player1 ?? '',
       player2: team.player2 ?? '',
+      present: team.present ?? !!legacyPresence[team.id],
     }));
-    // Migrate teamPresence if missing
-    parsed.teamPresence = parsed.teamPresence ?? {};
+    delete anyParsed['teamPresence'];
     // Migrate tournamentName if missing
     parsed.tournamentName = parsed.tournamentName ?? '';
     // Migrate showSponsors if missing
@@ -186,6 +189,8 @@ function loadPersistedState(): TournamentState | null {
     const anyParsed2 = parsed as any;
     parsed.exclusionPickerId = parsed.exclusionPickerId ?? anyParsed2['matchupAlgorithmId'] ?? DEFAULT_EXCLUSION_PICKER_ID;
     parsed.exclusionScorerId = parsed.exclusionScorerId ?? DEFAULT_EXCLUSION_SCORER_ID;
+    // Migrate points60_0 if missing
+    parsed.points60_0 = sanitizePoints60_0(parsed.points60_0);
     // Migrate postRoundLadderSnapshot (old field was 'ladder': string[])
     if (!Array.isArray(parsed.postRoundLadderSnapshot)) {
       parsed.postRoundLadderSnapshot = [];
@@ -231,9 +236,6 @@ function tournamentReducer(
       return {
         ...state,
         teams: state.teams.filter((t) => t.id !== action.teamId),
-        teamPresence: Object.fromEntries(
-          Object.entries(state.teamPresence).filter(([id]) => id !== action.teamId)
-        ),
       };
 
     case 'UPDATE_TEAM':
@@ -273,13 +275,12 @@ function tournamentReducer(
 
     case 'SET_TEAM_PRESENT': {
       if (state.status !== 'setup') return state;
-      return { ...state, teamPresence: { ...state.teamPresence, [action.teamId]: true } };
+      return { ...state, teams: state.teams.map((t) => t.id === action.teamId ? { ...t, present: true } : t) };
     }
 
     case 'SET_TEAM_ABSENT': {
       if (state.status !== 'setup') return state;
-      const { [action.teamId]: _, ...rest } = state.teamPresence;
-      return { ...state, teamPresence: rest };
+      return { ...state, teams: state.teams.map((t) => t.id === action.teamId ? { ...t, present: false } : t) };
     }
 
     case 'SET_TOTAL_ROUNDS': {
@@ -289,6 +290,14 @@ function tournamentReducer(
       return {
         ...state,
         totalRounds
+      };
+    }
+
+    case 'SET_POINTS_60_0_TOURNAMENT': {
+      if (state.status !== 'setup') return state;
+      return {
+        ...state,
+        points60_0: sanitizePoints60_0(action.points60_0),
       };
     }
 
@@ -480,8 +489,7 @@ function tournamentReducer(
       if (typeof localStorage !== 'undefined') {
         localStorage.removeItem(STORAGE_KEY);
       }
-      const initialPresence = USE_DUMMY_DATA ? DUMMY_TEAM_PRESENCE : {};
-      return createInitialState(action.defaultTotalRounds, action.teams, action.roundDurationSeconds, action.tournamentName, initialPresence, action.exclusionPickerId, action.exclusionScorerId);
+      return createInitialState(action.defaultTotalRounds, action.teams, action.roundDurationSeconds, action.tournamentName, action.exclusionPickerId, action.exclusionScorerId, true, DEFAULT_SPONSOR_INTERVAL_SECONDS, action.points60_0);
     }
 
     case 'RESTORE_STATE':
@@ -536,6 +544,7 @@ export class TournamentService {
         tournamentName: s.defaultTournamentName,
         exclusionPickerId: s.exclusionPickerId,
         exclusionScorerId: s.exclusionScorerId,
+        points60_0: s.points60_0,
       };
     }
     const newState = tournamentReducer(this.stateSubject.value, processedAction);

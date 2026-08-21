@@ -3,6 +3,8 @@ export interface Team {
   name: string;
   player1: string;
   player2: string;
+  /** Presence flag - only applicable in tournament state (not general settings state). */
+  present?: boolean;
 }
 
 export interface Matchup {
@@ -53,13 +55,20 @@ export interface TournamentState {
   exclusionScorerId: string;
   status: TournamentStatus;
   timerStatus: TimerStatus;
-  teamPresence: Record<string, boolean>;
   sponsorIntervalSeconds: number;
+  points60_0: number;
 }
 
 export const DEFAULT_ROUND_DURATION_SECONDS = 25 * 60;
 export const DEFAULT_TOTAL_ROUNDS = 5;
 export const DEFAULT_SPONSOR_INTERVAL_SECONDS = 10;
+export const POINTS_60_0_OPTIONS = [30, 60] as const;
+export const DEFAULT_POINTS_60_0 = 30;
+
+export function sanitizePoints60_0(value: unknown): number {
+  const n = Math.round(Number(value));
+  return (POINTS_60_0_OPTIONS as readonly number[]).includes(n) ? n : DEFAULT_POINTS_60_0;
+}
 export const STORAGE_KEY = 'manillen-tournament';
 
 export type TournamentAction =
@@ -70,6 +79,7 @@ export type TournamentAction =
   | { type: 'SET_SHOW_SPONSORS'; showSponsors: boolean }
   | { type: 'SET_SPONSOR_INTERVAL'; sponsorIntervalSeconds: number }
   | { type: 'SET_TOTAL_ROUNDS'; totalRounds: number }
+  | { type: 'SET_POINTS_60_0_TOURNAMENT'; points60_0: number }
   | { type: 'SET_SETUP_ROUND_DURATION'; roundDurationSeconds: number }
   | { type: 'SET_TEAM_PRESENT'; teamId: string }
   | { type: 'SET_TEAM_ABSENT'; teamId: string }
@@ -83,7 +93,7 @@ export type TournamentAction =
   | { type: 'UPDATE_SCORES'; scores: Record<string, number> }
   | { type: 'SUBMIT_SCORES'; scores: Record<string, number> }
   | { type: 'NEXT_ROUND' }
-  | { type: 'RESET_TOURNAMENT'; defaultTotalRounds?: number; teams?: Team[]; roundDurationSeconds?: number; tournamentName?: string; exclusionPickerId?: string; exclusionScorerId?: string }
+  | { type: 'RESET_TOURNAMENT'; defaultTotalRounds?: number; teams?: Team[]; roundDurationSeconds?: number; tournamentName?: string; exclusionPickerId?: string; exclusionScorerId?: string; points60_0?: number }
   | { type: 'SET_EXCLUSION_PICKER_TOURNAMENT'; exclusionPickerId: string }
   | { type: 'SET_EXCLUSION_SCORER_TOURNAMENT'; exclusionScorerId: string }
   | { type: 'STOP_TOURNAMENT' }

@@ -77,7 +77,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   get headerTimerLabel(): string {
-    return 'ROUND ';
+    return this.l10n.get('header.roundLabel') + ' ';
   }
 
   get headerTimerClock(): string {

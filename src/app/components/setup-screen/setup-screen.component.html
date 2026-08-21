@@ -94,10 +94,21 @@
     />
     <p class="field-hint">{{ 'setup.totalRoundsHint' | l10n }}</p>
 
+    <label class="field-label" for="setup-points-60-0">
+      {{ 'settings.points60_0Label' | l10n }}
+    </label>
+    <app-select-dropdown
+      [options]="points60_0Options"
+      [selectedId]="selectedPoints60_0Id"
+      [disabled]="!isSetup"
+      (selectedIdChange)="onPoints60_0Change($event)"
+    />
+    <p class="field-hint">{{ 'settings.points60_0Hint' | l10n }}</p>
+
     <label class="field-label" for="setup-exclusion-picker">
       {{ 'settings.exclusionPickerLabel' | l10n }}
     </label>
-    <app-algorithm-selector
+    <app-select-dropdown
       [options]="exclusionPickers"
       [selectedId]="state.exclusionPickerId"
       [disabled]="!isSetup"
@@ -109,7 +120,7 @@
     <label class="field-label" for="setup-exclusion-scorer">
       {{ 'settings.exclusionScorerLabel' | l10n }}
     </label>
-    <app-algorithm-selector
+    <app-select-dropdown
       [options]="exclusionScorers"
       [selectedId]="state.exclusionScorerId"
       [disabled]="!isSetup"
@@ -119,17 +130,15 @@
     <p class="field-hint">{{ (currentScorerOption?.descriptionKey ?? '') | l10n }}</p>
   </div>
 
-  @if (isSetup) {
-    <div class="page-nav">
-      <span></span>
-      <button
-        type="button"
-        class="btn btn-primary"
-        (click)="goToTeams()"
-      >
-        {{ 'setup.setupTeams' | l10n }} &#8594;
-      </button>
-    </div>
-  }
+  <div class="page-nav">
+    <span></span>
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="goToTeams()"
+    >
+      {{ 'setup.setupTeams' | l10n }} &#8594;
+    </button>
+  </div>
 </div>
 

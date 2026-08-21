@@ -8,7 +8,8 @@ import { L10nPipe } from '../../pipes/l10n.pipe';
 import { L10nService } from '../../services/l10n.service';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { TournamentState } from '../../models/tournament.model';
-import { AlgorithmSelectorComponent } from '../algorithm-selector/algorithm-selector.component';
+import { POINTS_60_0_OPTIONS } from '../../models/tournament.model';
+import { SelectDropdownComponent } from '../select-dropdown/select-dropdown.component';
 import { EXCLUSION_PICKERS, EXCLUSION_SCORERS } from '../../logic/matchup-algorithm';
 import type { ExclusionPicker, ExclusionScorer } from '../../logic/matchup-algorithm';
 import { Subscription } from 'rxjs';
@@ -16,7 +17,7 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-setup-screen',
   standalone: true,
-  imports: [CommonModule, FormsModule, L10nPipe, SvgIconComponent, AlgorithmSelectorComponent],
+  imports: [CommonModule, FormsModule, L10nPipe, SvgIconComponent, SelectDropdownComponent],
   templateUrl: './setup-screen.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './setup-screen.component.css',
@@ -24,6 +25,10 @@ import { Subscription } from 'rxjs';
 export class SetupScreenComponent implements OnInit, OnDestroy {
   readonly exclusionPickers: ExclusionPicker[] = EXCLUSION_PICKERS;
   readonly exclusionScorers: ExclusionScorer[] = EXCLUSION_SCORERS;
+  readonly points60_0Options = POINTS_60_0_OPTIONS.map(value => ({
+    id: String(value),
+    nameKey: `settings.points60_0Option${value}`,
+  }));
   state: TournamentState;
 
   durationValue: number;
@@ -57,7 +62,7 @@ export class SetupScreenComponent implements OnInit, OnDestroy {
   get hasTeamWithTags(): boolean {
     return this.state.teams.some(t => {
       const missingInfo = !t.name?.trim() || !t.player1?.trim() || !t.player2?.trim();
-      const absent = !this.state.teamPresence[t.id];
+      const absent = !t.present;
       return missingInfo || absent;
     });
   }
@@ -97,6 +102,14 @@ export class SetupScreenComponent implements OnInit, OnDestroy {
 
   onTotalRoundsChange(totalRounds: number): void {
     this.tournamentService.dispatch({ type: 'SET_TOTAL_ROUNDS', totalRounds });
+  }
+
+  onPoints60_0Change(points60_0: string): void {
+    this.tournamentService.dispatch({ type: 'SET_POINTS_60_0_TOURNAMENT', points60_0: Number(points60_0) });
+  }
+
+  get selectedPoints60_0Id(): string {
+    return String(this.state.points60_0);
   }
 
   get currentPickerOption() {

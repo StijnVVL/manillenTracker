@@ -6,7 +6,7 @@
         <app-svg-icon [name]="infoIsFull ? 'check' : 'alert-triangle'" [width]="14" [height]="14" />
         {{ 'teams.infoCounter' | l10n:{ count: fullInfoCount, total: teams.length } }}
       </span>
-      @if (teamPresence !== null) {
+      @if (showPresence) {
         <span class="counter-item" [class.counter-ok]="presenceIsFull" [class.counter-warn]="!presenceIsFull">
           <app-svg-icon [name]="presenceIsFull ? 'check' : 'alert-triangle'" [width]="14" [height]="14" />
           {{ 'setup.presenceCounter' | l10n:{ present: presentCount, total: teams.length } }}
@@ -54,7 +54,7 @@
           <span class="col-name">{{ team.name }}</span>
           @if (!readonly) {
             <span class="col-actions">
-              @if (teamPresence !== null) {
+              @if (showPresence) {
                 <button
                   type="button"
                   class="btn-status-tag"

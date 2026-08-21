@@ -66,10 +66,20 @@
     </div>
     <p class="field-hint">{{ 'settings.totalRoundsHint' | l10n }}</p>
 
+    <label class="field-label" for="settings-points-60-0">
+      {{ 'settings.points60_0Label' | l10n }}
+    </label>
+    <app-select-dropdown
+      [options]="points60_0Options"
+      [selectedId]="selectedPoints60_0Id"
+      (selectedIdChange)="onPoints60_0Change($event)"
+    />
+    <p class="field-hint">{{ 'settings.points60_0Hint' | l10n }}</p>
+
     <label class="field-label">
       {{ 'settings.exclusionPickerLabel' | l10n }}
     </label>
-    <app-algorithm-selector
+    <app-select-dropdown
       [options]="exclusionPickers"
       [selectedId]="settingsState.exclusionPickerId"
       (selectedIdChange)="onExclusionPickerChange($event)"
@@ -80,7 +90,7 @@
     <label class="field-label">
       {{ 'settings.exclusionScorerLabel' | l10n }}
     </label>
-    <app-algorithm-selector
+    <app-select-dropdown
       [options]="exclusionScorers"
       [selectedId]="settingsState.exclusionScorerId"
       (selectedIdChange)="onExclusionScorerChange($event)"

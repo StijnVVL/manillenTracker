@@ -170,7 +170,7 @@
   @if (roundNumber > 1) {
     <button type="button" class="btn btn-secondary" (click)="goToPrevRound()">&#8592; {{ 'nav.prevRound' | l10n:{roundNumber: roundNumber - 1} }}</button>
   } @else {
-    <span></span>
+    <button type="button" class="btn btn-secondary" routerLink="/tournament/rules">&#8592; {{ 'nav.rules' | l10n }}</button>
   }
   <div class="timer-controls">
     @if (isIdle && isCurrentRound) {

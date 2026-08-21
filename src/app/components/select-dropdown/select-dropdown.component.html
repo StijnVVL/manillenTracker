@@ -1,4 +1,4 @@
-<div class="algorithm-selector">
+<div class="select-dropdown">
   <div class="dropdown-container" (clickOutside)="closeDropdown()">
     <button
       type="button"
@@ -8,7 +8,7 @@
       [attr.aria-expanded]="isOpen"
       [attr.aria-disabled]="disabled"
     >
-      <span class="algorithm-name">{{ (currentOption?.nameKey ?? '') | l10n }}</span>
+      <span class="option-name">{{ (currentOption?.nameKey ?? '') | l10n }}</span>
       <span class="dropdown-arrow" [class.open]="isOpen">
         <app-svg-icon name="chevron-down" [width]="16" [height]="16" />
       </span>
@@ -23,7 +23,7 @@
             [class.selected]="option.id === selectedId"
             (click)="select(option)"
           >
-            <span class="algorithm-name">{{ option.nameKey | l10n }}</span>
+            <span class="option-name">{{ option.nameKey | l10n }}</span>
             @if (option.id === selectedId) {
               <span class="check-icon">
                 <app-svg-icon name="check" [width]="16" [height]="16" />

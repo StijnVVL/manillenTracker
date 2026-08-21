@@ -7,14 +7,15 @@ import { LanguageSelectorComponent } from '../language-selector/language-selecto
 import { TeamListEditorComponent } from '../team-list-editor/team-list-editor.component';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { SettingsState } from '../../models/settings.model';
-import { AlgorithmSelectorComponent } from '../algorithm-selector/algorithm-selector.component';
+import { POINTS_60_0_OPTIONS } from '../../models/tournament.model';
+import { SelectDropdownComponent } from '../select-dropdown/select-dropdown.component';
 import { EXCLUSION_PICKERS, EXCLUSION_SCORERS } from '../../logic/matchup-algorithm';
 import type { ExclusionPicker, ExclusionScorer } from '../../logic/matchup-algorithm';
 
 @Component({
   selector: 'app-settings',
   standalone: true,
-  imports: [CommonModule, FormsModule, L10nPipe, LanguageSelectorComponent, TeamListEditorComponent, SvgIconComponent, AlgorithmSelectorComponent],
+  imports: [CommonModule, FormsModule, L10nPipe, LanguageSelectorComponent, TeamListEditorComponent, SvgIconComponent, SelectDropdownComponent],
   templateUrl: './settings.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './settings.component.css'
@@ -22,6 +23,10 @@ import type { ExclusionPicker, ExclusionScorer } from '../../logic/matchup-algor
 export class SettingsComponent implements OnInit {
   readonly exclusionPickers: ExclusionPicker[] = EXCLUSION_PICKERS;
   readonly exclusionScorers: ExclusionScorer[] = EXCLUSION_SCORERS;
+  readonly points60_0Options = POINTS_60_0_OPTIONS.map(value => ({
+    id: String(value),
+    nameKey: `settings.points60_0Option${value}`,
+  }));
   settingsState: SettingsState;
 
   durationValue: number;
@@ -90,6 +95,14 @@ export class SettingsComponent implements OnInit {
 
   onExclusionScorerChange(exclusionScorerId: string): void {
     this.settingsService.dispatch({ type: 'SET_EXCLUSION_SCORER', exclusionScorerId });
+  }
+
+  onPoints60_0Change(points60_0: string): void {
+    this.settingsService.dispatch({ type: 'SET_POINTS_60_0', points60_0: Number(points60_0) });
+  }
+
+  get selectedPoints60_0Id(): string {
+    return String(this.settingsState.points60_0);
   }
 
   private validateDuration(value: number | null): string | null {

@@ -7,9 +7,11 @@ import {
   DEFAULT_ROUND_DURATION_MINUTES,
   DEFAULT_TOTAL_ROUNDS,
   DEFAULT_TOURNAMENT_NAME,
+  DEFAULT_POINTS_60_0,
   SETTINGS_STORAGE_KEY,
   sanitizeRoundDurationMinutes,
   sanitizeTotalRounds,
+  sanitizePoints60_0,
   type SettingsAction,
   type SettingsState,
   type SupportedLanguage,
@@ -29,6 +31,7 @@ function createDefaultSettings(): SettingsState {
     language: DEFAULT_LANGUAGE,
     exclusionPickerId: DEFAULT_EXCLUSION_PICKER_ID,
     exclusionScorerId: DEFAULT_EXCLUSION_SCORER_ID,
+    points60_0: DEFAULT_POINTS_60_0,
     teams: USE_DUMMY_DATA ? [...DUMMY_TEAMS] : [],
   };
 }
@@ -47,6 +50,7 @@ function loadPersistedSettings(): SettingsState {
         : DEFAULT_LANGUAGE,
       exclusionPickerId: typeof parsed.exclusionPickerId === 'string' ? parsed.exclusionPickerId : ((parsed as any)['matchupAlgorithmId'] ?? DEFAULT_EXCLUSION_PICKER_ID),
       exclusionScorerId: typeof parsed.exclusionScorerId === 'string' ? parsed.exclusionScorerId : DEFAULT_EXCLUSION_SCORER_ID,
+      points60_0: sanitizePoints60_0(parsed.points60_0),
       teams: Array.isArray(parsed.teams) ? parsed.teams : (USE_DUMMY_DATA ? [...DUMMY_TEAMS] : []),
     };
   } catch {
@@ -73,6 +77,9 @@ function settingsReducer(state: SettingsState, action: SettingsAction): Settings
 
     case 'SET_EXCLUSION_SCORER':
       return { ...state, exclusionScorerId: action.exclusionScorerId };
+
+    case 'SET_POINTS_60_0':
+      return { ...state, points60_0: sanitizePoints60_0(action.points60_0) };
 
     case 'ADD_SETTINGS_TEAM': {
       const name = action.name.trim();

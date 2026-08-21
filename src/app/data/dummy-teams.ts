@@ -29,12 +29,8 @@ export const DUMMY_TEAMS: Team[] = Array.from({ length: 20 }, (_, i) => ({
   name: DUMMY_TEAM_NAMES[i % DUMMY_TEAM_NAMES.length],
   player1: DUMMY_PLAYER_NAMES[(i * 2) % DUMMY_PLAYER_NAMES.length],
   player2: DUMMY_PLAYER_NAMES[(i * 2 + 1) % DUMMY_PLAYER_NAMES.length],
+  present: true,
 }));
-
-// All teams present
-export const DUMMY_TEAM_PRESENCE: Record<string, boolean> = Object.fromEntries(
-  DUMMY_TEAMS.map(t => [t.id, true])
-);
 
 /**
  * Set to true to load dummy teams on startup (when no persisted state exists).

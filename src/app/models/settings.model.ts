@@ -1,4 +1,5 @@
 import { Team } from './tournament.model';
+import { DEFAULT_POINTS_60_0, sanitizePoints60_0 } from './tournament.model';
 import { DEFAULT_EXCLUSION_PICKER_ID, DEFAULT_EXCLUSION_SCORER_ID } from '../logic/matchup-algorithm';
 
 export type SupportedLanguage = 'en-GB' | 'nl-BE';
@@ -20,6 +21,7 @@ export interface SettingsState {
   language: SupportedLanguage;
   exclusionPickerId: string;
   exclusionScorerId: string;
+  points60_0: number;
   teams: Team[];
 }
 
@@ -31,6 +33,7 @@ export const MAX_TOTAL_ROUNDS = 10;
 export const DEFAULT_LANGUAGE: SupportedLanguage = 'en-GB';
 export const SETTINGS_STORAGE_KEY = 'manillen-settings';
 export { DEFAULT_EXCLUSION_PICKER_ID, DEFAULT_EXCLUSION_SCORER_ID };
+export { DEFAULT_POINTS_60_0, sanitizePoints60_0 };
 
 export type SettingsAction =
   | { type: 'SET_DEFAULT_TOURNAMENT_NAME'; name: string }
@@ -39,6 +42,7 @@ export type SettingsAction =
   | { type: 'SET_LANGUAGE'; language: SupportedLanguage }
   | { type: 'SET_EXCLUSION_PICKER'; exclusionPickerId: string }
   | { type: 'SET_EXCLUSION_SCORER'; exclusionScorerId: string }
+  | { type: 'SET_POINTS_60_0'; points60_0: number }
   | { type: 'ADD_SETTINGS_TEAM'; name: string; player1: string; player2: string; id?: string }
   | { type: 'REMOVE_SETTINGS_TEAM'; teamId: string }
   | { type: 'UPDATE_SETTINGS_TEAM'; teamId: string; name: string; player1: string; player2: string };
