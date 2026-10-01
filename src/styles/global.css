@@ -283,6 +283,13 @@ select.input:disabled {
   font-variant-numeric: tabular-nums;
 }
 
+.countdown-colon {
+  display: inline-block;
+  vertical-align: baseline;
+  transform: translateY(-0.09em);
+  margin: 0 0.02em;
+}
+
 .countdown-warning {
   color: var(--danger);
 }

@@ -44,4 +44,28 @@ export class CountdownTimerComponent {
 
     return formatTime(0);
   }
+
+  /**
+   * The time split into numeric segments (e.g. ['24','35']) so the template can
+   * render raised colons between them like a digital sleep clock. Empty when the
+   * timer is showing non-numeric text (e.g. "round finished").
+   */
+  get timeSegments(): string[] {
+    if (this.isEnded) return [];
+    return this.formattedTime.split(':');
+  }
+
+  /**
+   * Opacity of the colon, synced to the live countdown: jumps to 1 (fully
+   * opaque) exactly when the second changes, then fades down to 0.2 just before
+   * the next second. When there is no live countdown (idle/paused) it stays
+   * fully opaque.
+   */
+  get colonOpacity(): number {
+    if (this.remainingSeconds === null || this.remainingSeconds <= 0) return 1;
+    const fraction = this.remainingSeconds - Math.floor(this.remainingSeconds);
+    // Counting down: fraction is ~1 right after a second change, ~0 just before
+    // the next. Map that to 1 -> 0.2.
+    return 0.2 + 0.8 * fraction;
+  }
 }

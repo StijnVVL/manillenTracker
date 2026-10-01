@@ -4,6 +4,12 @@
     <span class="round-number">{{ roundNumber }}</span>
   </div>
   <div class="countdown" [style.color]="timerColor">
-    {{ formattedTime }}
+    @if (timeSegments.length > 0) {
+      @for (seg of timeSegments; track $index) {
+        @if (!$first) {<span class="countdown-colon" [style.opacity]="colonOpacity">:</span>}<span class="countdown-segment">{{ seg }}</span>
+      }
+    } @else {
+      {{ formattedTime }}
+    }
   </div>
 </section>
