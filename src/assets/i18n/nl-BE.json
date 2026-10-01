@@ -227,7 +227,7 @@
   "roundScreen.pauseRound": "Ronde pauzeren",
   "roundScreen.resumeRound": "Ronde hervatten",
   "roundScreen.endRound": "Ronde beëindigen",
-  "roundScreen.roundFinished": "TIJD OM",
+  "roundScreen.roundFinished": "STOP",
   "roundScreen.toRoundWinner": "Winnaar ronde {roundNumber}",
   "roundScreen.viewTables": "Tafels bekijken",
   "nav.setup": "Opzet",
