@@ -150,6 +150,10 @@ export class RoundWinnerScreenComponent implements OnInit {
 
   goToNext(): void {
     if (this.isLastRound) {
+      // Finalize the tournament (status -> 'finished') before showing results.
+      if (this.isCurrentRound && this.state.status === 'round-winner') {
+        this.tournamentService.dispatch({ type: 'NEXT_ROUND' });
+      }
       this.goToTeamResults();
       return;
     }

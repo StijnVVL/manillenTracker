@@ -105,15 +105,25 @@ export class TeamResultsScreenComponent implements OnInit {
     return '';
   }
 
+  /** Position shown on the "previous" button (one rank lower), or null if none. */
+  get previousPosition(): number | null {
+    return this.position < this.totalTeams ? this.position + 1 : null;
+  }
+
+  /** Position shown on the "next" button (one rank higher), or null if none. */
+  get nextPosition(): number | null {
+    return this.position > 1 ? this.position - 1 : null;
+  }
+
   goToPrevious(): void {
-    if (this.position > 1) {
-      this.router.navigate(['/tournament/results', this.position - 1]);
+    if (this.position < this.totalTeams) {
+      this.router.navigate(['/tournament/results', this.position + 1]);
     }
   }
 
   goToNext(): void {
-    if (this.position < this.totalTeams) {
-      this.router.navigate(['/tournament/results', this.position + 1]);
+    if (this.position > 1) {
+      this.router.navigate(['/tournament/results', this.position - 1]);
     }
   }
 

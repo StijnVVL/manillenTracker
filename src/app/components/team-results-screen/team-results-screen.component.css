@@ -16,6 +16,10 @@
 .position-heading {
   text-align: center;
   line-height: 1;
+  height: 6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .medal-emoji {
@@ -114,9 +118,35 @@
   justify-content: center;
 }
 
+.setup-actions {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  width: 100%;
+  margin-top: 1.5rem;
+}
+
+.setup-actions .back-btn {
+  justify-self: start;
+}
+
+.setup-actions .nav-buttons {
+  grid-column: 2;
+}
+
+.nav-step-btn {
+  min-width: 5rem;
+  justify-content: center;
+}
+
 .no-results {
   text-align: center;
   padding: 2rem;
+}
+
+.nav-position {
+  font-weight: 700;
+  opacity: 0.85;
 }
 
 @media (max-width: 480px) {

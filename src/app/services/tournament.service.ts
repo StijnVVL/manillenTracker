@@ -475,7 +475,7 @@ function tournamentReducer(
     case 'NEXT_ROUND': {
       const currentRound = getCurrentRound(state)!;
       const isFinalRound = currentRound.number === state.totalRounds;
-      if (state.rounds.length >= state.totalRounds){
+      if (!isFinalRound && state.rounds.length >= state.totalRounds){
         return state;
       }
 
@@ -709,9 +709,11 @@ const UNDOABLE_COMMANDS: Record<UndoableActionType, UndoableCommand> = {
     up(state, cmd) {
       const currentRound = getCurrentRound(state);
       if (!currentRound) return state;
-      if (state.rounds.length >= state.totalRounds) return state;
 
       const isFinalRound = currentRound.number === state.totalRounds;
+      // Block only appending a new round past the limit; the final round must
+      // still be allowed to transition the tournament to 'finished'.
+      if (!isFinalRound && state.rounds.length >= state.totalRounds) return state;
 
       // Capture prior flow state and (for non-final rounds) the generated round,
       // so down() can reverse exactly and redo() reproduces the same round.

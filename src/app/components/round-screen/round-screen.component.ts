@@ -164,6 +164,11 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
     return this.state.timerStatus === 'idle';
   }
 
+  /** True once the tournament has been finalized (final round submitted). */
+  get isFinished(): boolean {
+    return this.state.status === 'finished';
+  }
+
   get isRoundEnded(): boolean {
     return this.displayRound?.endedAt !== null && this.displayRound?.endedAt !== undefined;
   }
@@ -210,7 +215,7 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
   }
 
   async goToRoundWinner(): Promise<void> {
-    if (this.isCurrentRound) {
+    if (this.isCurrentRound && !this.isFinished) {
       if (this.isIdle) {
         const confirmed = await this.confirmDialogService.confirm({
           title: this.l10n.get('dialog.goToRoundWinner.notStartedTitle'),
