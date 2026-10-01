@@ -43,6 +43,27 @@ export interface Round {
 export type TournamentStatus = 'none' | 'setup' | 'round' | 'scoring' | 'round-winner' | 'finished';
 export type TimerStatus = 'idle' | 'running' | 'paused' | 'ended';
 
+/**
+ * A recorded undoable command: the original action plus a memento holding any
+ * non-deterministic artifacts (e.g. generated ids / rounds) and prior-state
+ * values captured when the command's up() first ran. Mementos make down()
+ * self-contained and redo() deterministic.
+ */
+export interface CommandRecord {
+  type: UndoableActionType;
+  action: TournamentAction;
+  memento: Record<string, unknown>;
+}
+
+export type UndoableActionType =
+  | 'ADD_TEAM'
+  | 'REMOVE_TEAM'
+  | 'UPDATE_TEAM'
+  | 'START_ROUND'
+  | 'END_ROUND'
+  | 'SUBMIT_SCORES'
+  | 'NEXT_ROUND';
+
 export interface TournamentState {
   tournamentName: string;
   showSponsors: boolean;
@@ -57,6 +78,10 @@ export interface TournamentState {
   timerStatus: TimerStatus;
   sponsorIntervalSeconds: number;
   points60_0: number;
+  /** Ordered list of executed undoable commands (oldest first). Persisted at root. */
+  undoStack: CommandRecord[];
+  /** Commands that were undone and can be redone (most-recently-undone last). Persisted at root. */
+  redoStack: CommandRecord[];
 }
 
 export const DEFAULT_ROUND_DURATION_SECONDS = 25 * 60;

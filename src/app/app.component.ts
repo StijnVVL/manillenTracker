@@ -1,6 +1,8 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 
+import { AsyncPipe } from '@angular/common';
 import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
+import { Observable } from 'rxjs';
 import { TournamentService } from './services/tournament.service';
 import { TimerService, formatTime, getTimerColor } from './services/timer.service';
 import { ConfirmDialogService } from './services/confirm-dialog.service';
@@ -22,7 +24,8 @@ import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.componen
     AddTeamDialogComponent,
     ScoreEditDialogComponent,
     L10nPipe,
-    BreadcrumbComponent
+    BreadcrumbComponent,
+    AsyncPipe
   ],
   templateUrl: './app.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
@@ -30,6 +33,9 @@ import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.componen
 })
 export class AppComponent implements OnInit, OnDestroy {
   menuOpen = false;
+
+  readonly canUndo$: Observable<boolean>;
+  readonly canRedo$: Observable<boolean>;
 
   headerRemainingSeconds = 0;
   private headerIntervalId: ReturnType<typeof setInterval> | null = null;
@@ -40,7 +46,10 @@ export class AppComponent implements OnInit, OnDestroy {
     private confirmDialogService: ConfirmDialogService,
     private router: Router,
     private l10n: L10nService
-  ) {}
+  ) {
+    this.canUndo$ = this.tournamentService.canUndo$;
+    this.canRedo$ = this.tournamentService.canRedo$;
+  }
 
   private wasTimerActiveOrEnded = false;
 
@@ -128,6 +137,14 @@ export class AppComponent implements OnInit, OnDestroy {
 
   toggleMenu(): void {
     this.menuOpen = !this.menuOpen;
+  }
+
+  undo(): void {
+    this.tournamentService.undo();
+  }
+
+  redo(): void {
+    this.tournamentService.redo();
   }
 
   closeMenu(): void {

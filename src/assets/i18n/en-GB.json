@@ -57,8 +57,9 @@
   "futurePage.message": "The current round hasn't progressed to this stage yet. You can view this page once the round advances.",
 
   "menu.tournament": "Tournament",
+  "menu.undo": "Undo",
+  "menu.redo": "Redo",
   "menu.home": "Home",
-  "menu.setup": "Setup",
   "menu.teams": "Teams",
   "menu.rules": "Rules",
   "menu.currentRound": "Current Round",

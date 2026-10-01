@@ -57,6 +57,8 @@
   "futurePage.message": "De huidige ronde is nog niet tot deze fase gevorderd. Je kunt deze pagina bekijken zodra de ronde verder gaat.",
 
   "menu.tournament": "Toernooi",
+  "menu.undo": "Ongedaan maken",
+  "menu.redo": "Opnieuw",
   "menu.home": "Start",
   "menu.setup": "Opzet",
   "menu.teams": "Teams",

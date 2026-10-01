@@ -73,6 +73,7 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
       this.roundDiffs = getLatestRoundDiffs(state);
       this.teamMap = new Map(state.teams.map(t => [t.id, t]));
       this.loadScores();
+      this.syncTimerDisplay();
     });
 
     // Restore timer display and interval when navigating back to a running/paused/ended round
@@ -91,6 +92,36 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
         this.remainingSeconds = 0;
       }
     }
+  }
+
+  /**
+   * Recompute the displayed remaining time from the current state. Needed so
+   * external state changes (e.g. undo/redo of START_ROUND/END_ROUND) reset the
+   * timer display instead of leaving it frozen at the last ticked value.
+   */
+  private syncTimerDisplay(): void {
+    const round = this.currentRound;
+    const status = this.state.timerStatus;
+
+    if (status === 'running' && round?.dueAt) {
+      this.remainingSeconds = (round.dueAt - Date.now()) / 1000;
+      if (this.remainingSeconds <= 0) this.remainingSeconds = 0;
+      return;
+    }
+
+    if (status === 'paused' && round?.dueAt && round.pausedAt) {
+      this.remainingSeconds = (round.dueAt - round.pausedAt) / 1000;
+      return;
+    }
+
+    if (status === 'ended') {
+      this.remainingSeconds = 0;
+      return;
+    }
+
+    // Idle (e.g. after undoing START_ROUND): clear the tick-driven value so the
+    // timer falls back to showing the full static round duration.
+    this.remainingSeconds = null;
   }
 
   checkIfFutureRound(): void {

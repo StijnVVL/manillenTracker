@@ -141,6 +141,44 @@
   flex: 1;
 }
 
+.menu-toolbar {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.25rem 1rem 0.5rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.toolbar-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem;
+  flex: 1;
+  padding: 0.5rem 0.25rem;
+  background: transparent;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 6px;
+  color: var(--primary-dark);
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background 0.2s ease, opacity 0.2s ease;
+}
+
+.toolbar-btn:hover:not(:disabled) {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.toolbar-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.toolbar-icon {
+  font-size: 1.3rem;
+  line-height: 1;
+}
+
 .menu-bottom {
   border-top: 1px solid rgba(0, 0, 0, 0.1);
   padding-top: 0.5rem;
