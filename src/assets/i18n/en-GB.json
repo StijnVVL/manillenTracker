@@ -1,6 +1,7 @@
 {
   "common.cancel": "Cancel",
   "common.close": "Close",
+  "common.ok": "OK",
   "common.add": "Add",
   "common.save": "Save",
   "common.confirm": "Confirm",
@@ -227,6 +228,7 @@
   "roundScreen.endRound": "End Round",
   "roundScreen.roundFinished": "TIME'S UP",
   "roundScreen.toRoundWinner": "Round {roundNumber} Winner",
+  "roundScreen.viewTables": "View Tables",
   "nav.setup": "Setup",
   "nav.teams": "Teams",
   "nav.rules": "Rules",

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, HostListener } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TournamentService } from '../../services/tournament.service';
 import { TimerService, formatTime } from '../../services/timer.service';
@@ -44,6 +44,9 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
   tooltipTeamId: string | null = null;
   tooltipX: number = 0;
   tooltipY: number = 0;
+
+  isTablesDialogOpen: boolean = false;
+  tablesDialogIndex: number = 0;
 
   constructor(
     private tournamentService: TournamentService,
@@ -452,6 +455,44 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
     if (!this.displayRound) return [];
     const mid = Math.ceil(this.displayRound.matchups.length / 2);
     return this.displayRound.matchups.slice(mid);
+  }
+
+  get allMatchups(): Matchup[] {
+    return this.displayRound?.matchups ?? [];
+  }
+
+  get tablesDialogMatchup(): Matchup | null {
+    return this.allMatchups[this.tablesDialogIndex] ?? null;
+  }
+
+  get hasPrevTable(): boolean {
+    return this.tablesDialogIndex > 0;
+  }
+
+  get hasNextTable(): boolean {
+    return this.tablesDialogIndex < this.allMatchups.length - 1;
+  }
+
+  openTablesDialog(): void {
+    this.tablesDialogIndex = 0;
+    this.isTablesDialogOpen = true;
+  }
+
+  closeTablesDialog(): void {
+    this.isTablesDialogOpen = false;
+  }
+
+  @HostListener('document:keydown.escape')
+  onTablesDialogEscape(): void {
+    if (this.isTablesDialogOpen) this.closeTablesDialog();
+  }
+
+  prevTable(): void {
+    if (this.hasPrevTable) this.tablesDialogIndex--;
+  }
+
+  nextTable(): void {
+    if (this.hasNextTable) this.tablesDialogIndex++;
   }
 
   get excludedTeamScore(): number {

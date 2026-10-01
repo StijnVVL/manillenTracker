@@ -1,6 +1,7 @@
 {
   "common.cancel": "Annuleren",
   "common.close": "Sluiten",
+  "common.ok": "OK",
   "common.add": "Toevoegen",
   "common.save": "Opslaan",
   "common.confirm": "Bevestigen",
@@ -228,6 +229,7 @@
   "roundScreen.endRound": "Ronde beëindigen",
   "roundScreen.roundFinished": "TIJD OM",
   "roundScreen.toRoundWinner": "Winnaar ronde {roundNumber}",
+  "roundScreen.viewTables": "Tafels bekijken",
   "nav.setup": "Opzet",
   "nav.teams": "Teams",
   "nav.rules": "Reglement",

@@ -173,6 +173,11 @@
     <button type="button" class="btn btn-secondary" routerLink="/tournament/rules">&#8592; {{ 'nav.rules' | l10n }}</button>
   }
   <div class="timer-controls">
+    @if (allMatchups.length > 0) {
+      <button type="button" class="btn btn-secondary" (click)="openTablesDialog()">
+        {{ 'roundScreen.viewTables' | l10n }}
+      </button>
+    }
     @if (isIdle && isCurrentRound && !isFinished) {
       <button type="button" class="btn btn-primary" (click)="startRound()">
         {{ 'roundScreen.startRound' | l10n }}
@@ -234,5 +239,37 @@
     } @else {
       <div class="team-tooltip-row team-tooltip-muted">No stats yet</div>
     }
+  </div>
+}
+
+@if (isTablesDialogOpen && tablesDialogMatchup) {
+  <div class="dialog-overlay" (click)="closeTablesDialog()">
+    <div class="tables-dialog-box" (click)="$event.stopPropagation()">
+      <button class="dialog-close" (click)="closeTablesDialog()" [title]="'common.close' | l10n">&#x2715;</button>
+      <div class="tables-dialog-content">
+        <div class="tables-dialog-table">
+          <div class="tables-dialog-table-label">{{ 'common.table' | l10n }}</div>
+          <div class="tables-dialog-table-number">{{ tablesDialogIndex + 1 }}</div>
+        </div>
+        <div class="tables-dialog-teams">
+          <span class="tables-dialog-team">{{ getTeamName(tablesDialogMatchup.teamAId) }}</span>
+          <span class="tables-dialog-vs">{{ 'common.vs' | l10n }}</span>
+          <span class="tables-dialog-team">{{ getTeamName(tablesDialogMatchup.teamBId) }}</span>
+        </div>
+      </div>
+      <div class="tables-dialog-footer">
+        <div class="tables-dialog-carousel">
+          <button type="button" class="btn btn-secondary nav-step-btn" (click)="prevTable()" [disabled]="!hasPrevTable">
+            &#8592; <span class="nav-position">#{{ hasPrevTable ? tablesDialogIndex : '#' }}</span>
+          </button>
+          <button type="button" class="btn btn-secondary nav-step-btn" (click)="nextTable()" [disabled]="!hasNextTable">
+            <span class="nav-position">#{{ hasNextTable ? tablesDialogIndex + 2 : '#' }}</span> &#8594;
+          </button>
+        </div>
+        <div class="tables-dialog-actions">
+          <button type="button" class="btn btn-primary" (click)="closeTablesDialog()">{{ 'common.close' | l10n }}</button>
+        </div>
+      </div>
+    </div>
   </div>
 }
