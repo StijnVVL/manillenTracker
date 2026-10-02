@@ -242,20 +242,30 @@
   </div>
 }
 
-@if (isTablesDialogOpen && tablesDialogMatchup) {
-  <div class="dialog-overlay" (click)="closeTablesDialog()">
+@if (isTablesDialogOpen && (tablesDialogMatchup || isByeSlide)) {
+  <div class="dialog-overlay" (pointerdown)="onTablesOverlayPointerDown($event)" (click)="onTablesOverlayClick($event)">
     <div class="tables-dialog-box" (click)="$event.stopPropagation()">
       <button class="dialog-close" (click)="closeTablesDialog()" [title]="'common.close' | l10n">&#x2715;</button>
       <div class="tables-dialog-content">
-        <div class="tables-dialog-table">
-          <div class="tables-dialog-table-label">{{ 'common.table' | l10n }}</div>
-          <div class="tables-dialog-table-number">{{ tablesDialogIndex + 1 }}</div>
-        </div>
-        <div class="tables-dialog-teams">
-          <span class="tables-dialog-team">{{ getTeamName(tablesDialogMatchup.teamAId) }}</span>
-          <span class="tables-dialog-vs">{{ 'common.vs' | l10n }}</span>
-          <span class="tables-dialog-team">{{ getTeamName(tablesDialogMatchup.teamBId) }}</span>
-        </div>
+        @if (isByeSlide) {
+          <div class="tables-dialog-table">
+            <div class="tables-dialog-table-label">{{ 'common.table' | l10n }}</div>
+            <div class="tables-dialog-table-number tables-dialog-table-number--bye"><app-svg-icon name="no-entrance" [width]="144" [height]="144" /></div>
+          </div>
+          <div class="tables-dialog-teams">
+            <span class="tables-dialog-team">{{ getTeamName(displayRound!.excludedTeamId!) }}</span>
+          </div>
+        } @else if (tablesDialogMatchup) {
+          <div class="tables-dialog-table">
+            <div class="tables-dialog-table-label">{{ 'common.table' | l10n }}</div>
+            <div class="tables-dialog-table-number">{{ tablesDialogIndex + 1 }}</div>
+          </div>
+          <div class="tables-dialog-teams">
+            <span class="tables-dialog-team">{{ getTeamName(tablesDialogMatchup.teamAId) }}</span>
+            <span class="tables-dialog-vs">{{ 'common.vs' | l10n }}</span>
+            <span class="tables-dialog-team">{{ getTeamName(tablesDialogMatchup.teamBId) }}</span>
+          </div>
+        }
       </div>
       <div class="tables-dialog-footer">
         <div class="tables-dialog-carousel">
@@ -263,7 +273,11 @@
             &#8592; <span class="nav-position">#{{ hasPrevTable ? tablesDialogIndex : '#' }}</span>
           </button>
           <button type="button" class="btn btn-secondary nav-step-btn" (click)="nextTable()" [disabled]="!hasNextTable">
-            <span class="nav-position">#{{ hasNextTable ? tablesDialogIndex + 2 : '#' }}</span> &#8594;
+            @if (isNextSlideBye) {
+              <span class="nav-position"><app-svg-icon name="no-entrance" [width]="14" [height]="14" /></span> &#8594;
+            } @else {
+              <span class="nav-position">#{{ hasNextTable ? tablesDialogIndex + 2 : '#' }}</span> &#8594;
+            }
           </button>
         </div>
         <div class="tables-dialog-actions">

@@ -465,12 +465,24 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
     return this.allMatchups[this.tablesDialogIndex] ?? null;
   }
 
+  get tablesDialogSlideCount(): number {
+    return this.allMatchups.length + (this.displayRound?.excludedTeamId ? 1 : 0);
+  }
+
+  get isByeSlide(): boolean {
+    return !!this.displayRound?.excludedTeamId && this.tablesDialogIndex === this.allMatchups.length;
+  }
+
+  get isNextSlideBye(): boolean {
+    return !!this.displayRound?.excludedTeamId && this.tablesDialogIndex + 1 === this.allMatchups.length;
+  }
+
   get hasPrevTable(): boolean {
     return this.tablesDialogIndex > 0;
   }
 
   get hasNextTable(): boolean {
-    return this.tablesDialogIndex < this.allMatchups.length - 1;
+    return this.tablesDialogIndex < this.tablesDialogSlideCount - 1;
   }
 
   openTablesDialog(): void {
@@ -480,6 +492,19 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
 
   closeTablesDialog(): void {
     this.isTablesDialogOpen = false;
+  }
+
+  private tablesOverlayPressStarted = false;
+
+  onTablesOverlayPointerDown(event: PointerEvent): void {
+    this.tablesOverlayPressStarted = event.target === event.currentTarget;
+  }
+
+  onTablesOverlayClick(event: MouseEvent): void {
+    if (this.tablesOverlayPressStarted && event.target === event.currentTarget) {
+      this.closeTablesDialog();
+    }
+    this.tablesOverlayPressStarted = false;
   }
 
   @HostListener('document:keydown.escape')

@@ -347,6 +347,18 @@
   color: var(--primary-dark);
 }
 
+.tables-dialog-table-number--bye {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 1em;
+}
+
+.tables-dialog-table-number--bye app-svg-icon {
+  display: block;
+  transform: translateY(0.07em);
+}
+
 .tables-dialog-teams {
   display: flex;
   flex-direction: column;
