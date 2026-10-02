@@ -4,10 +4,12 @@ import { ConfirmDialogService, ConfirmDialogData } from '../../services/confirm-
 import { L10nService } from '../../services/l10n.service';
 import { Subscription } from 'rxjs';
 
+import { ModalDialogDirective } from '../../directives/modal-dialog.directive';
+
 @Component({
   selector: 'app-confirm-dialog',
   standalone: true,
-  imports: [FormsModule],
+  imports: [ModalDialogDirective, FormsModule],
   templateUrl: './confirm-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './confirm-dialog.component.css'

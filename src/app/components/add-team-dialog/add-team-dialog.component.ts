@@ -7,10 +7,12 @@ import { L10nPipe } from '../../pipes/l10n.pipe';
 import { Subscription } from 'rxjs';
 import { normalizeTeamName, levenshteinDistance } from '../../utils/teams';
 
+import { ModalDialogDirective } from '../../directives/modal-dialog.directive';
+
 @Component({
   selector: 'app-add-team-dialog',
   standalone: true,
-  imports: [FormsModule, L10nPipe],
+  imports: [ModalDialogDirective, FormsModule, L10nPipe],
   templateUrl: './add-team-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './add-team-dialog.component.css'

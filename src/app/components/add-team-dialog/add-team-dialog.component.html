@@ -1,5 +1,5 @@
 @if (isOpen) {
-  <div class="dialog-overlay">
+  <div class="dialog-overlay" modalDialog>
     <div class="dialog-box">
       <button class="dialog-close" (click)="onCancel()" [title]="l10n.get('common.close')">&#x2715;</button>
       <h2 class="dialog-title">{{ titleKey | l10n }}</h2>

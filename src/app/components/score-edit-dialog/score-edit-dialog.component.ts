@@ -6,10 +6,12 @@ import { L10nPipe } from '../../pipes/l10n.pipe';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { Subscription } from 'rxjs';
 
+import { ModalDialogDirective } from '../../directives/modal-dialog.directive';
+
 @Component({
   selector: 'app-score-edit-dialog',
   standalone: true,
-  imports: [FormsModule, L10nPipe, SvgIconComponent],
+  imports: [ModalDialogDirective, FormsModule, L10nPipe, SvgIconComponent],
   templateUrl: './score-edit-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './score-edit-dialog.component.css'

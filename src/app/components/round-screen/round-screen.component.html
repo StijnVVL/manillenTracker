@@ -243,7 +243,7 @@
 }
 
 @if (isTablesDialogOpen && (tablesDialogMatchup || isByeSlide)) {
-  <div class="dialog-overlay" (pointerdown)="onTablesOverlayPointerDown($event)" (click)="onTablesOverlayClick($event)">
+  <div class="dialog-overlay" modalDialog (pointerdown)="onTablesOverlayPointerDown($event)" (click)="onTablesOverlayClick($event)">
     <div class="tables-dialog-box" (click)="$event.stopPropagation()">
       <button class="dialog-close" (click)="closeTablesDialog()" [title]="'common.close' | l10n">&#x2715;</button>
       <div class="tables-dialog-content">
@@ -269,10 +269,10 @@
       </div>
       <div class="tables-dialog-footer">
         <div class="tables-dialog-carousel">
-          <button type="button" class="btn btn-secondary nav-step-btn" (click)="prevTable()" [disabled]="!hasPrevTable">
+          <button type="button" class="btn btn-secondary nav-step-btn" (click)="prevTable()" [style.visibility]="hasPrevTable ? null : 'hidden'">
             &#8592; <span class="nav-position">#{{ hasPrevTable ? tablesDialogIndex : '#' }}</span>
           </button>
-          <button type="button" class="btn btn-secondary nav-step-btn" (click)="nextTable()" [disabled]="!hasNextTable">
+          <button type="button" class="btn btn-secondary nav-step-btn" (click)="nextTable()" [style.visibility]="hasNextTable ? null : 'hidden'">
             @if (isNextSlideBye) {
               <span class="nav-position"><app-svg-icon name="no-entrance" [width]="14" [height]="14" /></span> &#8594;
             } @else {

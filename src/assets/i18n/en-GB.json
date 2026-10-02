@@ -30,6 +30,7 @@
   "tournament.startNewTournamentDesc": "Set up and start a brand new tournament.",
   "tournament.setupDesc": "Configure tournament settings and round options.",
   "tournament.viewTeamsDesc": "View and manage the registered teams.",
+  "tournament.rulesDesc": "View the tournament, round and manillen rules.",
   "tournament.currentRoundDesc": "Go to the current round in progress.",
   "tournament.resultsDesc": "View the standings and results so far.",
   "tournament.stateDesc": "Inspect and directly edit the raw tournament state as JSON.",
@@ -194,8 +195,10 @@
 
   "rules.tournament.title": "Tournament Rules",
   "rules.tournament.bullet1": "A ladder system with {rounds} rounds is used where each round allows a team to improve or worsen its position on the ladder. The team ranked #1 after the last round has ended, wins the tournament.",
+  "rules.tournament.ranking": "Ladder position is determined by the number of matches won, and secondly by cumulative score.",
   "rules.tournament.bullet2": "Initial ladder team positions are random.",
   "rules.round.title": "Round Rules",
+  "rules.round.pairing": "Each round, team #1 plays against team #2, team #3 against team #4, etc.",
   "rules.round.bullet1": "Each round lasts {minutes} minutes.",
   "rules.round.bullet2": "The match ends (= no new games can start at this table) when both these conditions are met:",
   "rules.round.bullet2Condition1": "an even number of manillen games has been played",
@@ -206,6 +209,7 @@
   "rules.manillen.bullet2": "The dealer's teammate cannot pick up his cards until the trump colour was chosen by the dealer.",
   "rules.manillen.bullet3": "If possible, must follow colour.",
   "rules.manillen.bullet4": "If the opposite team currently has the winning card on the table, you must play a card above that winning card.",
+  "rules.manillen.underTrump": "Undertrumping is not allowed, unless there is no other option.",
   "rules.manillen.bullet5": "A team winning a game with 60-0 gains {points} points.",
 
   "matchupList.title": "This Round's Matchups",

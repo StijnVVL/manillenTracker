@@ -14,10 +14,12 @@ import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { buildRoundResults } from '../../logic/scoring';
 import { getExclusionScorerById } from '../../logic/matchup-algorithm';
 
+import { ModalDialogDirective } from '../../directives/modal-dialog.directive';
+
 @Component({
   selector: 'app-round-screen',
   standalone: true,
-  imports: [
+  imports: [ModalDialogDirective, 
     CountdownTimerComponent,
     SponsorCarouselComponent,
     L10nPipe,

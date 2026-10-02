@@ -1,15 +1,20 @@
 <div class="rules-container">
+  @if (slideIndex === 0) {
   <div class="rules-section">
     <h2>{{ 'rules.tournament.title' | l10n }}</h2>
     <ul class="rules-bullets">
       <li>{{ 'rules.tournament.bullet1' | l10n : { rounds: totalRounds } }}</li>
+      <li>{{ 'rules.tournament.ranking' | l10n }}</li>
       <li>{{ 'rules.tournament.bullet2' | l10n }}</li>
     </ul>
   </div>
+  }
 
+  @if (slideIndex === 1) {
   <div class="rules-section">
     <h2>{{ 'rules.round.title' | l10n }}</h2>
     <ul class="rules-bullets">
+      <li>{{ 'rules.round.pairing' | l10n }}</li>
       <li>{{ 'rules.round.bullet1' | l10n : { minutes: roundDurationMinutes } }}</li>
       <li>
         {{ 'rules.round.bullet2' | l10n }}
@@ -26,7 +31,9 @@
       } }}</li>
     </ul>
   </div>
+  }
 
+  @if (slideIndex === 2) {
   <div class="rules-section">
     <h2>{{ 'rules.manillen.title' | l10n }}</h2>
     <ul class="rules-bullets">
@@ -34,12 +41,22 @@
       <li>{{ 'rules.manillen.bullet2' | l10n }}</li>
       <li>{{ 'rules.manillen.bullet3' | l10n }}</li>
       <li>{{ 'rules.manillen.bullet4' | l10n }}</li>
+      <li>{{ 'rules.manillen.underTrump' | l10n }}</li>
       <li>{{ 'rules.manillen.bullet5' | l10n : { points: points60_0 } }}</li>
     </ul>
   </div>
+  }
 
   <div class="page-nav">
     <button type="button" class="btn btn-secondary" routerLink="/tournament/teams">&#8592; {{ 'nav.teams' | l10n }}</button>
+    <div class="rules-carousel-nav">
+      <button type="button" class="btn btn-secondary nav-step-btn" (click)="goToPrevious()" [style.visibility]="hasPrevious ? null : 'hidden'">
+        &#8592; <span class="nav-label-stack">@for (key of slideTitleKeys; track key; let i = $index) {<span [class.nav-label-hidden]="i !== slideIndex - 1">{{ key | l10n }}</span>}</span>
+      </button>
+      <button type="button" class="btn btn-secondary nav-step-btn" (click)="goToNext()" [style.visibility]="hasNext ? null : 'hidden'">
+        <span class="nav-label-stack">@for (key of slideTitleKeys; track key; let i = $index) {<span [class.nav-label-hidden]="i !== slideIndex + 1">{{ key | l10n }}</span>}</span> &#8594;
+      </button>
+    </div>
     <button type="button" class="btn btn-primary" [routerLink]="['/tournament/round', 1, 'play']">{{ 'nav.round1' | l10n }} &#8594;</button>
   </div>
 </div>

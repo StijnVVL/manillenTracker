@@ -60,10 +60,10 @@
         &#8592; {{ 'teamResults.back' | l10n }}
       </button>
       <div class="nav-buttons">
-        <button type="button" class="btn btn-secondary nav-step-btn" (click)="goToPrevious()" [disabled]="position >= totalTeams">
+        <button type="button" class="btn btn-secondary nav-step-btn" (click)="goToPrevious()" [style.visibility]="position >= totalTeams ? 'hidden' : null">
           &#8592; <span class="nav-position">#{{ previousPosition ?? '#' }}</span>
         </button>
-        <button type="button" class="btn btn-secondary nav-step-btn" (click)="goToNext()" [disabled]="position <= 1">
+        <button type="button" class="btn btn-secondary nav-step-btn" (click)="goToNext()" [style.visibility]="position <= 1 ? 'hidden' : null">
           <span class="nav-position">#{{ nextPosition ?? '#' }}</span> &#8594;
         </button>
       </div>

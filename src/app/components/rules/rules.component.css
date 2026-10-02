@@ -36,3 +36,28 @@
 .rules-bullets li:last-child {
   margin-bottom: 0;
 }
+
+.rules-carousel-nav {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.nav-step-btn {
+  min-width: 5rem;
+  justify-content: center;
+}
+
+.nav-label-stack {
+  display: inline-grid;
+}
+
+.nav-label-stack > span {
+  grid-area: 1 / 1;
+  text-align: center;
+}
+
+.nav-label-hidden {
+  visibility: hidden;
+}

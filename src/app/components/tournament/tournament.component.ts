@@ -34,6 +34,10 @@ import { L10nService } from '../../services/l10n.service';
             <span class="link-card-title">{{ 'menu.teams' | l10n }}</span>
             <span class="link-card-desc">{{ 'tournament.viewTeamsDesc' | l10n }}</span>
           </a>
+          <a routerLink="/tournament/rules" class="ongoing-link-card">
+            <span class="link-card-title">{{ 'menu.rules' | l10n }}</span>
+            <span class="link-card-desc">{{ 'tournament.rulesDesc' | l10n }}</span>
+          </a>
           <a class="ongoing-link-card" [class.ongoing-link-card-disabled]="!isPostSetup" (click)="redirectToCurrentState()">
             <span class="link-card-title">{{ 'menu.currentRound' | l10n }}</span>
             <span class="link-card-desc">{{ 'tournament.currentRoundDesc' | l10n }}</span>
