@@ -591,6 +591,41 @@ const UNDOABLE_COMMANDS: Record<UndoableActionType, UndoableCommand> = {
     },
   },
 
+  START_TOURNAMENT: {
+    up(state, cmd) {
+      if (state.status !== 'setup' || state.teams.length < 2) return state;
+      // Capture prior state so down() can restore setup, and the generated
+      // snapshot/round so redo reproduces the same random draw.
+      cmd.memento['prevPostRoundLadderSnapshot'] = state.postRoundLadderSnapshot;
+      cmd.memento['prevRounds'] = state.rounds;
+      cmd.memento['prevStatus'] = state.status;
+      cmd.memento['prevTimerStatus'] = state.timerStatus;
+      const snapshot = (cmd.memento['snapshot'] as LadderSnapshotEntry[] | undefined) ?? buildInitialSnapshot(state.teams);
+      const round = (cmd.memento['round'] as Round | undefined) ?? createRound(1, state.teams, snapshot, state.exclusionPickerId);
+      cmd.memento['snapshot'] = snapshot;
+      cmd.memento['round'] = round;
+      return {
+        ...state,
+        postRoundLadderSnapshot: snapshot,
+        rounds: [round],
+        status: 'round',
+        timerStatus: 'idle',
+      };
+    },
+    down(state, cmd) {
+      const prevStatus = cmd.memento['prevStatus'] as TournamentState['status'] | undefined;
+      const prevTimerStatus = cmd.memento['prevTimerStatus'] as TournamentState['timerStatus'] | undefined;
+      if (prevStatus === undefined || prevTimerStatus === undefined) return state;
+      return {
+        ...state,
+        postRoundLadderSnapshot: cmd.memento['prevPostRoundLadderSnapshot'] as LadderSnapshotEntry[],
+        rounds: cmd.memento['prevRounds'] as Round[],
+        status: prevStatus,
+        timerStatus: prevTimerStatus,
+      };
+    },
+  },
+
   START_ROUND: {
     up(state, cmd) {
       const action = cmd.action as Extract<TournamentAction, { type: 'START_ROUND' }>;

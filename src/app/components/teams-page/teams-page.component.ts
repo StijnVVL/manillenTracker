@@ -52,7 +52,7 @@ export class TeamsPageComponent implements OnInit, OnDestroy {
 
   startTournament(): void {
     this.tournamentService.dispatch({ type: 'START_TOURNAMENT' });
-    this.router.navigate(['/tournament/round', 1, 'play']);
+    this.router.navigate(['/tournament/rules']);
   }
 
   onTeamAdded(result: TeamDialogResult): void {

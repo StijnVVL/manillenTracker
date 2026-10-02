@@ -37,12 +37,22 @@
   <div class="rules-section">
     <h2>{{ 'rules.manillen.title' | l10n }}</h2>
     <ul class="rules-bullets">
+      <li>{{ 'rules.manillen.shuffle' | l10n }}</li>
       <li>{{ 'rules.manillen.bullet1' | l10n }}</li>
       <li>{{ 'rules.manillen.bullet2' | l10n }}</li>
       <li>{{ 'rules.manillen.bullet3' | l10n }}</li>
       <li>{{ 'rules.manillen.bullet4' | l10n }}</li>
       <li>{{ 'rules.manillen.underTrump' | l10n }}</li>
       <li>{{ 'rules.manillen.bullet5' | l10n : { points: points60_0 } }}</li>
+      <li>
+        {{ 'rules.manillen.double' | l10n }}
+        <ul class="rules-bullets">
+          <li>{{ 'rules.manillen.doubleNoTrump' | l10n }}</li>
+          <li>{{ 'rules.manillen.doubleKnock' | l10n }}</li>
+          <li>{{ 'rules.manillen.doubleDraw' | l10n }}</li>
+        </ul>
+      </li>
+      <li>{{ 'rules.manillen.maxMultiplier' | l10n }}</li>
     </ul>
   </div>
   }
@@ -57,6 +67,10 @@
         <span class="nav-label-stack">@for (key of slideTitleKeys; track key; let i = $index) {<span [class.nav-label-hidden]="i !== slideIndex + 1">{{ key | l10n }}</span>}</span> &#8594;
       </button>
     </div>
-    <button type="button" class="btn btn-primary" [routerLink]="['/tournament/round', 1, 'play']">{{ 'nav.round1' | l10n }} &#8594;</button>
+    @if (isSetup) {
+      <button type="button" class="btn" [class.btn-primary]="canStart" [class.btn-secondary]="!canStart" [disabled]="!canStart" (click)="startTournament()">{{ 'nav.startTournament' | l10n }} &#8594;</button>
+    } @else {
+      <button type="button" class="btn btn-primary" [routerLink]="['/tournament/round', 1, 'play']">{{ 'nav.round1' | l10n }} &#8594;</button>
+    }
   </div>
 </div>

@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, HostListener } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { L10nPipe } from '../../pipes/l10n.pipe';
 import { TournamentService } from '../../services/tournament.service';
 import { getExclusionPickerById, getExclusionScorerById } from '../../logic/matchup-algorithm';
@@ -16,7 +16,21 @@ export class RulesComponent {
   readonly slideTitleKeys = ['rules.tournament.title', 'rules.round.title', 'rules.manillen.title'];
   slideIndex = 0;
 
-  constructor(private tournamentService: TournamentService) {}
+  constructor(private tournamentService: TournamentService, private router: Router) {}
+
+  get isSetup(): boolean {
+    return this.tournamentService.state.status === 'setup';
+  }
+
+  get canStart(): boolean {
+    const teams = this.tournamentService.state.teams;
+    return teams.length >= 2 && teams.every(t => !!t.name?.trim() && !!t.player1?.trim() && !!t.player2?.trim() && !!t.present);
+  }
+
+  startTournament(): void {
+    this.tournamentService.dispatch({ type: 'START_TOURNAMENT' });
+    this.router.navigate(['/tournament/round', 1, 'play']);
+  }
 
   get hasPrevious(): boolean {
     return this.slideIndex > 0;

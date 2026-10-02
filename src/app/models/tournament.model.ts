@@ -59,6 +59,7 @@ export type UndoableActionType =
   | 'ADD_TEAM'
   | 'REMOVE_TEAM'
   | 'UPDATE_TEAM'
+  | 'START_TOURNAMENT'
   | 'START_ROUND'
   | 'END_ROUND'
   | 'SUBMIT_SCORES'
