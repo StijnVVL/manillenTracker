@@ -487,6 +487,16 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
     if (this.isTablesDialogOpen) this.closeTablesDialog();
   }
 
+  @HostListener('document:keydown.arrowleft')
+  onTablesDialogArrowLeft(): void {
+    if (this.isTablesDialogOpen) this.prevTable();
+  }
+
+  @HostListener('document:keydown.arrowright')
+  onTablesDialogArrowRight(): void {
+    if (this.isTablesDialogOpen) this.nextTable();
+  }
+
   prevTable(): void {
     if (this.hasPrevTable) this.tablesDialogIndex--;
   }

@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TournamentService } from '../../services/tournament.service';
 import { L10nService } from '../../services/l10n.service';
@@ -113,6 +113,16 @@ export class TeamResultsScreenComponent implements OnInit {
   /** Position shown on the "next" button (one rank higher), or null if none. */
   get nextPosition(): number | null {
     return this.position > 1 ? this.position - 1 : null;
+  }
+
+  @HostListener('document:keydown.arrowleft')
+  onArrowLeft(): void {
+    this.goToPrevious();
+  }
+
+  @HostListener('document:keydown.arrowright')
+  onArrowRight(): void {
+    this.goToNext();
   }
 
   goToPrevious(): void {
