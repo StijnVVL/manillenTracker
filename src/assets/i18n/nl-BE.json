@@ -70,7 +70,7 @@
   "menu.stopTournament": "Toernooi stoppen",
   "menu.settings": "Instellingen",
 
-  "home.title": "Welkom bij ManillenTracker",
+  "home.title": "Welkom bij manill.io",
   "home.intro": "Volg je manillentoernooi met gemak — beheer teams, speel rondes en volg de rangschikking in real time.",
   "home.tournamentDesc": "Start of vervolg een toernooi, beheer teams en volg de huidige ronde.",
   "home.settingsDesc": "Configureer de standaard rondeduur, het aantal rondes en de vooraf geregistreerde teams.",
@@ -188,7 +188,7 @@
   "dialog.markAbsent.title": "Markeren als afwezig",
   "dialog.markAbsent.message": "{teamName} markeren als afwezig voor dit toernooi?",
   "dialog.markAbsent.confirm": "Markeren als afwezig",
-  "credits.appTitle": "ManillenTracker",
+  "credits.appTitle": "manill.io",
   "credits.appDescription": "Een toernooi-volgtoepassing voor het kaartspel manillen.",
   "credits.developmentTitle": "Ontwikkeling",
   "credits.builtWith": "Ontwikkeld in Angular, Tim De Mey, 2026",

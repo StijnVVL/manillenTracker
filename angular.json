@@ -40,6 +40,7 @@
                 "glob": "icons.svg",
                 "input": "src/assets"
               },
+              { "glob": "manillio_*.png", "input": "src/assets", "output": "assets" },
               {
                 "glob": "**/*",
                 "input": "src/assets/img",
@@ -100,6 +101,7 @@
                 "glob": "icons.svg",
                 "input": "src/assets"
               },
+              { "glob": "manillio_*.png", "input": "src/assets", "output": "assets" },
               {
                 "glob": "**/*",
                 "input": "src/assets/img",

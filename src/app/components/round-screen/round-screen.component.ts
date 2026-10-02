@@ -496,18 +496,6 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
     this.isTablesDialogOpen = false;
   }
 
-  private tablesOverlayPressStarted = false;
-
-  onTablesOverlayPointerDown(event: PointerEvent): void {
-    this.tablesOverlayPressStarted = event.target === event.currentTarget;
-  }
-
-  onTablesOverlayClick(event: MouseEvent): void {
-    if (this.tablesOverlayPressStarted && event.target === event.currentTarget) {
-      this.closeTablesDialog();
-    }
-    this.tablesOverlayPressStarted = false;
-  }
 
   @HostListener('document:keydown.escape')
   onTablesDialogEscape(): void {

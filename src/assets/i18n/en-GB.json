@@ -70,7 +70,7 @@
   "menu.stopTournament": "Stop Tournament",
   "menu.settings": "Settings",
 
-  "home.title": "Welcome to ManillenTracker",
+  "home.title": "Welcome to manill.io",
   "home.intro": "Track your Manillen tournament with ease — manage teams, run rounds, and follow the standings in real time.",
   "home.tournamentDesc": "Start or continue a tournament, manage teams and follow the current round.",
   "home.settingsDesc": "Configure default round duration, number of rounds, and pre-registered teams.",
@@ -188,7 +188,7 @@
   "dialog.markAbsent.title": "Mark as Absent",
   "dialog.markAbsent.message": "Mark {teamName} as absent for this tournament?",
   "dialog.markAbsent.confirm": "Mark Absent",
-    "credits.appTitle": "ManillenTracker",
+    "credits.appTitle": "manill.io",
     "credits.appDescription": "A tournament tracking application for Manillen card games.",
     "credits.developmentTitle": "Development",
     "credits.builtWith": "Built with Angular",

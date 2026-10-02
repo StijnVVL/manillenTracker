@@ -243,8 +243,8 @@
 }
 
 @if (isTablesDialogOpen && (tablesDialogMatchup || isByeSlide)) {
-  <div class="dialog-overlay" modalDialog (pointerdown)="onTablesOverlayPointerDown($event)" (click)="onTablesOverlayClick($event)">
-    <div class="tables-dialog-box" (click)="$event.stopPropagation()">
+  <div class="dialog-overlay" modalDialog>
+    <div class="tables-dialog-box">
       <button class="dialog-close" (click)="closeTablesDialog()" [title]="'common.close' | l10n">&#x2715;</button>
       <div class="tables-dialog-content">
         @if (isByeSlide) {
