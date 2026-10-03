@@ -50,6 +50,8 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
   isTablesDialogOpen: boolean = false;
   tablesDialogIndex: number = 0;
 
+  isRankingsDialogOpen: boolean = false;
+
   constructor(
     private tournamentService: TournamentService,
     private confirmDialogService: ConfirmDialogService,
@@ -496,10 +498,18 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
     this.isTablesDialogOpen = false;
   }
 
+  openRankingsDialog(): void {
+    this.isRankingsDialogOpen = true;
+  }
+
+  closeRankingsDialog(): void {
+    this.isRankingsDialogOpen = false;
+  }
 
   @HostListener('document:keydown.escape')
   onTablesDialogEscape(): void {
     if (this.isTablesDialogOpen) this.closeTablesDialog();
+    if (this.isRankingsDialogOpen) this.closeRankingsDialog();
   }
 
   @HostListener('document:keydown.arrowleft')
@@ -532,6 +542,21 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
   }
 
   get excludedRowRightLabel(): string { return '–'; }
+
+  getRankingsForDialog(): any[] {
+    const snapshot = this.state.postRoundLadderSnapshot;
+    if (!snapshot || snapshot.length === 0) return [];
+
+    return snapshot.map((entry, index) => ({
+      teamId: entry.teamId,
+      position: index + 1,
+      teamName: this.getTeamName(entry.teamId),
+      wins: entry.wins,
+      exclusions: entry.exclusions,
+      cumulativeScore: entry.cumulativeScore,
+      roundScores: entry.roundScores
+    }));
+  }
 
   getTeamTooltip(teamId: string): string {
     const snapshot = this.displayRound?.preRoundLadderSnapshot;

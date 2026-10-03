@@ -178,6 +178,11 @@
         {{ 'roundScreen.viewTables' | l10n }}
       </button>
     }
+    @if (state.postRoundLadderSnapshot.length > 0) {
+      <button type="button" class="btn btn-secondary" (click)="openRankingsDialog()">
+        {{ 'roundScreen.showRankings' | l10n }}
+      </button>
+    }
     @if (isIdle && isCurrentRound && !isFinished) {
       <button type="button" class="btn btn-primary" (click)="startRound()">
         {{ 'roundScreen.startRound' | l10n }}
@@ -283,6 +288,55 @@
         <div class="tables-dialog-actions">
           <button type="button" class="btn btn-primary" (click)="closeTablesDialog()">{{ 'common.close' | l10n }}</button>
         </div>
+      </div>
+    </div>
+  </div>
+}
+
+
+@if (isRankingsDialogOpen) {
+  <div class="dialog-overlay" modalDialog>
+    <div class="rankings-dialog-box">
+      <button class="dialog-close" (click)="closeRankingsDialog()" [title]="'common.close' | l10n">&#x2715;</button>
+      <h2 class="dialog-title">{{ 'rankingDialog.title' | l10n:{ roundNumber: displayRound?.number ?? roundNumber } }}</h2>
+      
+      <div class="rankings-table-container">
+        <table class="rankings-table">
+          <thead>
+            <tr>
+              <th class="col-position">{{ 'rankingDialog.position' | l10n }}</th>
+              <th class="col-team">{{ 'common.team' | l10n }}</th>
+              <th class="col-wins">{{ 'rankingDialog.wins' | l10n }}</th>
+              <th class="col-score">{{ 'rankingDialog.cumulativeScore' | l10n }}</th>
+              <th class="col-round-scores">{{ 'rankingDialog.roundScores' | l10n }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (ranking of getRankingsForDialog(); track ranking.teamId) {
+              <tr class="ranking-row">
+                <td class="col-position">
+                  <span class="position-badge">{{ ranking.position }}</span>
+                </td>
+                <td class="col-team team-name"><span>{{ ranking.teamName }}</span></td>
+                <td class="col-wins"><span>{{ ranking.wins }}</span></td>
+                <td class="col-score"><span>{{ ranking.cumulativeScore }}</span></td>
+                <td class="col-round-scores">
+                  @if (ranking.roundScores.length > 0) {
+                    <span class="round-scores">{{ ranking.roundScores.join(', ') }}</span>
+                  } @else {
+                    <span class="no-scores">{{ 'rankingDialog.noScores' | l10n }}</span>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div class="dialog-actions">
+        <button type="button" class="btn btn-primary" (click)="closeRankingsDialog()">
+          {{ 'common.close' | l10n }}
+        </button>
       </div>
     </div>
   </div>

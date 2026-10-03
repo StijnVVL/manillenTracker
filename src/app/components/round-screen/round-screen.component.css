@@ -409,3 +409,192 @@
   grid-column: 3;
 }
 
+
+
+/* Rankings Dialog */
+.rankings-dialog-box {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  max-width: 800px;
+  max-height: 80vh;
+  width: 90%;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.rankings-dialog-box .dialog-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #666;
+  padding: 5px;
+  line-height: 1;
+}
+
+.rankings-dialog-box .dialog-close:hover {
+  color: #333;
+}
+
+.rankings-dialog-box .dialog-title {
+  margin: 0 0 20px 0;
+  font-size: 24px;
+  text-align: center;
+  color: #333;
+}
+
+.rankings-table-container {
+  overflow-y: auto;
+  max-height: 50vh;
+  margin-bottom: 20px;
+}
+
+.rankings-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.rankings-table th,
+.rankings-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+  vertical-align: middle;
+  line-height: normal;
+  min-height: 48px;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.rankings-table td span {
+  display: inline-block;
+  vertical-align: middle;
+  line-height: normal;
+}
+
+.rankings-table .col-position span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rankings-table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #555;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.rankings-table tr:last-child td {
+  border-bottom: none;
+}
+
+.ranking-row:hover {
+  background-color: #f8f9fa;
+}
+
+.rankings-table .col-position {
+  width: 60px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.rankings-table .col-team {
+  width: 45%;
+  font-weight: 500;
+  vertical-align: middle;
+}
+
+.rankings-table .col-wins {
+  width: 80px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+table.rankings-table .col-score {
+  width: 120px;
+  text-align: right;
+  font-weight: 600;
+  vertical-align: middle;
+  line-height: normal;
+}
+
+.rankings-table .col-round-scores {
+  width: 35%;
+  font-size: 13px;
+  vertical-align: middle;
+}
+
+.position-badge {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  background: #4CAF50;
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  text-align: center;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.position-badge:first-child {
+  background: #FFD700;
+}
+
+.position-badge:nth-child(2) {
+  background: #C0C0C0;
+}
+
+.position-badge:nth-child(3) {
+  background: #CD7F32;
+}
+
+.round-scores {
+  color: #666;
+}
+
+.no-scores {
+  color: #999;
+  font-style: italic;
+}
+
+.rankings-dialog-box .dialog-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+  .rankings-dialog-box {
+    width: 95%;
+    max-width: none;
+  }
+
+  .rankings-table {
+    font-size: 14px;
+  }
+
+  .rankings-table .col-team {
+    width: 35%;
+  }
+
+  .rankings-table .col-round-scores {
+    width: 30%;
+    font-size: 12px;
+  }
+
+  .rankings-table .col-position,
+  .rankings-table .col-wins,
+  .rankings-table .col-score {
+    font-size: 12px;
+  }
+}
