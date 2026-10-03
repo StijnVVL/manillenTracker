@@ -30,21 +30,22 @@
   "tournament.startNewTournamentDesc": "Zet een gloednieuw toernooi op en start het.",
   "tournament.setupDesc": "Configureer de toernooi-instellingen en ronde-opties.",
   "tournament.viewTeamsDesc": "Bekijk en beheer de geregistreerde teams.",
+  "tournament.rulesDesc": "Bekijk het toernooi-, ronde- en manillenreglement.",
   "tournament.currentRoundDesc": "Ga naar de huidige ronde die bezig is.",
   "tournament.resultsDesc": "Bekijk de tussenstand en resultaten tot nu toe.",
   "tournament.stateDesc": "Bekijk en bewerk de ruwe toernooistatus rechtstreeks als JSON.",
   "pageTitle.teams": "Teams beheren",
   "pageTitle.credits": "Credits",
   "pageTitle.settings": "Instellingen",
-  "pageTitle.state": "Status-editor",
+  "pageTitle.state": "Geavanceerd",
 
   "pageTitle.rules": "Toernooireglement",
 
-  "menu.state": "Status",
+  "menu.state": "Geavanceerd",
 
   "header.roundLabel": "RONDE",
 
-  "stateEditor.title": "Toernooistatus-editor",
+  "stateEditor.title": "Geavanceerd",
   "stateEditor.save": "Status opslaan",
   "stateEditor.confirmTitle": "Status toepassen?",
   "stateEditor.confirmMessage": "Dit overschrijft de huidige toernooistatus met de bewerkte JSON. Dit kan niet ongedaan worden gemaakt.",

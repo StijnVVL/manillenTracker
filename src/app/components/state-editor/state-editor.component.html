@@ -11,6 +11,10 @@
     }
   </div>
 
+  <div class="history-actions">
+    <button type="button" class="btn btn-secondary" [disabled]="!canUndo" (click)="undo()" [title]="'menu.undo' | l10n">&#8630; {{ 'menu.undo' | l10n }}@if (undoType) { ({{ undoType }})}</button>
+    <button type="button" class="btn btn-secondary" [disabled]="!canRedo" (click)="redo()" [title]="'menu.redo' | l10n">{{ 'menu.redo' | l10n }}@if (redoType) { ({{ redoType }})} &#8631;</button>
+  </div>
   <div class="page-nav">
     <a class="btn btn-secondary" routerLink="/tournament">{{ '< ' + ('breadcrumb.tournament' | l10n) }}</a>
     <button class="btn btn-danger-filled" [disabled]="!isValid" (click)="save()">

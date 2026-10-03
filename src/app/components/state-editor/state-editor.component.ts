@@ -31,6 +31,7 @@ export class StateEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   private stateSub?: Subscription;
   private editorView?: EditorView;
   private ignoreNextStateUpdate = false;
+  private lastLoadedContent = '';
 
   constructor(
     private tournamentService: TournamentService,
@@ -40,6 +41,32 @@ export class StateEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     private cdr: ChangeDetectorRef,
   ) {}
 
+  get canUndo(): boolean {
+    return this.tournamentService.canUndo;
+  }
+
+  get canRedo(): boolean {
+    return this.tournamentService.canRedo;
+  }
+
+  get undoType(): string | null {
+    const stack = this.tournamentService.state.undoStack;
+    return stack.length ? stack[stack.length - 1].type : null;
+  }
+
+  get redoType(): string | null {
+    const stack = this.tournamentService.state.redoStack;
+    return stack.length ? stack[stack.length - 1].type : null;
+  }
+
+  undo(): void {
+    this.tournamentService.undo();
+  }
+
+  redo(): void {
+    this.tournamentService.redo();
+  }
+
   ngOnInit(): void {
     this.stateSub = this.tournamentService.state$.subscribe(state => {
       if (this.ignoreNextStateUpdate) {
@@ -47,22 +74,16 @@ export class StateEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         return;
       }
       if (!this.editorView) return;
-      // Only overwrite if the editor still contains valid JSON that matches
-      // the last persisted state (i.e. the user hasn't made unsaved edits)
-      const current = this.editorView.state.doc.toString();
-      const incoming = JSON.stringify(state, null, 2);
-      try {
-        if (JSON.stringify(JSON.parse(current)) === JSON.stringify(state)) {
-          this.setEditorContent(incoming);
-        }
-      } catch {
-        // user has invalid JSON — don't overwrite
+      // Only overwrite if the user hasn't made unsaved edits since the last load
+      if (this.editorView.state.doc.toString() === this.lastLoadedContent) {
+        this.setEditorContent(JSON.stringify(state, null, 2));
       }
     });
   }
 
   ngAfterViewInit(): void {
     const initialContent = JSON.stringify(this.tournamentService.state, null, 2);
+    this.lastLoadedContent = initialContent;
 
     const updateListener = EditorView.updateListener.of(update => {
       if (update.docChanged) {
@@ -107,6 +128,7 @@ export class StateEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private setEditorContent(text: string): void {
     if (!this.editorView) return;
+    this.lastLoadedContent = text;
     this.editorView.dispatch({
       changes: { from: 0, to: this.editorView.state.doc.length, insert: text },
     });

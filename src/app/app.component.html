@@ -28,16 +28,6 @@
   @if (menuOpen) {
     <div class="menu-overlay" (click)="closeMenu()"></div>
     <nav class="slide-menu">
-      <div class="menu-toolbar">
-        <button class="toolbar-btn" [disabled]="!(canUndo$ | async)" (click)="undo()" [title]="'menu.undo' | l10n">
-          <span class="toolbar-icon">&#8630;</span>
-          <span class="toolbar-label">{{ 'menu.undo' | l10n }}</span>
-        </button>
-        <button class="toolbar-btn" [disabled]="!(canRedo$ | async)" (click)="redo()" [title]="'menu.redo' | l10n">
-          <span class="toolbar-icon">&#8631;</span>
-          <span class="toolbar-label">{{ 'menu.redo' | l10n }}</span>
-        </button>
-      </div>
       <div class="menu-top">
         <a routerLink="/" routerLinkActive="menu-item-active" [routerLinkActiveOptions]="{exact:true}" class="menu-item" (click)="closeMenu()">{{ 'menu.home' | l10n }}</a>
         <a routerLink="/tournament" routerLinkActive="menu-item-active" [routerLinkActiveOptions]="{exact:true}" class="menu-item" (click)="closeMenu()">{{ 'menu.tournament' | l10n }}</a>

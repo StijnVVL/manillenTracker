@@ -37,15 +37,15 @@
   "pageTitle.teams": "Manage Teams",
   "pageTitle.credits": "Credits",
   "pageTitle.settings": "Settings",
-  "pageTitle.state": "State Editor",
+  "pageTitle.state": "Advanced",
 
   "pageTitle.rules": "Tournament Rules",
 
-  "menu.state": "State",
+  "menu.state": "Advanced",
 
   "header.roundLabel": "ROUND",
 
-  "stateEditor.title": "Tournament State Editor",
+  "stateEditor.title": "Advanced",
   "stateEditor.save": "Save State",
   "stateEditor.confirmTitle": "Apply State?",
   "stateEditor.confirmMessage": "This will overwrite the current tournament state with the edited JSON. This cannot be undone.",
@@ -62,6 +62,7 @@
   "menu.undo": "Undo",
   "menu.redo": "Redo",
   "menu.home": "Home",
+  "menu.setup": "Settings",
   "menu.teams": "Teams",
   "menu.rules": "Rules",
   "menu.currentRound": "Current Round",

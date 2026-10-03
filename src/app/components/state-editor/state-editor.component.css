@@ -56,3 +56,17 @@
   align-items: center;
   padding-top: 0;
 }
+
+.history-actions {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.history-actions .btn {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
