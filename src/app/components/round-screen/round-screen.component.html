@@ -178,7 +178,7 @@
         {{ 'roundScreen.viewTables' | l10n }}
       </button>
     }
-    @if (state.postRoundLadderSnapshot.length > 0) {
+    @if (displayRound?.preRoundLadderSnapshot?.length) {
       <button type="button" class="btn btn-secondary" (click)="openRankingsDialog()">
         {{ 'roundScreen.showRankings' | l10n }}
       </button>

@@ -544,7 +544,7 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
   get excludedRowRightLabel(): string { return '–'; }
 
   getRankingsForDialog(): any[] {
-    const snapshot = this.state.postRoundLadderSnapshot;
+    const snapshot = this.displayRound?.preRoundLadderSnapshot;
     if (!snapshot || snapshot.length === 0) return [];
 
     return snapshot.map((entry, index) => ({
