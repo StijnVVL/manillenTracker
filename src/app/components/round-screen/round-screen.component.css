@@ -444,126 +444,113 @@
   margin: 0 0 20px 0;
   font-size: 24px;
   text-align: center;
-  color: #333;
+  color: var(--primary-dark);
 }
 
 .rankings-table-container {
-  overflow-y: auto;
-  max-height: 50vh;
   margin-bottom: 20px;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
 }
 
 .rankings-table {
   width: 100%;
   border-collapse: collapse;
+  background: var(--bg-card);
+}
+
+/* Header stays fixed; only the body scrolls */
+.rankings-table thead,
+.rankings-table tbody {
+  display: block;
+  scrollbar-gutter: stable;
+}
+
+.rankings-table thead {
+  overflow: hidden;
+  background: var(--primary);
+}
+
+.rankings-table tbody {
+  overflow-y: auto;
+  max-height: 50vh;
+}
+
+.rankings-table tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
 }
 
 .rankings-table th,
 .rankings-table td {
-  padding: 12px;
-  text-align: left;
-  border-bottom: 1px solid #eee;
+  padding: 0.5rem 1rem;
   vertical-align: middle;
-  line-height: normal;
-  min-height: 48px;
-  font-family: inherit;
-  font-size: inherit;
-}
-
-.rankings-table td span {
-  display: inline-block;
-  vertical-align: middle;
-  line-height: normal;
-}
-
-.rankings-table .col-position span {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  text-align: center;
 }
 
 .rankings-table th {
-  background-color: #f8f9fa;
-  font-weight: 600;
-  color: #555;
-  font-size: 14px;
+  color: white;
+  font-weight: 700;
+  font-size: 0.8rem;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.05em;
+}
+
+.rankings-table td {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  font-size: 1rem;
 }
 
 .rankings-table tr:last-child td {
   border-bottom: none;
 }
 
-.ranking-row:hover {
-  background-color: #f8f9fa;
+.rankings-table .rk-position {
+  width: 90px;
 }
 
-.rankings-table .col-position {
-  width: 60px;
-  text-align: center;
-  vertical-align: middle;
+.rankings-table td.rk-position {
+  font-weight: 700;
+  color: var(--primary-dark);
 }
 
-.rankings-table .col-team {
-  width: 45%;
-  font-weight: 500;
-  vertical-align: middle;
+.rankings-table .rk-team {
+  text-align: left;
 }
 
-.rankings-table .col-wins {
-  width: 80px;
-  text-align: center;
-  vertical-align: middle;
-}
-
-table.rankings-table .col-score {
-  width: 120px;
-  text-align: right;
+.rankings-table td.rk-team {
   font-weight: 600;
-  vertical-align: middle;
-  line-height: normal;
+  color: var(--primary-dark);
 }
 
-.rankings-table .col-round-scores {
-  width: 35%;
-  font-size: 13px;
-  vertical-align: middle;
+.rankings-table .rk-num {
+  width: 110px;
 }
 
-.position-badge {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  background: #4CAF50;
-  color: white;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  text-align: center;
-  font-weight: bold;
-  font-size: 14px;
+.rankings-table td.rk-num {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  color: var(--primary-dark);
 }
 
-.position-badge:first-child {
-  background: #FFD700;
+.rankings-table .rk-total {
+  width: 40%;
+  text-align: left;
 }
 
-.position-badge:nth-child(2) {
-  background: #C0C0C0;
-}
-
-.position-badge:nth-child(3) {
-  background: #CD7F32;
+.rankings-table td.rk-total {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  color: var(--primary-dark);
 }
 
 .round-scores {
+  margin-left: 0.4em;
   color: #666;
-}
-
-.no-scores {
-  color: #999;
-  font-style: italic;
+  font-weight: 400;
+  font-size: 0.85rem;
 }
 
 .rankings-dialog-box .dialog-actions {
@@ -579,22 +566,13 @@ table.rankings-table .col-score {
     max-width: none;
   }
 
-  .rankings-table {
-    font-size: 14px;
+  .rankings-table th,
+  .rankings-table td {
+    padding: 0.5rem;
   }
 
-  .rankings-table .col-team {
-    width: 35%;
-  }
-
-  .rankings-table .col-round-scores {
-    width: 30%;
-    font-size: 12px;
-  }
-
-  .rankings-table .col-position,
-  .rankings-table .col-wins,
-  .rankings-table .col-score {
-    font-size: 12px;
+  .rankings-table .rk-position,
+  .rankings-table .rk-num {
+    width: 70px;
   }
 }

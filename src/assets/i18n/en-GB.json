@@ -284,8 +284,6 @@
   "rankingDialog.wins": "Wins",
   "rankingDialog.roundsWon": "Rounds Won",
   "rankingDialog.cumulativeScore": "Total Score",
-  "rankingDialog.roundScores": "Round Scores",
-  "rankingDialog.noScores": "No scores yet",
   "finished.championLabel": "Champion",
   "finished.tournamentComplete": "Tournament Complete",
   "finished.noChampion": "No champion",

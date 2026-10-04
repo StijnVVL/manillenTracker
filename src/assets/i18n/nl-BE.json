@@ -284,8 +284,6 @@
   "rankingDialog.wins": "Overwinningen",
   "rankingDialog.roundsWon": "Rondes gewonnen",
   "rankingDialog.cumulativeScore": "Totaalscore",
-  "rankingDialog.roundScores": "Scores per ronde",
-  "rankingDialog.noScores": "Nog geen scores",
 
   "finished.championLabel": "Kampioen",
   "finished.tournamentComplete": "Toernooi afgelopen",
