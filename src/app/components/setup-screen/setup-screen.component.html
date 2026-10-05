@@ -1,133 +1,136 @@
-<div class="setup-container">
+<div class="page-body setup-container">
   <p class="setup-description">
     {{ 'setup.description' | l10n }}
   </p>
 
-  <!-- Tournament Options -->
-  <div class="setup-card">
-    <h2 class="setup-card-title">{{ 'setup.tournamentOptionsCard' | l10n }}</h2>
+  <div class="page-scroll">
 
-    <label class="field-label" for="setup-tournament-name">
-      {{ 'setup.tournamentNameLabel' | l10n }}
-    </label>
-    <input
-      id="setup-tournament-name"
-      class="input"
-      type="text"
-      [ngModel]="state.tournamentName"
-      (ngModelChange)="onTournamentNameChange($event)"
-      [placeholder]="l10n.get('setup.tournamentNamePlaceholder')"
-    />
+    <!-- Tournament Options -->
+    <div class="setup-card">
+      <h2 class="setup-card-title">{{ 'setup.tournamentOptionsCard' | l10n }}</h2>
 
-    <div class="field-checkbox-row">
-      <input
-        id="setup-show-sponsors"
-        type="checkbox"
-        [ngModel]="state.showSponsors"
-        (ngModelChange)="onShowSponsorsChange($event)"
-      />
-      <label class="field-label" for="setup-show-sponsors">
-        {{ 'setup.showSponsorsLabel' | l10n }}
+      <label class="field-label" for="setup-tournament-name">
+        {{ 'setup.tournamentNameLabel' | l10n }}
       </label>
+      <input
+        id="setup-tournament-name"
+        class="input"
+        type="text"
+        [ngModel]="state.tournamentName"
+        (ngModelChange)="onTournamentNameChange($event)"
+        [placeholder]="l10n.get('setup.tournamentNamePlaceholder')"
+      />
+
+      <div class="field-checkbox-row">
+        <input
+          id="setup-show-sponsors"
+          type="checkbox"
+          [ngModel]="state.showSponsors"
+          (ngModelChange)="onShowSponsorsChange($event)"
+        />
+        <label class="field-label" for="setup-show-sponsors">
+          {{ 'setup.showSponsorsLabel' | l10n }}
+        </label>
+      </div>
+
+      @if (state.showSponsors) {
+        <label class="field-label" for="setup-sponsor-interval">
+          {{ 'setup.sponsorIntervalLabel' | l10n }}
+        </label>
+        <div class="input-row">
+          <input
+            id="setup-sponsor-interval"
+            class="input-number"
+            type="number"
+            [ngModel]="state.sponsorIntervalSeconds"
+            (ngModelChange)="onSponsorIntervalChange($event)"
+            min="1"
+            max="300"
+          />
+        </div>
+      }
     </div>
 
-    @if (state.showSponsors) {
-      <label class="field-label" for="setup-sponsor-interval">
-        {{ 'setup.sponsorIntervalLabel' | l10n }}
+    <!-- Round Settings -->
+    <div class="setup-card">
+      <h2 class="setup-card-title">{{ 'setup.roundSettingsCard' | l10n }}</h2>
+
+      @if (!isSetup) {
+        <p class="field-hint field-hint-warning">{{ 'setup.roundSettingsLockedHint' | l10n }}</p>
+      }
+
+      <label class="field-label" for="setup-round-duration">
+        {{ 'settings.roundDurationLabel' | l10n }}
       </label>
       <div class="input-row">
         <input
-          id="setup-sponsor-interval"
+          id="setup-round-duration"
           class="input-number"
+          [class.input-invalid]="durationError"
           type="number"
-          [ngModel]="state.sponsorIntervalSeconds"
-          (ngModelChange)="onSponsorIntervalChange($event)"
           min="1"
-          max="300"
+          max="120"
+          [(ngModel)]="durationValue"
+          (ngModelChange)="onDurationChange($event)"
+          [disabled]="!isSetup"
         />
+        <span class="field-error" *ngIf="durationError">
+          <app-svg-icon name="alert-triangle" [width]="16" [height]="16"/>
+          {{ durationError | l10n }}
+        </span>
       </div>
-    }
-  </div>
+      <p class="field-hint">{{ 'settings.roundDurationHint' | l10n }}</p>
 
-  <!-- Round Settings -->
-  <div class="setup-card">
-    <h2 class="setup-card-title">{{ 'setup.roundSettingsCard' | l10n }}</h2>
-
-    @if (!isSetup) {
-      <p class="field-hint field-hint-warning">{{ 'setup.roundSettingsLockedHint' | l10n }}</p>
-    }
-
-    <label class="field-label" for="setup-round-duration">
-      {{ 'settings.roundDurationLabel' | l10n }}
-    </label>
-    <div class="input-row">
+      <label class="field-label" for="setup-total-rounds">
+        {{ 'setup.totalRoundsLabel' | l10n }}
+      </label>
       <input
-        id="setup-round-duration"
+        id="setup-total-rounds"
         class="input-number"
-        [class.input-invalid]="durationError"
         type="number"
         min="1"
-        max="120"
-        [(ngModel)]="durationValue"
-        (ngModelChange)="onDurationChange($event)"
+        max="10"
+        [ngModel]="state.totalRounds"
+        (ngModelChange)="onTotalRoundsChange($event)"
         [disabled]="!isSetup"
       />
-      <span class="field-error" *ngIf="durationError">
-        <app-svg-icon name="alert-triangle" [width]="16" [height]="16"/>
-        {{ durationError | l10n }}
-      </span>
+      <p class="field-hint">{{ 'setup.totalRoundsHint' | l10n }}</p>
+
+      <label class="field-label" for="setup-points-60-0">
+        {{ 'settings.points60_0Label' | l10n }}
+      </label>
+      <app-select-dropdown
+        [options]="points60_0Options"
+        [selectedId]="selectedPoints60_0Id"
+        [disabled]="!isSetup"
+        (selectedIdChange)="onPoints60_0Change($event)"
+      />
+      <p class="field-hint">{{ 'settings.points60_0Hint' | l10n }}</p>
+
+      <label class="field-label" for="setup-exclusion-picker">
+        {{ 'settings.exclusionPickerLabel' | l10n }}
+      </label>
+      <app-select-dropdown
+        [options]="exclusionPickers"
+        [selectedId]="state.exclusionPickerId"
+        [disabled]="!isSetup"
+        (selectedIdChange)="onExclusionPickerChange($event)"
+      />
+      <p class="field-hint">{{ 'settings.exclusionPickerStaticHint' | l10n }}</p>
+      <p class="field-hint">{{ (currentPickerOption?.descriptionKey ?? '') | l10n }}</p>
+
+      <label class="field-label" for="setup-exclusion-scorer">
+        {{ 'settings.exclusionScorerLabel' | l10n }}
+      </label>
+      <app-select-dropdown
+        [options]="exclusionScorers"
+        [selectedId]="state.exclusionScorerId"
+        [disabled]="!isSetup"
+        (selectedIdChange)="onExclusionScorerChange($event)"
+      />
+      <p class="field-hint">{{ 'settings.exclusionScorerStaticHint' | l10n }}</p>
+      <p class="field-hint">{{ (currentScorerOption?.descriptionKey ?? '') | l10n }}</p>
     </div>
-    <p class="field-hint">{{ 'settings.roundDurationHint' | l10n }}</p>
-
-    <label class="field-label" for="setup-total-rounds">
-      {{ 'setup.totalRoundsLabel' | l10n }}
-    </label>
-    <input
-      id="setup-total-rounds"
-      class="input-number"
-      type="number"
-      min="1"
-      max="10"
-      [ngModel]="state.totalRounds"
-      (ngModelChange)="onTotalRoundsChange($event)"
-      [disabled]="!isSetup"
-    />
-    <p class="field-hint">{{ 'setup.totalRoundsHint' | l10n }}</p>
-
-    <label class="field-label" for="setup-points-60-0">
-      {{ 'settings.points60_0Label' | l10n }}
-    </label>
-    <app-select-dropdown
-      [options]="points60_0Options"
-      [selectedId]="selectedPoints60_0Id"
-      [disabled]="!isSetup"
-      (selectedIdChange)="onPoints60_0Change($event)"
-    />
-    <p class="field-hint">{{ 'settings.points60_0Hint' | l10n }}</p>
-
-    <label class="field-label" for="setup-exclusion-picker">
-      {{ 'settings.exclusionPickerLabel' | l10n }}
-    </label>
-    <app-select-dropdown
-      [options]="exclusionPickers"
-      [selectedId]="state.exclusionPickerId"
-      [disabled]="!isSetup"
-      (selectedIdChange)="onExclusionPickerChange($event)"
-    />
-    <p class="field-hint">{{ 'settings.exclusionPickerStaticHint' | l10n }}</p>
-    <p class="field-hint">{{ (currentPickerOption?.descriptionKey ?? '') | l10n }}</p>
-
-    <label class="field-label" for="setup-exclusion-scorer">
-      {{ 'settings.exclusionScorerLabel' | l10n }}
-    </label>
-    <app-select-dropdown
-      [options]="exclusionScorers"
-      [selectedId]="state.exclusionScorerId"
-      [disabled]="!isSetup"
-      (selectedIdChange)="onExclusionScorerChange($event)"
-    />
-    <p class="field-hint">{{ 'settings.exclusionScorerStaticHint' | l10n }}</p>
-    <p class="field-hint">{{ (currentScorerOption?.descriptionKey ?? '') | l10n }}</p>
   </div>
 
   <div class="page-nav">

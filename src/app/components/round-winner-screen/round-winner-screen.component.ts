@@ -20,6 +20,7 @@ interface RoundWinner {
   imports: [CommonModule, L10nPipe],
   templateUrl: './round-winner-screen.component.html',
   styleUrl: './round-winner-screen.component.css',
+  host: { class: 'page-body' },
   changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class RoundWinnerScreenComponent implements OnInit {

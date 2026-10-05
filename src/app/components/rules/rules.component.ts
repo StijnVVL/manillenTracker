@@ -10,7 +10,7 @@ import { getExclusionPickerById, getExclusionScorerById } from '../../logic/matc
   imports: [L10nPipe, RouterLink],
   templateUrl: './rules.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
-  styleUrl: './rules.component.css'
+  styleUrls: ['./rules.component.css', '../round-screen/team-tooltip.css']
 })
 export class RulesComponent {
   readonly slideTitleKeys = ['rules.tournament.title', 'rules.round.title', 'rules.manillen.title'];
@@ -23,8 +23,39 @@ export class RulesComponent {
   }
 
   get canStart(): boolean {
-    const teams = this.tournamentService.state.teams;
-    return teams.length >= 2 && teams.every(t => !!t.name?.trim() && !!t.player1?.trim() && !!t.player2?.trim() && !!t.present);
+    return this.teamCount >= 2 && this.missingInfoCount === 0 && this.absentCount === 0;
+  }
+
+  get teamCount(): number {
+    return this.tournamentService.state.teams.length;
+  }
+
+  get missingInfoCount(): number {
+    return this.tournamentService.state.teams
+      .filter(t => !t.name?.trim() || !t.player1?.trim() || !t.player2?.trim()).length;
+  }
+
+  get absentCount(): number {
+    return this.tournamentService.state.teams.filter(t => !t.present).length;
+  }
+
+  startTooltipVisible = false;
+  tooltipX = 0;
+  tooltipY = 0;
+
+  showStartTooltip(event: MouseEvent): void {
+    this.startTooltipVisible = true;
+    this.updateStartTooltipPosition(event);
+  }
+
+  /** Places the popup above-left of the cursor, since the button sits at the bottom-right. */
+  updateStartTooltipPosition(event: MouseEvent): void {
+    this.tooltipX = Math.max(8, event.clientX - 334);
+    this.tooltipY = Math.max(8, event.clientY - 150);
+  }
+
+  hideStartTooltip(): void {
+    this.startTooltipVisible = false;
   }
 
   startTournament(): void {

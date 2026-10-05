@@ -5,6 +5,7 @@ import { L10nService } from '../../services/l10n.service';
 import { L10nPipe } from '../../pipes/l10n.pipe';
 import { TournamentState, LadderSnapshotEntry } from '../../models/tournament.model';
 import { getTeamMap, getCurrentRound } from '../../utils/teams';
+import { ModalDialogDirective } from '../../directives/modal-dialog.directive';
 
 interface TeamResultEntry {
   position: number;
@@ -19,15 +20,17 @@ interface TeamResultEntry {
 @Component({
   selector: 'app-team-results-screen',
   standalone: true,
-  imports: [L10nPipe],
+  imports: [L10nPipe, ModalDialogDirective],
   templateUrl: './team-results-screen.component.html',
-  styleUrl: './team-results-screen.component.css',
+  styleUrls: ['./team-results-screen.component.css', '../ranking-dialog/ranking-dialog.css'],
+  host: { class: 'page-body' },
   changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class TeamResultsScreenComponent implements OnInit {
   state: TournamentState;
   entry: TeamResultEntry | null = null;
   position: number = 1;
+  isRankingsDialogOpen: boolean = false;
 
   constructor(
     private tournamentService: TournamentService,
@@ -115,14 +118,46 @@ export class TeamResultsScreenComponent implements OnInit {
     return this.position > 1 ? this.position - 1 : null;
   }
 
+  openRankingsDialog(): void {
+    this.isRankingsDialogOpen = true;
+  }
+
+  closeRankingsDialog(): void {
+    this.isRankingsDialogOpen = false;
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscape(): void {
+    if (this.isRankingsDialogOpen) this.closeRankingsDialog();
+  }
+
+  getFinalRankings() {
+    const teamMap = getTeamMap(this.state.teams);
+    const earlierSnapshots = [...this.state.rounds]
+      .sort((a, b) => a.number - b.number)
+      .map(r => r.preRoundLadderSnapshot ?? []);
+
+    return this.state.postRoundLadderSnapshot.map((entry, index) => ({
+      teamId: entry.teamId,
+      position: index + 1,
+      teamName: teamMap.get(entry.teamId)?.name ?? 'Unknown',
+      wins: entry.wins,
+      cumulativeScore: entry.cumulativeScore,
+      previousPositions: earlierSnapshots
+        .map(s => s.findIndex(e => e.teamId === entry.teamId) + 1)
+        .filter(p => p > 0)
+        .map(p => `#${p}`),
+    }));
+  }
+
   @HostListener('document:keydown.arrowleft')
   onArrowLeft(): void {
-    this.goToPrevious();
+    if (!this.isRankingsDialogOpen) this.goToPrevious();
   }
 
   @HostListener('document:keydown.arrowright')
   onArrowRight(): void {
-    this.goToNext();
+    if (!this.isRankingsDialogOpen) this.goToNext();
   }
 
   goToPrevious(): void {

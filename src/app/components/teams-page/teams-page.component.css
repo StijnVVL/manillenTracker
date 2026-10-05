@@ -1,5 +1,7 @@
-.teams-container {
-  padding: 1rem 1.5rem;
+.teams-container > app-team-list-editor {
+  display: block;
+  flex: 1;
+  min-height: 0;
 }
 
 .teams-actions {
@@ -120,12 +122,4 @@
   .teams-tables-grid {
     grid-template-columns: 1fr;
   }
-
-  .teams-container {
-    padding: 1rem;
-  }
-}
-
-.teams-page-nav {
-  padding-bottom: 0.5rem;
 }

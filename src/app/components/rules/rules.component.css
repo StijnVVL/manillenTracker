@@ -1,7 +1,6 @@
-.rules-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 1rem;
+.rules-container > .rules-section {
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .rules-section {
@@ -35,6 +34,15 @@
 
 .rules-bullets li:last-child {
   margin-bottom: 0;
+}
+
+.start-btn-wrapper {
+  display: inline-flex;
+}
+
+/* Disabled buttons swallow mouse events in some browsers; let the wrapper receive them */
+.start-btn-wrapper .btn:disabled {
+  pointer-events: none;
 }
 
 .rules-carousel-nav {

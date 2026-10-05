@@ -537,3 +537,27 @@ select.input:disabled {
   font-size: 0.9rem;
   color: var(--primary);
 }
+
+/* Shared page body: fills the viewport below the header at full content width; a direct .page-nav child sticks to the bottom */
+.page-body {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: calc(100vh - 48px - 4rem);
+}
+
+.page-body > .page-nav {
+  flex-shrink: 0;
+  margin-top: auto;
+  padding-top: 1.5rem;
+}
+
+/* Scrollable content area inside a .page-body (fills the space above the sticky .page-nav) */
+.page-scroll {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}

@@ -48,8 +48,9 @@
           <span class="col-actions">{{ 'teams.actions' | l10n }}</span>
         }
       </div>
+      <div class="team-table-body">
       @for (team of teams; track team.id; let i = $index) {
-        <div class="team-row">
+        <div class="team-row" [attr.data-team-id]="team.id" [class.team-row--new]="team.id === highlightedTeamId">
           <span class="col-num">{{ i + 1 }}</span>
           <span class="col-name">{{ team.name }}</span>
           @if (!readonly) {
@@ -91,6 +92,7 @@
           }
         </div>
       }
+      </div>
     </div>
   }
 </div>

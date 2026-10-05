@@ -123,6 +123,7 @@ export class AddTeamDialogComponent implements OnInit, OnDestroy {
 
   onKeydown(event: KeyboardEvent): void {
     if (event.key === 'Enter' && this.isValid) {
+      event.preventDefault();
       this.onSubmit();
     }
   }

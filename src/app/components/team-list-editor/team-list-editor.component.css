@@ -74,6 +74,46 @@
   border-bottom: none;
 }
 
+.team-row--new {
+  animation: teamRowFadeOut 0.5s ease-out;
+}
+
+@keyframes teamRowFadeOut {
+  from { background: rgba(45, 127, 94, 0.25); }
+  to   { background: transparent; }
+}
+
+/* Fill-height mode: counters, actions and table header stay put; only the rows scroll */
+:host(.fill-height) .team-editor {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+:host(.fill-height) .team-editor-counters,
+:host(.fill-height) .team-editor-actions {
+  flex-shrink: 0;
+}
+
+:host(.fill-height) .team-table {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+:host(.fill-height) .team-table-header {
+  flex-shrink: 0;
+  overflow: hidden;
+  scrollbar-gutter: stable;
+}
+
+:host(.fill-height) .team-table-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}
+
 .col-num {
   text-align: center;
 }

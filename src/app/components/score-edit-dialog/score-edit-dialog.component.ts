@@ -110,6 +110,7 @@ export class ScoreEditDialogComponent implements OnInit, OnDestroy {
 
   onKeydown(event: KeyboardEvent): void {
     if (event.key === 'Enter' && this.canSave) {
+      event.preventDefault();
       this.onSave();
     }
   }

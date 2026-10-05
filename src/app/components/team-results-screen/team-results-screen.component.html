@@ -7,8 +7,8 @@
     </button>
   </div>
 } @else {
-<div class="card result-card">
-  @if (entry) {
+@if (entry) {
+  <div class="card result-card">
     <div class="result-container">
       <div class="position-heading">
         @if (medalEmoji) {
@@ -54,27 +54,72 @@
         </div>
       }
     </div>
+  </div>
 
-    <div class="setup-actions">
-      <button type="button" class="btn btn-secondary back-btn" (click)="goBack()">
-        &#8592; {{ 'teamResults.back' | l10n }}
+  <div class="page-nav results-page-nav">
+    <button type="button" class="btn btn-secondary back-btn" (click)="goBack()">
+      &#8592; {{ 'teamResults.back' | l10n }}
+    </button>
+    <div class="nav-buttons">
+      <button type="button" class="btn btn-secondary nav-step-btn" (click)="goToPrevious()" [style.visibility]="position >= totalTeams ? 'hidden' : null">
+        &#8592; <span class="nav-position">#{{ previousPosition ?? '#' }}</span>
       </button>
-      <div class="nav-buttons">
-        <button type="button" class="btn btn-secondary nav-step-btn" (click)="goToPrevious()" [style.visibility]="position >= totalTeams ? 'hidden' : null">
-          &#8592; <span class="nav-position">#{{ previousPosition ?? '#' }}</span>
-        </button>
-        <button type="button" class="btn btn-secondary nav-step-btn" (click)="goToNext()" [style.visibility]="position <= 1 ? 'hidden' : null">
-          <span class="nav-position">#{{ nextPosition ?? '#' }}</span> &#8594;
-        </button>
+      <button type="button" class="btn btn-secondary nav-step-btn" (click)="goToNext()" [style.visibility]="position <= 1 ? 'hidden' : null">
+        <span class="nav-position">#{{ nextPosition ?? '#' }}</span> &#8594;
+      </button>
+    </div>
+    <button type="button" class="btn btn-secondary ranking-btn" (click)="openRankingsDialog()">
+      {{ 'teamResults.showRanking' | l10n }}
+    </button>
+  </div>
+
+  @if (isRankingsDialogOpen) {
+    <div class="dialog-overlay" modalDialog>
+      <div class="rankings-dialog-box">
+        <button class="dialog-close" (click)="closeRankingsDialog()" [title]="'common.close' | l10n">&#x2715;</button>
+        <h2 class="dialog-title">{{ 'rankingDialog.finalTitle' | l10n }}</h2>
+
+        <div class="rankings-table-container">
+          <table class="rankings-table">
+            <thead>
+              <tr>
+                <th class="rk-position">{{ 'rankingDialog.position' | l10n }}</th>
+                <th class="rk-team">{{ 'common.team' | l10n }}</th>
+                <th class="rk-num" [title]="'rankingDialog.wins' | l10n">{{ 'rankingDialog.winsShort' | l10n }}</th>
+                <th class="rk-num" [title]="'rankingDialog.cumulativeScore' | l10n">{{ 'rankingDialog.cumulativeScoreShort' | l10n }}</th>
+                <th class="rk-prev">{{ 'rankingDialog.previousPositions' | l10n }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (ranking of getFinalRankings(); track ranking.teamId) {
+                <tr>
+                  <td class="rk-position">{{ ranking.position }}</td>
+                  <td class="rk-team">{{ ranking.teamName }}</td>
+                  <td class="rk-num">{{ ranking.wins }}</td>
+                  <td class="rk-num">{{ ranking.cumulativeScore }}</td>
+                  <td class="rk-prev">{{ ranking.previousPositions.join(', ') }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <div class="dialog-actions">
+          <button type="button" class="btn btn-primary" (click)="closeRankingsDialog()">
+            {{ 'common.close' | l10n }}
+          </button>
+        </div>
       </div>
     </div>
-  } @else {
+  }
+} @else {
+  <div class="card result-card">
     <div class="no-results">
       <p>{{ 'teamResults.notFound' | l10n }}</p>
       <button type="button" class="btn btn-secondary" (click)="goBack()">
         {{ 'teamResults.back' | l10n }}
       </button>
     </div>
-  }
-</div>
+  </div>
+}
 }

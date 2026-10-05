@@ -2,6 +2,14 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.result-card > .result-container,
+.result-card > .no-results {
+  margin: auto 0;
 }
 
 .result-container {
@@ -118,20 +126,23 @@
   justify-content: center;
 }
 
-.setup-actions {
+.results-page-nav {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  width: 100%;
-  margin-top: 1.5rem;
 }
 
-.setup-actions .back-btn {
+.results-page-nav .back-btn {
   justify-self: start;
 }
 
-.setup-actions .nav-buttons {
+.results-page-nav .nav-buttons {
   grid-column: 2;
+}
+
+.results-page-nav .ranking-btn {
+  grid-column: 3;
+  justify-self: end;
 }
 
 .nav-step-btn {

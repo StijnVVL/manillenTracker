@@ -1,12 +1,7 @@
-.setup-container {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
 .setup-description {
   color: var(--muted);
-  margin: 0;
+  margin: 0 0 1.5rem;
+  flex-shrink: 0;
 }
 
 .setup-card {

@@ -1,5 +1,6 @@
-<div class="teams-container">
+<div class="page-body teams-container">
   <app-team-list-editor
+    class="fill-height"
     [teams]="state.teams"
     [showPresence]="true"
     [readonly]="!isSetup"
@@ -13,7 +14,7 @@
     (teamAbsent)="onTeamAbsent($event)"
     (startTournament)="startTournament()"
   />
-  <div class="page-nav teams-page-nav">
+  <div class="page-nav">
     <button type="button" class="btn btn-secondary" routerLink="/tournament/setup">&#8592; {{ 'nav.setup' | l10n }}</button>
     <button type="button" class="btn btn-primary" routerLink="/tournament/rules">{{ 'nav.rules' | l10n }} &#8594;</button>
   </div>

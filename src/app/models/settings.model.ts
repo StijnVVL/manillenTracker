@@ -25,7 +25,7 @@ export interface SettingsState {
   teams: Team[];
 }
 
-export const DEFAULT_TOURNAMENT_NAME = 'Manillentoernooi Oudleiding Chiro Oude Bareel 2026';
+export const DEFAULT_TOURNAMENT_NAME = 'Manillentoernooi Oud-leiding Chiro Oude Bareel 2026';
 export const DEFAULT_ROUND_DURATION_MINUTES = 25;
 export const DEFAULT_TOTAL_ROUNDS = 5;
 export const MAX_ROUND_DURATION_MINUTES = 120;

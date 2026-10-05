@@ -28,7 +28,8 @@ import { ModalDialogDirective } from '../../directives/modal-dialog.directive';
   ],
   templateUrl: './round-screen.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
-  styleUrl: './round-screen.component.css',
+  styleUrls: ['./round-screen.component.css', './team-tooltip.css', './tables-dialog.css', '../ranking-dialog/ranking-dialog.css'],
+  host: { class: 'page-body' },
 })
 export class RoundScreenComponent implements OnInit, OnDestroy {
   state: TournamentState;
@@ -547,6 +548,12 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
     const snapshot = this.displayRound?.preRoundLadderSnapshot;
     if (!snapshot || snapshot.length === 0) return [];
 
+    // Earlier pre-round positions
+    const earlierSnapshots = this.state.rounds
+      .filter(r => r.number < this.displayRound!.number)
+      .sort((a, b) => a.number - b.number)
+      .map(r => r.preRoundLadderSnapshot);
+
     return snapshot.map((entry, index) => ({
       teamId: entry.teamId,
       position: index + 1,
@@ -554,7 +561,10 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
       wins: entry.wins,
       exclusions: entry.exclusions,
       cumulativeScore: entry.cumulativeScore,
-      roundScores: entry.roundScores
+      previousPositions: earlierSnapshots
+        .map(s => s.findIndex(e => e.teamId === entry.teamId) + 1)
+        .filter(p => p > 0)
+        .map(p => `#${p}`)
     }));
   }
 

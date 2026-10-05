@@ -173,14 +173,14 @@
     <button type="button" class="btn btn-secondary" routerLink="/tournament/rules">&#8592; {{ 'nav.rules' | l10n }}</button>
   }
   <div class="timer-controls">
-    @if (allMatchups.length > 0) {
-      <button type="button" class="btn btn-secondary" (click)="openTablesDialog()">
-        {{ 'roundScreen.viewTables' | l10n }}
-      </button>
-    }
     @if (displayRound?.preRoundLadderSnapshot?.length) {
       <button type="button" class="btn btn-secondary" (click)="openRankingsDialog()">
         {{ 'roundScreen.showRankings' | l10n }}
+      </button>
+    }
+    @if (allMatchups.length > 0) {
+      <button type="button" class="btn btn-secondary" (click)="openTablesDialog()">
+        {{ 'roundScreen.viewTables' | l10n }}
       </button>
     }
     @if (isIdle && isCurrentRound && !isFinished) {
@@ -306,8 +306,9 @@
             <tr>
               <th class="rk-position">{{ 'rankingDialog.position' | l10n }}</th>
               <th class="rk-team">{{ 'common.team' | l10n }}</th>
-              <th class="rk-num">{{ 'rankingDialog.wins' | l10n }}</th>
-              <th class="rk-total">{{ 'rankingDialog.cumulativeScore' | l10n }}</th>
+              <th class="rk-num" [title]="'rankingDialog.wins' | l10n">{{ 'rankingDialog.winsShort' | l10n }}</th>
+              <th class="rk-num" [title]="'rankingDialog.cumulativeScore' | l10n">{{ 'rankingDialog.cumulativeScoreShort' | l10n }}</th>
+              <th class="rk-prev">{{ 'rankingDialog.previousPositions' | l10n }}</th>
             </tr>
           </thead>
           <tbody>
@@ -316,7 +317,8 @@
                 <td class="rk-position">{{ ranking.position }}</td>
                 <td class="rk-team">{{ ranking.teamName }}</td>
                 <td class="rk-num">{{ ranking.wins }}</td>
-                <td class="rk-total">{{ ranking.cumulativeScore }}@if (ranking.roundScores.length > 0) { <span class="round-scores">({{ ranking.roundScores.join(', ') }})</span>}</td>
+                <td class="rk-num">{{ ranking.cumulativeScore }}</td>
+                <td class="rk-prev">{{ ranking.previousPositions.join(', ') }}</td>
               </tr>
             }
           </tbody>

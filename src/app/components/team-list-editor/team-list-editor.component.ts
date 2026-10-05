@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AddTeamDialogService, TeamDialogResult } from '../../services/add-team-dialog.service';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
@@ -57,8 +57,12 @@ export class TeamListEditorComponent {
   constructor(
     private addTeamDialogService: AddTeamDialogService,
     private confirmDialogService: ConfirmDialogService,
+    private elementRef: ElementRef<HTMLElement>,
     public l10n: L10nService
   ) {}
+
+  /** Id of the team that was just added; its row gets a short highlight. */
+  highlightedTeamId: string | null = null;
 
   isPresent(team: Team): boolean {
     return this.showPresence && !!team.present;
@@ -81,7 +85,24 @@ export class TeamListEditorComponent {
   async openAddTeamDialog(): Promise<void> {
     const existingNames = this.teams.map(t => t.name);
     const result = await this.addTeamDialogService.openAdd(this.showPresence, existingNames);
-    if (result) this.teamAdded.emit(result);
+    if (result) {
+      const knownIds = new Set(this.teams.map(t => t.id));
+      this.teamAdded.emit(result);
+      setTimeout(() => this.highlightNewTeam(knownIds));
+    }
+  }
+
+  private highlightNewTeam(knownIds: Set<string>): void {
+    const added = this.teams.find(t => !knownIds.has(t.id));
+    if (!added) return;
+    this.highlightedTeamId = added.id;
+    setTimeout(() => {
+      const row = this.elementRef.nativeElement.querySelector<HTMLElement>(`[data-team-id="${added.id}"]`);
+      row?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+    setTimeout(() => {
+      if (this.highlightedTeamId === added.id) this.highlightedTeamId = null;
+    }, 500);
   }
 
   async openEditTeamDialog(team: Team): Promise<void> {

@@ -1,0 +1,174 @@
+/* Rankings Dialog */
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.rankings-dialog-box {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  max-width: 800px;
+  max-height: 80vh;
+  width: 90%;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.rankings-dialog-box .dialog-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #666;
+  padding: 5px;
+  line-height: 1;
+}
+
+.rankings-dialog-box .dialog-close:hover {
+  color: #333;
+}
+
+.rankings-dialog-box .dialog-title {
+  margin: 0 0 20px 0;
+  font-size: 24px;
+  text-align: center;
+  color: var(--primary-dark);
+}
+
+.rankings-table-container {
+  margin-bottom: 20px;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.rankings-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--bg-card);
+}
+
+/* Header stays fixed; only the body scrolls */
+.rankings-table thead,
+.rankings-table tbody {
+  display: block;
+  scrollbar-gutter: stable;
+}
+
+.rankings-table thead {
+  overflow: hidden;
+  background: var(--primary);
+}
+
+.rankings-table tbody {
+  overflow-y: auto;
+  max-height: 50vh;
+}
+
+.rankings-table tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.rankings-table th,
+.rankings-table td {
+  padding: 0.5rem 1rem;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.rankings-table th {
+  color: white;
+  font-weight: 700;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.rankings-table td {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  font-size: 1rem;
+}
+
+.rankings-table tr:last-child td {
+  border-bottom: none;
+}
+
+.rankings-table .rk-position {
+  width: 90px;
+}
+
+.rankings-table td.rk-position {
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+
+.rankings-table .rk-team {
+  text-align: left;
+}
+
+.rankings-table td.rk-team {
+  font-weight: 600;
+  color: var(--primary-dark);
+}
+
+.rankings-table .rk-num {
+  width: 60px;
+}
+
+.rankings-table td.rk-num {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+
+.rankings-table .rk-prev {
+  width: 40%;
+  text-align: left;
+}
+
+.rankings-table td.rk-prev {
+  font-variant-numeric: tabular-nums;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.rankings-dialog-box .dialog-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+  .rankings-dialog-box {
+    width: 95%;
+    max-width: none;
+  }
+
+  .rankings-table th,
+  .rankings-table td {
+    padding: 0.5rem;
+  }
+
+  .rankings-table .rk-position,
+  .rankings-table .rk-num {
+    width: 70px;
+  }
+}

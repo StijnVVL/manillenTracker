@@ -1,4 +1,4 @@
-<div class="rules-container">
+<div class="page-body rules-container">
   @if (slideIndex === 0) {
   <div class="rules-section">
     <h2>{{ 'rules.tournament.title' | l10n }}</h2>
@@ -68,9 +68,34 @@
       </button>
     </div>
     @if (isSetup) {
-      <button type="button" class="btn" [class.btn-primary]="canStart" [class.btn-secondary]="!canStart" [disabled]="!canStart" (click)="startTournament()">{{ 'nav.startTournament' | l10n }} &#8594;</button>
+      <span
+        class="start-btn-wrapper"
+        (mouseenter)="showStartTooltip($event)"
+        (mousemove)="updateStartTooltipPosition($event)"
+        (mouseleave)="hideStartTooltip()"
+      >
+        <button type="button" class="btn" [class.btn-primary]="canStart" [class.btn-secondary]="!canStart" [disabled]="!canStart" (click)="startTournament()">{{ 'nav.startTournament' | l10n }} &#8594;</button>
+      </span>
     } @else {
       <button type="button" class="btn btn-primary" [routerLink]="['/tournament/round', 1, 'play']">{{ 'nav.round1' | l10n }} &#8594;</button>
     }
   </div>
 </div>
+
+@if (startTooltipVisible && !canStart) {
+  <div class="team-tooltip" [style.left.px]="tooltipX" [style.top.px]="tooltipY">
+    <div class="team-tooltip-header">
+      <span class="team-tooltip-name">{{ 'rules.startBlocked.title' | l10n }}</span>
+    </div>
+    @if (teamCount < 2) {
+      <div class="team-tooltip-row">{{ 'rules.startBlocked.tooFewTeams' | l10n:{ count: teamCount } }}</div>
+    }
+    @if (missingInfoCount > 0) {
+      <div class="team-tooltip-row">{{ 'rules.startBlocked.missingInfo' | l10n:{ count: missingInfoCount } }}</div>
+    }
+    @if (absentCount > 0) {
+      <div class="team-tooltip-row">{{ 'rules.startBlocked.notPresent' | l10n:{ count: absentCount } }}</div>
+    }
+    <div class="team-tooltip-row team-tooltip-muted">{{ 'rules.startBlocked.hint' | l10n }}</div>
+  </div>
+}
