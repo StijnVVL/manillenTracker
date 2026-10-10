@@ -17,6 +17,16 @@
   font-size: 1.1rem;
 }
 
+.rules-subtitle {
+  color: var(--primary);
+  margin: 1rem 0 0.4rem 0;
+  font-size: 1rem;
+}
+
+.rules-section .rules-subtitle:first-of-type {
+  margin-top: 0.25rem;
+}
+
 .rules-section p {
   margin: 0 0 0.75rem 0;
   color: var(--muted);

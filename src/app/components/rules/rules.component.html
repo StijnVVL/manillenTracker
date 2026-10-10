@@ -36,13 +36,25 @@
   @if (slideIndex === 2) {
   <div class="rules-section">
     <h2>{{ 'rules.manillen.title' | l10n }}</h2>
+
+    <h3 class="rules-subtitle">{{ 'rules.manillen.dealingTitle' | l10n }}</h3>
     <ul class="rules-bullets">
       <li>{{ 'rules.manillen.shuffle' | l10n }}</li>
       <li>{{ 'rules.manillen.bullet1' | l10n }}</li>
       <li>{{ 'rules.manillen.bullet2' | l10n }}</li>
+      <li>{{ 'rules.manillen.bullet7' | l10n }}</li>
+    </ul>
+
+    <h3 class="rules-subtitle">{{ 'rules.manillen.playingTitle' | l10n }}</h3>
+    <ul class="rules-bullets">
       <li>{{ 'rules.manillen.bullet3' | l10n }}</li>
       <li>{{ 'rules.manillen.bullet4' | l10n }}</li>
       <li>{{ 'rules.manillen.underTrump' | l10n }}</li>
+      <li>{{ 'rules.manillen.bullet6' | l10n }}</li>
+    </ul>
+
+    <h3 class="rules-subtitle">{{ 'rules.manillen.scoringTitle' | l10n }}</h3>
+    <ul class="rules-bullets">
       <li>{{ 'rules.manillen.bullet5' | l10n : { points: points60_0 } }}</li>
       <li>
         {{ 'rules.manillen.double' | l10n }}
@@ -53,6 +65,11 @@
         </ul>
       </li>
       <li>{{ 'rules.manillen.maxMultiplier' | l10n }}</li>
+    </ul>
+
+    <h3 class="rules-subtitle">{{ 'rules.manillen.juryTitle' | l10n }}</h3>
+    <ul class="rules-bullets">
+      <li>{{ 'rules.manillen.bullet8' | l10n }}</li>
     </ul>
   </div>
   }
