@@ -4,7 +4,7 @@ import { tournamentGuard } from './guards/tournament.guard';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
-  { path: 'tournament', redirectTo: 'tournament/current', pathMatch: 'full' },
+  { path: 'tournament', loadComponent: () => import('./components/tournament/tournament.component').then(m => m.TournamentComponent) },
   { path: 'tournament/current', canActivate: [tournamentGuard], loadComponent: () => import('./components/tournament/tournament.component').then(m => m.TournamentComponent) },
   { path: 'tournament/rules', loadComponent: () => import('./components/rules/rules.component').then(m => m.RulesComponent), canActivate: [tournamentGuard], data: { titleKey: 'pageTitle.rules' } },
   { path: 'tournament/state', loadComponent: () => import('./components/state-editor/state-editor.component').then(m => m.StateEditorComponent), data: { titleKey: 'pageTitle.state' } },
@@ -16,6 +16,8 @@ export const routes: Routes = [
   { path: 'tournament/:id/round/:roundNumber/scoring', redirectTo: 'play', pathMatch: 'full' },
   { path: 'tournament/:id/round/:roundNumber/round-winner', loadComponent: () => import('./components/round-winner-screen/round-winner-screen.component').then(m => m.RoundWinnerScreenComponent), canActivate: [tournamentGuard], data: { titleKey: 'pageTitle.roundWinner' } },
   { path: 'tournament/:id/results/:position', canActivate: [tournamentGuard], loadComponent: () => import('./components/team-results-screen/team-results-screen.component').then(m => m.TeamResultsScreenComponent), data: { titleKey: 'pageTitle.teamResults' } },
+  { path: 'tournament/:id/rules', redirectTo: '/tournament/rules', pathMatch: 'full' },
+  { path: 'tournament/:id/state', redirectTo: '/tournament/state', pathMatch: 'full' },
 
   { path: 'credits', loadComponent: () => import('./components/credits/credits.component').then(m => m.CreditsComponent), data: { titleKey: 'pageTitle.credits' } },
   { path: 'settings', loadComponent: () => import('./components/settings/settings.component').then(m => m.SettingsComponent), data: { titleKey: 'pageTitle.settings' } },

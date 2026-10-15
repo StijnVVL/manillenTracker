@@ -140,16 +140,20 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
   goToCurrentRound(): void {
     if (this.currentRound) {
       const sub = this.state.status === 'round-winner' ? 'round-winner' : 'play';
-      this.router.navigate(['/tournament/round', this.currentRound.number, sub]);
+      this.router.navigate(['/tournament', this.tournamentService.state.id, 'round', this.currentRound.number, sub]);
     }
   }
 
   goToPrevRound(): void {
-    this.router.navigate(['/tournament/round', this.roundNumber - 1, 'round-winner']);
+    this.router.navigate(['/tournament', this.tournamentService.state.id, 'round', this.roundNumber - 1, 'round-winner']);
   }
 
   loadRound(): void {
     this.displayRound = getRoundByNumber(this.state, this.roundNumber);
+  }
+
+  get tournamentId(): string {
+    return this.tournamentService.state.id;
   }
 
   get isCurrentRound(): boolean {
@@ -266,7 +270,7 @@ export class RoundScreenComponent implements OnInit, OnDestroy {
         }
       }
     }
-    this.router.navigate(['/tournament/round', this.roundNumber, 'round-winner']);
+    this.router.navigate(['/tournament', this.tournamentService.state.id, 'round', this.roundNumber, 'round-winner']);
   }
 
   get scoresConfirmed(): boolean {

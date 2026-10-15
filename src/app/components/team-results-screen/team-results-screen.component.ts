@@ -91,7 +91,7 @@ export class TeamResultsScreenComponent implements OnInit {
     const round = this.currentRound;
     if (round) {
       const subPage = this.state.status === 'round-winner' ? 'round-winner' : 'play';
-      this.router.navigate(['/tournament/round', round.number, subPage]);
+      this.router.navigate(['/tournament', this.tournamentService.state.id, 'round', round.number, subPage]);
     } else {
       this.router.navigate(['/tournament']);
     }
@@ -162,20 +162,20 @@ export class TeamResultsScreenComponent implements OnInit {
 
   goToPrevious(): void {
     if (this.position < this.totalTeams) {
-      this.router.navigate(['/tournament/results', this.position + 1]);
+      this.router.navigate(['/tournament', this.tournamentService.state.id, 'results', this.position + 1]);
     }
   }
 
   goToNext(): void {
     if (this.position > 1) {
-      this.router.navigate(['/tournament/results', this.position - 1]);
+      this.router.navigate(['/tournament', this.tournamentService.state.id, 'results', this.position - 1]);
     }
   }
 
   goBack(): void {
     const current = getCurrentRound(this.state);
     if (current) {
-      this.router.navigate(['/tournament/round', current.number, 'round-winner']);
+      this.router.navigate(['/tournament', this.tournamentService.state.id, 'round', current.number, 'round-winner']);
     } else {
       this.router.navigate(['/tournament']);
     }

@@ -18,6 +18,10 @@ export class RulesComponent {
 
   constructor(private tournamentService: TournamentService, private router: Router) {}
 
+  get tournamentId(): string {
+    return this.tournamentService.state.id;
+  }
+
   get isSetup(): boolean {
     return this.tournamentService.state.status === 'setup';
   }
@@ -60,7 +64,7 @@ export class RulesComponent {
 
   startTournament(): void {
     this.tournamentService.dispatch({ type: 'START_TOURNAMENT' });
-    this.router.navigate(['/tournament/round', 1, 'play']);
+    this.router.navigate(['/tournament', this.tournamentService.state.id, 'round', 1, 'play']);
   }
 
   get hasPrevious(): boolean {

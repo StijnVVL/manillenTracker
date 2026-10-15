@@ -72,7 +72,7 @@ export class SetupScreenComponent implements OnInit, OnDestroy {
   }
 
   goToTeams(): void {
-    this.router.navigate(['/tournament/teams']);
+    this.router.navigate(['/tournament', this.tournamentService.state.id, 'teams']);
   }
 
   onTournamentNameChange(name: string): void {

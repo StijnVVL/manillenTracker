@@ -14,7 +14,7 @@
           <div class="header-info-wrap">
             @if (shouldShowHeaderTimer) {
               <a class="header-info-item header-timer-text"
-                 [routerLink]="['/tournament/round', currentRoundNumber, 'play']"
+                 [routerLink]="['/tournament', tournamentId, 'round', currentRoundNumber, 'play']"
               >
                 {{ headerTimerLabel }}<span class="header-round-number">{{ currentRoundNumber }}</span><span [style.color]="headerTimerColor">&#8195;{{ headerTimerClock }}</span>
               </a>
@@ -32,20 +32,20 @@
         <a routerLink="/" routerLinkActive="menu-item-active" [routerLinkActiveOptions]="{exact:true}" class="menu-item" (click)="closeMenu()">{{ 'menu.home' | l10n }}</a>
         <a routerLink="/tournament" routerLinkActive="menu-item-active" [routerLinkActiveOptions]="{exact:true}" class="menu-item" (click)="closeMenu()">{{ 'menu.tournament' | l10n }}</a>
         @if (hasTournament) {
-          <a routerLink="/tournament/setup" routerLinkActive="menu-item-active" class="menu-item menu-item-sub" (click)="closeMenu()">{{ 'menu.setup' | l10n }}</a>
-          <a routerLink="/tournament/teams" routerLinkActive="menu-item-active" class="menu-item menu-item-sub" (click)="closeMenu()">{{ 'menu.teams' | l10n }}</a>
-          <a routerLink="/tournament/rules" routerLinkActive="menu-item-active" class="menu-item menu-item-sub" (click)="closeMenu()">{{ 'menu.rules' | l10n }}</a>
+          <a [routerLink]="['/tournament', tournamentId, 'setup']" routerLinkActive="menu-item-active" class="menu-item menu-item-sub" (click)="closeMenu()">{{ 'menu.setup' | l10n }}</a>
+          <a [routerLink]="['/tournament', tournamentId, 'teams']" routerLinkActive="menu-item-active" class="menu-item menu-item-sub" (click)="closeMenu()">{{ 'menu.teams' | l10n }}</a>
+          <a [routerLink]="['/tournament', tournamentId, 'rules']" routerLinkActive="menu-item-active" class="menu-item menu-item-sub" (click)="closeMenu()">{{ 'menu.rules' | l10n }}</a>
           @if (isPostSetup && currentRoundNumber !== null) {
-            <a [routerLink]="['/tournament/round', currentRoundNumber, currentRoundSubRoute]" routerLinkActive="menu-item-active" class="menu-item menu-item-sub" (click)="closeMenu()">{{ 'menu.currentRound' | l10n }}</a>
+            <a [routerLink]="['/tournament', tournamentId, 'round', currentRoundNumber, currentRoundSubRoute]" routerLinkActive="menu-item-active" class="menu-item menu-item-sub" (click)="closeMenu()">{{ 'menu.currentRound' | l10n }}</a>
           } @else {
             <span class="menu-item menu-item-sub menu-item-disabled">{{ 'menu.currentRound' | l10n }}</span>
           }
           @if (isPostSetup) {
-            <a routerLink="/tournament/results/last" routerLinkActive="menu-item-active" class="menu-item menu-item-sub" (click)="closeMenu()">{{ 'menu.results' | l10n }}</a>
+            <a [routerLink]="['/tournament', tournamentId, 'results', 'last']" routerLinkActive="menu-item-active" class="menu-item menu-item-sub" (click)="closeMenu()">{{ 'menu.results' | l10n }}</a>
           } @else {
             <span class="menu-item menu-item-sub menu-item-disabled">{{ 'menu.results' | l10n }}</span>
           }
-          <a routerLink="/tournament/state" routerLinkActive="menu-item-active" class="menu-item menu-item-sub" (click)="closeMenu()">{{ 'menu.state' | l10n }}</a>
+          <a [routerLink]="['/tournament', tournamentId, 'state']" routerLinkActive="menu-item-active" class="menu-item menu-item-sub" (click)="closeMenu()">{{ 'menu.state' | l10n }}</a>
         }
         </div>
         <div class="menu-bottom">

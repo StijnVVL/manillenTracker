@@ -15,7 +15,7 @@
     (startTournament)="startTournament()"
   />
   <div class="page-nav">
-    <button type="button" class="btn btn-secondary" routerLink="/tournament/setup">&#8592; {{ 'nav.setup' | l10n }}</button>
-    <button type="button" class="btn btn-primary" routerLink="/tournament/rules">{{ 'nav.rules' | l10n }} &#8594;</button>
+    <button type="button" class="btn btn-secondary" [routerLink]="['/tournament', tournamentId, 'setup']">&#8592; {{ 'nav.setup' | l10n }}</button>
+    <button type="button" class="btn btn-primary" [routerLink]="['/tournament', tournamentId, 'rules']">{{ 'nav.rules' | l10n }} &#8594;</button>
   </div>
 </div>

@@ -66,7 +66,7 @@ export class RoundWinnerScreenComponent implements OnInit {
   goToCurrentRound(): void {
     if (this.currentRound) {
       const subPage = this.state.status === 'round-winner' ? 'round-winner' : 'play';
-      this.router.navigate(['/tournament/round', this.currentRound.number, subPage]);
+      this.router.navigate(['/tournament', this.tournamentService.state.id, 'round', this.currentRound.number, subPage]);
     }
   }
 
@@ -135,18 +135,18 @@ export class RoundWinnerScreenComponent implements OnInit {
   }
 
   goToTeamResults(): void {
-    this.router.navigate(['/tournament/results', 'last']);
+    this.router.navigate(['/tournament', this.tournamentService.state.id, 'results', 'last']);
   }
 
   nextRound(): void {
     if (!this.isCurrentRound || !this.displayRound) return;
     this.tournamentService.dispatch({ type: 'NEXT_ROUND' });
     const newRound = this.tournamentService.state.rounds[this.tournamentService.state.rounds.length - 1];
-    this.router.navigate(['/tournament/round', newRound.number, 'play']);
+    this.router.navigate(['/tournament', this.tournamentService.state.id, 'round', newRound.number, 'play']);
   }
 
   backToMatchups(): void {
-    this.router.navigate(['/tournament/round', this.roundNumber, 'play']);
+    this.router.navigate(['/tournament', this.tournamentService.state.id, 'round', this.roundNumber, 'play']);
   }
 
   goToNext(): void {
@@ -162,9 +162,9 @@ export class RoundWinnerScreenComponent implements OnInit {
     if (this.state.status === 'round-winner') {
       this.tournamentService.dispatch({ type: 'NEXT_ROUND' });
       const newRound = this.tournamentService.state.rounds[this.tournamentService.state.rounds.length - 1];
-      this.router.navigate(['/tournament/round', newRound.number, 'play']);
+      this.router.navigate(['/tournament', this.tournamentService.state.id, 'round', newRound.number, 'play']);
     } else {
-      this.router.navigate(['/tournament/round', this.roundNumber + 1, 'play']);
+      this.router.navigate(['/tournament', this.tournamentService.state.id, 'round', this.roundNumber + 1, 'play']);
     }
   }
 

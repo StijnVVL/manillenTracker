@@ -75,7 +75,7 @@
   }
 
   <div class="page-nav">
-    <button type="button" class="btn btn-secondary" routerLink="/tournament/teams">&#8592; {{ 'nav.teams' | l10n }}</button>
+    <button type="button" class="btn btn-secondary" [routerLink]="['/tournament', tournamentId, 'teams']">&#8592; {{ 'nav.teams' | l10n }}</button>
     <div class="rules-carousel-nav">
       <button type="button" class="btn btn-secondary nav-step-btn" (click)="goToPrevious()" [style.visibility]="hasPrevious ? null : 'hidden'">
         &#8592; <span class="nav-label-stack">@for (key of slideTitleKeys; track key; let i = $index) {<span [class.nav-label-hidden]="i !== slideIndex - 1">{{ key | l10n }}</span>}</span>
@@ -94,7 +94,7 @@
         <button type="button" class="btn" [class.btn-primary]="canStart" [class.btn-secondary]="!canStart" [disabled]="!canStart" (click)="startTournament()">{{ 'nav.startTournament' | l10n }} &#8594;</button>
       </span>
     } @else {
-      <button type="button" class="btn btn-primary" [routerLink]="['/tournament/round', 1, 'play']">{{ 'nav.round1' | l10n }} &#8594;</button>
+      <button type="button" class="btn btn-primary" [routerLink]="['/tournament', tournamentId, 'round', 1, 'play']">{{ 'nav.round1' | l10n }} &#8594;</button>
     }
   </div>
 </div>

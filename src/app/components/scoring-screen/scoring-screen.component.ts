@@ -76,7 +76,7 @@ export class ScoringScreenComponent implements OnInit {
     if (this.currentRound) {
       const subPage = this.state.status === 'round' ? 'play' :
                       this.state.status === 'scoring' ? 'scoring' : 'round-winner';
-      this.router.navigate(['/tournament/round', this.currentRound.number, subPage]);
+      this.router.navigate(['/tournament', this.tournamentService.state.id, 'round', this.currentRound.number, subPage]);
     }
   }
 
@@ -190,7 +190,7 @@ export class ScoringScreenComponent implements OnInit {
 
     // If scores already confirmed, just navigate to round winner screen
     if (this.scoresAlreadyConfirmed) {
-      this.router.navigate(['/tournament/round', this.displayRound.number, 'round-winner']);
+      this.router.navigate(['/tournament', this.tournamentService.state.id, 'round', this.displayRound.number, 'round-winner']);
       return;
     }
 

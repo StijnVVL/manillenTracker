@@ -141,7 +141,7 @@ export class TournamentComponent implements OnInit, OnDestroy {
 
   startNewTournament(): void {
     this.tournamentService.dispatch({ type: 'RESET_TOURNAMENT' });
-    this.router.navigate(['/tournament/setup']);
+    this.router.navigate(['/tournament', this.tournamentService.state.id, 'setup']);
   }
 
   redirectToCurrentState(): void {
@@ -149,21 +149,21 @@ export class TournamentComponent implements OnInit, OnDestroy {
 
     switch (this.state.status) {
       case 'setup':
-        this.router.navigate(['/tournament/setup']);
+        this.router.navigate(['/tournament', this.tournamentService.state.id, 'setup']);
         break;
       case 'round':
         if (currentRound) {
-          this.router.navigate(['/tournament/round', currentRound.number, 'play']);
+          this.router.navigate(['/tournament', this.tournamentService.state.id, 'round', currentRound.number, 'play']);
         }
         break;
       case 'scoring':
         if (currentRound) {
-          this.router.navigate(['/tournament/round', currentRound.number, 'scoring']);
+          this.router.navigate(['/tournament', this.tournamentService.state.id, 'round', currentRound.number, 'scoring']);
         }
         break;
       case 'round-winner':
         if (currentRound) {
-          this.router.navigate(['/tournament/round', currentRound.number, 'round-winner']);
+          this.router.navigate(['/tournament', this.tournamentService.state.id, 'round', currentRound.number, 'round-winner']);
         }
         break;
       case 'finished':

@@ -73,7 +73,7 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
 
   private parseUrl(url: string): void {
     this.currentUrl = url;
-    const roundMatch = url.match(/\/tournament\/round\/(\d+)\/(play|round-winner)/);
+    const roundMatch = url.match(/\/tournament\/(?:current|[\w-]+)?\/round\/(\d+)\/(play|round-winner)/) ?? url.match(/\/tournament\/round\/(\d+)\/(play|round-winner)/);
     if (roundMatch) {
       this.roundNumber = +roundMatch[1];
       this.pageType = roundMatch[2] as PageType;
@@ -86,7 +86,7 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
   get mode(): BreadcrumbMode {
     const url = this.currentUrl;
     if (url === '/' || url === '') return 'home';
-    if (/\/tournament\/round\/\d+\/(play|scoring|round-winner)/.test(url)) return 'tournament-round';
+    if (/\/tournament\/(?:current|[\w-]+)?\/round\/\d+\/(play|scoring|round-winner)/.test(url) || /\/tournament\/round\/\d+\/(play|scoring|round-winner)/.test(url)) return 'tournament-round';
     if (url === '/tournament') return 'tournament';
     if (url.startsWith('/tournament/')) return 'tournament-sub';
     return 'other';
@@ -111,17 +111,17 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
     const items: NavItem[] = [
       {
         labelKey: 'menu.setup',
-        url: ['/tournament/setup'],
+        url: ['/tournament', this.tournamentService.state.id, 'setup'],
         active: url.includes('/setup'),
       },
       {
         labelKey: 'menu.teams',
-        url: ['/tournament/teams'],
+        url: ['/tournament', this.tournamentService.state.id, 'teams'],
         active: url.includes('/teams'),
       },
       {
         labelKey: 'menu.rules',
-        url: ['/tournament/rules'],
+        url: ['/tournament', this.tournamentService.state.id, 'rules'],
         active: url.includes('/rules'),
       },
     ];
@@ -129,20 +129,20 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
     for (const r of this.rounds) {
       items.push({
         label: this.l10n.get('breadcrumb.round', { roundNumber: r }),
-        url: ['/tournament/round', String(r), this.pageType],
-        active: /\/tournament\/round\/\d+\/(play|round-winner)/.test(url) && this.roundNumber === r,
+        url: ['/tournament', this.tournamentService.state.id, 'round', String(r), this.pageType],
+        active: (/\/tournament\/(?:current|[\w-]+)?\/round\/\d+\/(play|round-winner)/.test(url) || /\/tournament\/round\/\d+\/(play|round-winner)/.test(url)) && this.roundNumber === r,
       });
     }
 
     items.push({
       labelKey: 'menu.results',
-      url: ['/tournament/results/last'],
+      url: ['/tournament', this.tournamentService.state.id, 'results', 'last'],
       active: url.includes('/results/'),
     });
 
     items.push({
       labelKey: 'menu.state',
-      url: ['/tournament/state'],
+      url: ['/tournament', this.tournamentService.state.id, 'state'],
       active: url.includes('/state'),
     });
 
@@ -202,12 +202,12 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
   }
 
   selectRound(round: number): void {
-    this.router.navigate(['/tournament/round', round, this.pageType]);
+    this.router.navigate(['/tournament', this.tournamentService.state.id, 'round', round, this.pageType]);
     this.closePopups();
   }
 
   selectPage(option: PageOption): void {
-    this.router.navigate(['/tournament/round', this.roundNumber, option.route]);
+    this.router.navigate(['/tournament', this.tournamentService.state.id, 'round', this.roundNumber, option.route]);
     this.closePopups();
   }
 

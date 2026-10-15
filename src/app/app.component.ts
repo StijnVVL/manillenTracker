@@ -95,6 +95,10 @@ export class AppComponent implements OnInit, OnDestroy {
     return getTimerColor(this.headerRemainingSeconds, duration, isEnded);
   }
 
+  get tournamentId(): string {
+    return this.tournamentService.state.id;
+  }
+
   get hasTournament(): boolean {
     return this.tournamentService.state.status !== 'none';
   }

@@ -38,6 +38,10 @@ export class TeamsPageComponent implements OnInit, OnDestroy {
     this.stateSubscription?.unsubscribe();
   }
 
+  get tournamentId(): string {
+    return this.tournamentService.state.id;
+  }
+
   get isSetup(): boolean {
     return this.state.status === 'setup';
   }
@@ -52,7 +56,7 @@ export class TeamsPageComponent implements OnInit, OnDestroy {
 
   startTournament(): void {
     this.tournamentService.dispatch({ type: 'START_TOURNAMENT' });
-    this.router.navigate(['/tournament/rules']);
+    this.router.navigate(['/tournament', this.tournamentService.state.id, 'rules']);
   }
 
   onTeamAdded(result: TeamDialogResult): void {
