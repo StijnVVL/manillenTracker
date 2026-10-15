@@ -66,6 +66,8 @@ export type UndoableActionType =
   | 'NEXT_ROUND';
 
 export interface TournamentState {
+  /** Stable identifier used in routes and (later) multi-tournament storage. */
+  id: string;
   tournamentName: string;
   showSponsors: boolean;
   teams: Team[];
@@ -96,6 +98,10 @@ export function sanitizePoints60_0(value: unknown): number {
   return (POINTS_60_0_OPTIONS as readonly number[]).includes(n) ? n : DEFAULT_POINTS_60_0;
 }
 export const STORAGE_KEY = 'manillen-tournament';
+
+export function ensureTournamentId(state: TournamentState): TournamentState {
+  return state.id ? state : { ...state, id: crypto.randomUUID() };
+}
 
 export type TournamentAction =
   | { type: 'ADD_TEAM'; name: string; player1: string; player2: string; id?: string }

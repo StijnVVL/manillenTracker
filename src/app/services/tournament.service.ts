@@ -9,6 +9,7 @@ import {
   DEFAULT_POINTS_60_0,
   sanitizePoints60_0,
   STORAGE_KEY,
+  ensureTournamentId,
   type LadderSnapshotEntry,
   type Round,
   type Team,
@@ -110,6 +111,7 @@ function applyRoundDelta(
 
 function createEmptyState(): TournamentState {
   return {
+    id: crypto.randomUUID(),
     tournamentName: '',
     showSponsors: true,
     sponsorIntervalSeconds: DEFAULT_SPONSOR_INTERVAL_SECONDS,
@@ -140,6 +142,7 @@ function createInitialState(
   points60_0 = DEFAULT_POINTS_60_0,
 ): TournamentState {
   return {
+    id: crypto.randomUUID(),
     tournamentName,
     showSponsors,
     sponsorIntervalSeconds,
@@ -794,7 +797,7 @@ export class TournamentService {
   public canRedo$: Observable<boolean>;
 
   constructor(private settingsService: SettingsService) {
-    const initialState = loadPersistedState() ?? createEmptyState();
+    const initialState = ensureTournamentId(loadPersistedState() ?? createEmptyState());
     this.stateSubject = new BehaviorSubject<TournamentState>(initialState);
     this.state$ = this.stateSubject.asObservable();
     this.canUndo$ = this.state$.pipe(map((s) => s.undoStack.length > 0), distinctUntilChanged());
