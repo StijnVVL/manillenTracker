@@ -192,7 +192,7 @@
     "credits.appTitle": "manill.io",
     "credits.appDescription": "A tournament tracking application for Manillen card games.",
     "credits.developmentTitle": "Development",
-    "credits.builtWith": "Built with Angular",
+    "credits.builtWith": "Built with Angular, Tim De Mey & StijnVVL, 2026",
 
   "rules.tournament.title": "Tournament Rules",
   "rules.tournament.bullet1": "A ladder system with {rounds} rounds is used where each round allows a team to improve or worsen its position on the ladder. The team ranked #1 after the last round has ended, wins the tournament.",
