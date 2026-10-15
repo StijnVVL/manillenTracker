@@ -192,7 +192,7 @@
   "credits.appTitle": "manill.io",
   "credits.appDescription": "Een toernooi-volgtoepassing voor het kaartspel manillen.",
   "credits.developmentTitle": "Ontwikkeling",
-  "credits.builtWith": "Ontwikkeld in Angular, Tim De Mey, 2026",
+  "credits.builtWith": "Ontwikkeld in Angular, Tim De Mey & StijnVVL, 2026",
 
   "rules.tournament.title": "Toernooireglement",
   "rules.tournament.bullet1": "Er wordt een laddersysteem met {rounds} rondes gebruikt waarbij elke ronde een team toelaat zijn positie op de ladder te verbeteren of te verslechteren. Het team dat na de laatste ronde op plaats #1 staat, wint het toernooi.",
