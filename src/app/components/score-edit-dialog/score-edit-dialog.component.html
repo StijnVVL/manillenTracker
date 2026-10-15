@@ -53,8 +53,8 @@
         <p class="score-warn">{{ 'dialog.editScore.scoreWarn' | l10n:{ threshold: capWarnThreshold } }}</p>
       }
       <div class="dialog-actions">
-        <button class="btn btn-secondary" (click)="onCancel()">{{ 'common.cancel' | l10n }}</button>
         <button class="btn btn-primary" (click)="onSave()" [disabled]="!canSave">{{ 'dialog.editScore.save' | l10n }}</button>
+        <button class="btn btn-secondary" (click)="onCancel()">{{ 'common.cancel' | l10n }}</button>
       </div>
     </div>
   </div>
